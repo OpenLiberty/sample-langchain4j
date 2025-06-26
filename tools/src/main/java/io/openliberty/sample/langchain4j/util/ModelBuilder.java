@@ -1,4 +1,4 @@
-package dev.langchain4j.example.util;
+package io.openliberty.sample.langchain4j.util;
 
 import static dev.langchain4j.model.github.GitHubModelsChatModelName.PHI_3_MINI_INSTRUCT_4K;
 import static dev.langchain4j.model.github.GitHubModelsEmbeddingModelName.TEXT_EMBEDDING_3_SMALL;

@@ -1,15 +1,17 @@
-package dev.langchain4j.example;
+package io.openliberty.sample.langchain4j;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import dev.langchain4j.data.message.ToolExecutionResultMessage;
-import dev.langchain4j.example.util.ModelBuilder;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
+
+import io.openliberty.sample.langchain4j.util.*;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 

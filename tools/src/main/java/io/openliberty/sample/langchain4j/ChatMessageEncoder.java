@@ -1,4 +1,4 @@
-package dev.langchain4j.example;
+package io.openliberty.sample.langchain4j;
 
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.Encoder;
