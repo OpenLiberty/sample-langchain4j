@@ -10,7 +10,7 @@ import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 
-import io.openliberty.sample.langchain4j.util.*;
+import io.openliberty.sample.langchain4j.util.ModelBuilder;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
