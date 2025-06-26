@@ -5,11 +5,8 @@
         <platform>jakartaee-10.0</platform>
         <platform>microprofile-7.0</platform>
         <feature>cdi</feature>
-        <feature>jsonb</feature>
         <feature>mpConfig</feature>
         <feature>mpMetrics</feature>
-        <feature>mpOpenAPI</feature>
-        <feature>restfulWS</feature>
         <feature>websocket</feature>
     </featureManager>
 
