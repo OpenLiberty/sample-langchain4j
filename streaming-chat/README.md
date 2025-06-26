@@ -111,7 +111,7 @@ If the tests pass, you see a similar output to the following example:
 [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.101 s...
 [INFO]
 [INFO] Results:
-[INFO] 
+[INFO]
 [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 ```
 

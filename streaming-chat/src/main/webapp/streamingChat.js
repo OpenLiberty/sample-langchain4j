@@ -1,7 +1,7 @@
     var messagesTableBody = document.getElementById('messagesTableBody');
     var thinkingRow = document.createElement('tr');
     thinkingRow.setAttribute('id', 'thinking');
-    thinkingRow.innerHTML = '<td><p class=\"thinking-msg\">thinking...</p></td>' + 
+    thinkingRow.innerHTML = '<td><p class=\"thinking-msg\">thinking...</p></td>' +
                             '<td></td>';
 
     function getTime() {
@@ -19,7 +19,7 @@
     function sendMessage() {
         var myMessageRow = document.createElement('tr');
         var myMessage = document.getElementById('myMessage').value;
-        myMessageRow.innerHTML = '<td><p class=\"my-msg\">' + myMessage + '</p></td>' + 
+        myMessageRow.innerHTML = '<td><p class=\"my-msg\">' + myMessage + '</p></td>' +
                                  '<td>' + getTime() + '</td>';
         messagesTableBody.appendChild(myMessageRow);
         messagesTableBody.appendChild(thinkingRow);
