@@ -1,4 +1,4 @@
-package it.dev.langchan4j.example;
+package io.openliberty.sample.langchain4j;
 
 public class Util {
 

@@ -1,10 +1,9 @@
-package dev.langchain4j.example.streaming.chat;
+package io.openliberty.sample.langchain4j.streaming.chat;
 
 import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import dev.langchain4j.example.util.ModelBuilder;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.model.chat.response.ChatResponse;
@@ -15,6 +14,8 @@ import dev.langchain4j.service.TokenStream;
 import dev.langchain4j.service.UserMessage;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+
+import io.openliberty.sample.langchain4j.util.ModelBuilder;
 
 @ApplicationScoped
 public class StreamingChatAgent {

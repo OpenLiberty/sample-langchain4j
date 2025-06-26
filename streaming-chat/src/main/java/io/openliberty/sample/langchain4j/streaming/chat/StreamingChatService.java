@@ -1,4 +1,4 @@
-package dev.langchain4j.example.streaming.chat;
+package io.openliberty.sample.langchain4j.streaming.chat;
 
 import java.util.logging.Logger;
 

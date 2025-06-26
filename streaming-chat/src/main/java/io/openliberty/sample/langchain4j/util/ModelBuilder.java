@@ -1,4 +1,4 @@
-package dev.langchain4j.example.util;
+package io.openliberty.sample.langchain4j.util;
 
 import static java.time.Duration.ofSeconds;
 
