@@ -52,7 +52,7 @@
         }
         if (!thinkingRow.parentNode) {  // if a token has been sent already
             var existing = messagesTableBody.lastChild.firstChild.firstChild;
-            existing.innerHTML += data;
+            existing.innerHTML += data.replaceAll("\n", "<br/>");
             return;
         }
         messagesTableBody.removeChild(thinkingRow);
