@@ -28,7 +28,7 @@ This example demonstrates LangChain4J in a Jakarta EE / MicroProfile application
 
 ## Environment Set Up
 
-To run this example application, navigate to the `sample-langchain4j` directory:
+To run this example application, navigate to the `sample-langchain4j/tools` directory:
 
 ```
 cd sample-langchain4j/tools
