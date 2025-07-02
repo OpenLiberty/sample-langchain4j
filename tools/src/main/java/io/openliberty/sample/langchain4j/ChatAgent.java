@@ -42,7 +42,7 @@ public class ChatAgent {
 
     public Assistant getAssistant() throws Exception {
         if (assistant == null) {
-            ChatModel model = modelBuilder.getChatModelForWeb();
+            ChatModel model = modelBuilder.getChatModel();
             assistant = AiServices.builder(Assistant.class)
                 .chatModel(model)
                 .tools(stackOverflowTools)

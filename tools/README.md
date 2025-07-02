@@ -28,10 +28,10 @@ This example demonstrates LangChain4J in a Jakarta EE / MicroProfile application
 
 ## Environment Set Up
 
-To run this example application, navigate to the `jakartaee-microprofile-example` directory:
+To run this example application, navigate to the `sample-langchain4j` directory:
 
 ```
-cd langchain4j-examples/jakartaee-microprofile-example
+cd sample-langchain4j/tools
 ```
 
 Set the `JAVA_HOME` environment variable:
