@@ -72,7 +72,7 @@ public class ModelBuilder {
     @ConfigProperty(name = "chat.model.temperature")
     private Double TEMPERATURE;
 
-    private ChatModel chatModelForWeb = null;
+    private ChatModel chatModel = null;
 
     public boolean usingGithub() {
         return GITHUB_API_KEY.startsWith("ghp_");
@@ -91,9 +91,9 @@ public class ModelBuilder {
     }
 
     public ChatModel getChatModel() throws Exception {
-        if (chatModelForWeb == null) {
+        if (chatModel == null) {
             if (usingGithub()) {
-                chatModelForWeb = GitHubModelsChatModel.builder()
+                chatModel = GitHubModelsChatModel.builder()
                     .gitHubToken(GITHUB_API_KEY)
                     .modelName(GITHUB_CHAT_MODEL_ID)
                     .timeout(ofSeconds(TIMEOUT))
@@ -102,7 +102,7 @@ public class ModelBuilder {
                     .build();
                 logger.info("using Github " + GITHUB_CHAT_MODEL_ID + " chat model for the web");
             } else if (usingOllama()) {
-                chatModelForWeb = OllamaChatModel.builder()
+                chatModel = OllamaChatModel.builder()
                     .baseUrl(OLLAMA_BASE_URL)
                     .modelName(OLLAMA_CHAT_MODEL_ID)
                     .timeout(ofSeconds(TIMEOUT))
@@ -111,7 +111,7 @@ public class ModelBuilder {
                     .build();
                 logger.info("using Ollama " + OLLAMA_CHAT_MODEL_ID + " chat model for the web");
             } else if (usingMistralAi()) {
-                chatModelForWeb = MistralAiChatModel.builder()
+                chatModel = MistralAiChatModel.builder()
                     .apiKey(MISTRAL_AI_API_KEY)
                     .modelName(MISTRAL_AI_MISTRAL_CHAT_MODEL_ID)
                     .timeout(ofSeconds(TIMEOUT))
@@ -120,7 +120,7 @@ public class ModelBuilder {
                     .build();
                 logger.info("using Mistral AI " + MISTRAL_AI_MISTRAL_CHAT_MODEL_ID + " chat model for the web");
             } else if (usingHuggingFace()) {
-                chatModelForWeb = HuggingFaceChatModel.builder()
+                chatModel = HuggingFaceChatModel.builder()
                     .accessToken(HUGGING_FACE_API_KEY)
                     .modelId(HUGGING_FACE_CHAT_MODEL_ID)
                     .timeout(ofSeconds(TIMEOUT))
@@ -134,7 +134,6 @@ public class ModelBuilder {
                 throw new Exception("No available platform to access model");
             }
         }
-        return chatModelForWeb;
+        return chatModel;
     }
-
 }
