@@ -11,9 +11,7 @@ public class ChatMessageEncoder implements Encoder.Text<String> {
         if (!message.endsWith(".")) {
             message += " ...";
         }
-
         message = message.replaceAll("\n", "<br/>");
-
         return message;
 
     }

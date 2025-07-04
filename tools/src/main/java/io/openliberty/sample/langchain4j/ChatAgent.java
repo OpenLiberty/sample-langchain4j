@@ -17,7 +17,8 @@ import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class ChatAgent {
-    @Inject
+
+	@Inject
     private ModelBuilder modelBuilder;
 
     @Inject
@@ -29,12 +30,12 @@ public class ChatAgent {
 
     interface Assistant {
         @SystemMessage("You are a coding helper, people will go to you for questions around coding. " +
-                "You have ONLY four tools. " +
-                "ONLY use the tools if NECESSARY. " +
-                "ALWAYS follow the tool call parameters exactly and make sure to provide ALL necessary parameters. " +
-                "Do NOT add more parameters than needed" + 
-                "NEVER give the user unnecessary information. " + 
-                "NEVER lie or make information up, if you are unsure say so.")
+            "You have ONLY four tools. " +
+            "ONLY use the tools if NECESSARY. " +
+            "ALWAYS follow the tool call parameters exactly and make sure to provide ALL necessary parameters. " +
+            "Do NOT add more parameters than needed" + 
+            "NEVER give the user unnecessary information. " + 
+            "NEVER lie or make information up, if you are unsure say so.")
         String chat(@MemoryId String sessionId, @UserMessage String userMessage);
     }
 

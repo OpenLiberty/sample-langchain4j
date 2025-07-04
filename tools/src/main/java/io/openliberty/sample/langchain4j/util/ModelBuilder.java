@@ -1,10 +1,5 @@
 package io.openliberty.sample.langchain4j.util;
 
-import static dev.langchain4j.model.github.GitHubModelsChatModelName.PHI_3_MINI_INSTRUCT_4K;
-import static dev.langchain4j.model.github.GitHubModelsEmbeddingModelName.TEXT_EMBEDDING_3_SMALL;
-import static dev.langchain4j.model.huggingface.HuggingFaceModelName.SENTENCE_TRANSFORMERS_ALL_MINI_LM_L6_V2;
-import static dev.langchain4j.model.mistralai.MistralAiChatModelName.MISTRAL_SMALL_LATEST;
-import static dev.langchain4j.model.mistralai.MistralAiEmbeddingModelName.MISTRAL_EMBED;
 import static java.time.Duration.ofSeconds;
 
 import java.util.logging.Logger;
