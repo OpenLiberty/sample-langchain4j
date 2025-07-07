@@ -13,7 +13,7 @@ This example demonstrates LangChain4J in a Jakarta EE / MicroProfile application
     -   Ollama
         -   Download and install [Ollama](https://ollama.com/download)
             -   see the [README.md](https://github.com/ollama/ollama/blob/main/README.md#ollama)
-        -   Pull the following models
+        -   Pull the following model
             -   `ollama pull llama3.2`
     -   Mistral AI
         -   Sign up and log in to https://console.mistral.ai/home.
