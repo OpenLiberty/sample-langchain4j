@@ -27,7 +27,6 @@ public class StackOverflowTools {
     private String clientSearch(String url) {
         Client client = ClientBuilder.newClient();
         Response response = client.target(url).request().get();
-
         String responseBody = response.readEntity(String.class);
         client.close();
         return responseBody;
@@ -36,21 +35,18 @@ public class StackOverflowTools {
     @Tool("Multiple JakartaEE Questions on stackoverflow")
     public String searchJakartaEEQuestions() {
         logger.info("AI is searching stackoverflow for JakartaEE");
-
         return clientSearch(stackOverflowJakartaEE);
     }
 
     @Tool("Multiple MicroProfile Questions on stackoverflow")
     public String searchMicroProfileQuestions() {
         logger.info("AI is searching stackoverflow for MicroProfile");
-
         return clientSearch(stackOverflowMicroProfile);
     }
 
     @Tool("Multiple LangChain4j Questions on stackoverflow")
     public String searchLangChain4jQuestions() {
         logger.info("AI is searching stackoverflow for langchain4j");
-
         return clientSearch(stackOverflowLangChain4j);
     }
 
@@ -58,7 +54,7 @@ public class StackOverflowTools {
     public String searchStackOverflow(@P("Question you are searching") String question) {
         logger.info("AI called the searchStackOverflow Tool with question: " + question);
         String targetUrl = stackOverflowMethod + "&q=" + question + "&site=stackoverflow";
-
         return clientSearch(targetUrl);
     }
+
 }
