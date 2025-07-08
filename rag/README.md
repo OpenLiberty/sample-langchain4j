@@ -28,10 +28,10 @@ This example demonstrates LangChain4J in a Jakarta EE / MicroProfile application
 
 ## Environment Set Up
 
-To run this example application, navigate to the `jakartaee-microprofile-example` directory:
+To run this example application, navigate to the `rag` directory:
 
 ```
-cd langchain4j-examples/jakartaee-microprofile-example
+cd sample-langchain4j/rag
 ```
 
 Set the `JAVA_HOME` environment variable:
@@ -96,12 +96,6 @@ export ENVIRON_PATH=</PATH/TO/ENVFILE>
 
 ```
 export API_KEY_SEARCH_ENGINE=<Add-API-Key>
-```
-
-- Then run the application in dev mode:
-
-```
-./mvnw liberty:dev
 ```
 
 ## Start the application
