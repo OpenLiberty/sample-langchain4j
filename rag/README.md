@@ -4,27 +4,27 @@ This example demonstrates LangChain4J in a Jakarta EE / MicroProfile application
 
 ## Prerequisites:
 
--   [Java 21](https://developer.ibm.com/languages/java/semeru-runtimes/downloads)
--   Either one of the following model providers:
-    -   Github
-        -   Sign up and sign in to https://github.com.
-        -   Go to your [Settings/Developer Settings/Personal access tokens](https://github.com/settings/personal-access-tokens).
-        -   Generate a new token with the `models` account permission.
-    -   Ollama
-        -   Download and install [Ollama](https://ollama.com/download)
-            -   see the [README.md](https://github.com/ollama/ollama/blob/main/README.md#ollama)
-        -   Pull the following models
-            -   `ollama pull llama3.2`
-            -   `ollama pull all-minilm`
-            -   `ollama pull tinydolphin`
-    -   Mistral AI
-        -   Sign up and log in to https://console.mistral.ai/home.
-        -   Go to [Your API keys](https://console.mistral.ai/api-keys).
-        -   Create a new key.
-    -   Hugging Face
-        -   Sign up and log in to https://huggingface.co.
-        -   Go to [Access Tokens](https://huggingface.co/settings/tokens).
-        -   Create a new access token with `read` role.
+- [Java 21](https://developer.ibm.com/languages/java/semeru-runtimes/downloads)
+- Either one of the following model providers:
+  - Github
+    - Sign up and sign in to https://github.com.
+    - Go to your [Settings/Developer Settings/Personal access tokens](https://github.com/settings/personal-access-tokens).
+    - Generate a new token with the `models` account permission.
+  - Ollama
+    - Download and install [Ollama](https://ollama.com/download)
+      - see the [README.md](https://github.com/ollama/ollama/blob/main/README.md#ollama)
+    - Pull the following models
+      - `ollama pull llama3.2`
+      - `ollama pull all-minilm`
+      - `ollama pull tinydolphin`
+  - Mistral AI
+    - Sign up and log in to https://console.mistral.ai/home.
+    - Go to [Your API keys](https://console.mistral.ai/api-keys).
+    - Create a new key.
+  - Hugging Face
+    - Sign up and log in to https://huggingface.co.
+    - Go to [Access Tokens](https://huggingface.co/settings/tokens).
+    - Create a new access token with `read` role.
 
 ## Environment Set Up
 
@@ -76,63 +76,6 @@ unset MISTRAL_AI_API_KEY
 export HUGGING_FACE_API_KEY=<your Hugging Face read token>
 ```
 
-## Start the application
-
-Use the Maven wrapper to start the application by using the [Liberty dev mode](https://openliberty.io/docs/latest/development-mode.html):
-
-```
-./mvnw liberty:dev
-```
-
-## Try out the application
-
--   Navigate to http://localhost:9080
--   At the prompt, try the following message examples:
-    -   ```
-        What are large language models?
-        ```
-    -   ```
-        Which are the most used models?
-        ```
-    -   ```
-        show me the documentation
-        ```
-
-### Try out other models
-
-Navigate to the the [OpenAPI UI](http://localhost:9080/openapi/ui) URL for the following 3 REST APIs:
-
--   [LanguageModel](https://javadoc.io/doc/dev.langchain4j/langchain4j-core/latest/dev/langchain4j/model/language/LanguageModel.html)
-    -   Expand the GET `/api/model/language` API.
-        1. Click the **Try it out** button.
-        2. Type `When was Hugging Face launched?`, or any question, in the question field.
-        3. Click the **Execute** button.
-    -   Alternatively, run the following `curl` command from a command-line session:
-        -   ```
-            curl 'http://localhost:9080/api/model/language?question=When%20was%20Hugging%20Face%20launched%3F'
-            ```
--   [ChatModel](https://javadoc.io/doc/dev.langchain4j/langchain4j-core/latest/dev/langchain4j/model/chat/ChatModel.html)
-    -   expand the GET `/api/model/chat` API
-        1. Click the **Try it out** button.
-        2. Type `Which are the most used Large Language Models?`, or any question, in the question field.
-        3. Click the **Execute** button.
-    -   Alternatively, run the following `curl` command from a command-line session:
-        -   ```
-            curl 'http://localhost:9080/api/model/chat?userMessage=Which%20are%20the%20most%20used%20Large%20Language%20Models%3F' | jq
-            ```
--   [EmbeddingModel](https://javadoc.io/doc/dev.langchain4j/langchain4j-core/latest/dev/langchain4j/model/embedding/EmbeddingModel.html)
-    -   expand the GET `/api/model/similarity` API
-        1. Click the **Try it out** button.
-        2. Type `I like Jakarta EE and MicroProfile.`, or any text, in the the **text1** field.
-        3. Type `I like Python language.`, or any text, in the the **text2** field.
-        4. Click the **Execute** button.
-    -   Alternatively, run the following `curl` command from a command-line session:
-        -   ```
-            curl 'http://localhost:9080/api/model/similarity?text1=I%20like%20Jakarta%20EE%20and%20MicroProfile.&text2=I%20like%20Python%20language.' | jq
-            ```
-
-## Try out RAG
-
 - Create a [MongoDB Atlas account](https://www.mongodb.com/products/platform/atlas-database) and create a live cluster.
 
 - To connect to the live cluster, use MogoDB's native drivers, install the driver, and copy the connection string.
@@ -149,7 +92,6 @@ CONNECTION_URI=<Add-Your-Connection-String>
 export ENVIRON_PATH=</PATH/TO/ENVFILE>
 ```
 
-=======
 - Sign up or sign in to [Tavily](https://app.tavily.com/home) and create an api key.
 
 ```
@@ -162,46 +104,63 @@ export API_KEY_SEARCH_ENGINE=<Add-API-Key>
 ./mvnw liberty:dev
 ```
 
-- Navigate to http://localhost:9080/ragChat.html
+## Start the application
+
+Use the Maven wrapper to start the application by using the [Liberty dev mode](https://openliberty.io/docs/latest/development-mode.html):
+
+```
+./mvnw liberty:dev
+```
+
+## Try out the application
+
+- Navigate to http://localhost:9080
 - At the prompt, try the following examples:
-    -   ```
-        How to install Open Liberty?
-        ```
-    -   ```
-        What are RESTful microservices?
-        ```
-    -   ```
-        Explain Jakarta EE in detail.
-        ```
-    -   ```
-        What is the Java EE 8 full platform and the Web Profile? Use the exact wording that you have.
-        ```
-
-## Try out streaming chat
-
--   Navigate to http://localhost:9080/streamingChat.html
--   At the prompt, try the same examples from earlier.
-    -   ```
-        What are large language models?
-        ```
-    -   ```
-        Which are the most used models?
-        ```
-    -   ```
-        show me the documentation
-        ```
-
-## Try out Tools
-If you are currently using one of the following model providers: GitHub, Ollama or MistralAI, you may proceed
-
-- Navigate to http://localhost:9080/toolChat.html
-- At the prompt, try the following message examples:
   - ```
-    What are some current problems users have with LangChain4J?
+    How to install Open Liberty?
     ```
   - ```
-    What are some possible solutions to the problems?
+    What are RESTful microservices?
     ```
+  - ```
+    Explain Jakarta EE in detail.
+    ```
+  - ```
+    What is the Java EE 8 full platform and the Web Profile? Use the exact wording that you have.
+    ```
+
+### Try out other models
+
+Navigate to the the [OpenAPI UI](http://localhost:9080/openapi/ui) URL for the following 3 REST APIs:
+
+- [LanguageModel](https://javadoc.io/doc/dev.langchain4j/langchain4j-core/latest/dev/langchain4j/model/language/LanguageModel.html)
+  - Expand the GET `/api/model/language` API.
+    1. Click the **Try it out** button.
+    2. Type `When was Hugging Face launched?`, or any question, in the question field.
+    3. Click the **Execute** button.
+  - Alternatively, run the following `curl` command from a command-line session:
+    - ```
+      curl 'http://localhost:9080/api/model/language?question=When%20was%20Hugging%20Face%20launched%3F'
+      ```
+- [ChatModel](https://javadoc.io/doc/dev.langchain4j/langchain4j-core/latest/dev/langchain4j/model/chat/ChatModel.html)
+  - expand the GET `/api/model/chat` API
+    1. Click the **Try it out** button.
+    2. Type `Which are the most used Large Language Models?`, or any question, in the question field.
+    3. Click the **Execute** button.
+  - Alternatively, run the following `curl` command from a command-line session:
+    - ```
+      curl 'http://localhost:9080/api/model/chat?userMessage=Which%20are%20the%20most%20used%20Large%20Language%20Models%3F' | jq
+      ```
+- [EmbeddingModel](https://javadoc.io/doc/dev.langchain4j/langchain4j-core/latest/dev/langchain4j/model/embedding/EmbeddingModel.html)
+  - expand the GET `/api/model/similarity` API
+    1. Click the **Try it out** button.
+    2. Type `I like Jakarta EE and MicroProfile.`, or any text, in the the **text1** field.
+    3. Type `I like Python language.`, or any text, in the the **text2** field.
+    4. Click the **Execute** button.
+  - Alternatively, run the following `curl` command from a command-line session:
+    - ```
+      curl 'http://localhost:9080/api/model/similarity?text1=I%20like%20Jakarta%20EE%20and%20MicroProfile.&text2=I%20like%20Python%20language.' | jq
+      ```
 
 ## Running the tests
 
@@ -227,7 +186,7 @@ If the tests pass, you see a similar output to the following example:
 [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.733 s...
 [INFO]
 [INFO] Results:
-[INFO] 
+[INFO]
 [INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0
 ```
 
