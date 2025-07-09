@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2025 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *******************************************************************************/
 package dev.langchain4j.example.chat;
 
 import java.text.DateFormat;
@@ -49,7 +58,6 @@ import java.util.Set;
 import org.bson.conversions.Bson;
 
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 import com.mongodb.client.model.CreateCollectionOptions;
 
 import io.github.cdimascio.dotenv.Dotenv;
@@ -73,6 +81,8 @@ record Data(String fileName, String source, Date date) {
 
 @ApplicationScoped
 public class ChatAgent {
+        @Inject
+        MongoClient mongodbClient;
 
         @Inject
         private ModelBuilder modelBuilder;
@@ -152,15 +162,6 @@ public class ChatAgent {
 
                         }
                         zipFile.close();
-                        String path = System.getenv("ENVIRON_PATH");
-                        Dotenv loadEnvVar = Dotenv.configure()
-                                        .directory(path)
-                                        .filename(".env")
-                                        .load();
-
-                        String establishConn = loadEnvVar.get("CONNECTION_URI");
-
-                        MongoClient mongodbClient = MongoClients.create(establishConn);
 
                         OllamaEmbeddingModel embModel = OllamaEmbeddingModel.builder()
                                         .baseUrl("http://localhost:11434/")

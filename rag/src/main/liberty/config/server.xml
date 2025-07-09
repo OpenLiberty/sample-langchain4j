@@ -12,15 +12,21 @@
         <feature>restfulWS</feature>
         <feature>websocket</feature>
     </featureManager>
+    <library id="libraryMongodb">
+        <fileset
+            dir="${server.config.dir}sample-langchain4j/rag/target/jakartaee-microprofile-example/WEB-INF/lib"
+            includes="mongodb-driver-sync-4.11.1.jar" />
+    </library>
+    <httpEndpoint host="*" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint" />
+    <applicationManager autoExpand="true" />
 
-    <httpEndpoint host="*" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint"/>
+    <webApplication
+        contextRoot="/" location="jakartaee-microprofile-example.war">
+        <classloader commonLibraryRef="libraryMongodb" />
+    </webApplication>
 
-    <applicationManager autoExpand="true"/>
+    <mpMetrics authentication="false" />
 
-    <webApplication contextRoot="/" location="jakartaee-microprofile-example.war"/>
-
-    <mpMetrics authentication="false"/>
-
-    <logging consoleLogLevel="INFO"/>
+    <logging consoleLogLevel="INFO" />
 
 </server>
