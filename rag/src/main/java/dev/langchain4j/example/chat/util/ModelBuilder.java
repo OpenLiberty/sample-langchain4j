@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2025 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *******************************************************************************/
 package dev.langchain4j.example.chat.util;
 
 import static dev.langchain4j.model.github.GitHubModelsChatModelName.PHI_3_MINI_INSTRUCT_4K;
@@ -107,22 +116,22 @@ public class ModelBuilder {
                 throw new Exception("LangChain4J Github APIs do not support language model");
             } else if (usingOllama()) {
                 languageModel = OllamaLanguageModel.builder()
-                    .baseUrl(OLLAMA_BASE_URL)
-                    .modelName("tinydolphin")
-                    .temperature(1.0)
-                    .build();
+                        .baseUrl(OLLAMA_BASE_URL)
+                        .modelName("tinydolphin")
+                        .temperature(1.0)
+                        .build();
                 logger.info("using Ollama tinydolphin language model");
             } else if (usingMistralAi()) {
                 throw new Exception("LangChain4J  Mistral AI APIs do not support language model");
             } else if (usingHuggingFace()) {
                 languageModel = HuggingFaceLanguageModel.builder()
-                    .accessToken(HUGGING_FACE_API_KEY)
-                    .modelId(HUGGING_FACE_LANGUAGE_MODEL_ID)
-                    .timeout(ofSeconds(120))
-                    .temperature(1.0)
-                    .maxNewTokens(30)
-                    .waitForModel(true)
-                    .build();
+                        .accessToken(HUGGING_FACE_API_KEY)
+                        .modelId(HUGGING_FACE_LANGUAGE_MODEL_ID)
+                        .timeout(ofSeconds(120))
+                        .temperature(1.0)
+                        .maxNewTokens(30)
+                        .waitForModel(true)
+                        .build();
                 logger.info("using Hugging Face " + HUGGING_FACE_LANGUAGE_MODEL_ID + " language model");
             } else {
                 throw new Exception("No available platform to access model");
@@ -135,32 +144,32 @@ public class ModelBuilder {
         if (embeddingModel == null) {
             if (usingGithub()) {
                 embeddingModel = GitHubModelsEmbeddingModel.builder()
-                    .gitHubToken(GITHUB_API_KEY)
-                    .modelName(TEXT_EMBEDDING_3_SMALL)
-                    .timeout(ofSeconds(120))
-                    .build();
+                        .gitHubToken(GITHUB_API_KEY)
+                        .modelName(TEXT_EMBEDDING_3_SMALL)
+                        .timeout(ofSeconds(120))
+                        .build();
                 logger.info("using Github " + TEXT_EMBEDDING_3_SMALL + " embedding model");
             } else if (usingOllama()) {
                 embeddingModel = OllamaEmbeddingModel.builder()
-                    .baseUrl(OLLAMA_BASE_URL)
-                    .modelName("all-minilm")
-                    .timeout(ofSeconds(120))
-                    .build();
+                        .baseUrl(OLLAMA_BASE_URL)
+                        .modelName("all-minilm")
+                        .timeout(ofSeconds(120))
+                        .build();
                 logger.info("using Ollama all-minilm embedding model");
             } else if (usingMistralAi()) {
                 embeddingModel = MistralAiEmbeddingModel.builder()
-                    .apiKey(MISTRAL_AI_API_KEY)
-                    .modelName(MISTRAL_EMBED)
-                    .timeout(ofSeconds(120))
-                    .build();
+                        .apiKey(MISTRAL_AI_API_KEY)
+                        .modelName(MISTRAL_EMBED)
+                        .timeout(ofSeconds(120))
+                        .build();
                 logger.info("using Mistral AI " + MISTRAL_EMBED + " embedding model");
             } else if (usingHuggingFace()) {
                 embeddingModel = HuggingFaceEmbeddingModel.builder()
-                    .accessToken(HUGGING_FACE_API_KEY)
-                    .modelId(SENTENCE_TRANSFORMERS_ALL_MINI_LM_L6_V2)
-                    .timeout(ofSeconds(120))
-                    .waitForModel(true)
-                    .build();
+                        .accessToken(HUGGING_FACE_API_KEY)
+                        .modelId(SENTENCE_TRANSFORMERS_ALL_MINI_LM_L6_V2)
+                        .timeout(ofSeconds(120))
+                        .waitForModel(true)
+                        .build();
                 logger.info("using Hugging Face " + SENTENCE_TRANSFORMERS_ALL_MINI_LM_L6_V2 + " embedding model");
             } else {
                 throw new Exception("No available platform to access model");
@@ -173,39 +182,39 @@ public class ModelBuilder {
         if (chatModelForResource == null) {
             if (usingGithub()) {
                 chatModelForResource = GitHubModelsChatModel.builder()
-                    .gitHubToken(GITHUB_API_KEY)
-                    .modelName(PHI_3_MINI_INSTRUCT_4K)
-                    .timeout(ofSeconds(120))
-                    .temperature(1.0)
-                    .maxTokens(200)
-                    .build();
+                        .gitHubToken(GITHUB_API_KEY)
+                        .modelName(PHI_3_MINI_INSTRUCT_4K)
+                        .timeout(ofSeconds(120))
+                        .temperature(1.0)
+                        .maxTokens(200)
+                        .build();
                 logger.info("using Github " + PHI_3_MINI_INSTRUCT_4K + " chat model");
             } else if (usingOllama()) {
                 chatModelForResource = OllamaChatModel.builder()
-                    .baseUrl(OLLAMA_BASE_URL)
-                    .modelName(OLLAMA_CHAT_MODEL_ID)
-                    .timeout(ofSeconds(TIMEOUT))
-                    .temperature(TEMPERATURE)
-                    .build();
+                        .baseUrl(OLLAMA_BASE_URL)
+                        .modelName(OLLAMA_CHAT_MODEL_ID)
+                        .timeout(ofSeconds(TIMEOUT))
+                        .temperature(TEMPERATURE)
+                        .build();
                 logger.info("using Ollama " + OLLAMA_CHAT_MODEL_ID + " chat model");
             } else if (usingMistralAi()) {
                 chatModelForResource = MistralAiChatModel.builder()
-                    .apiKey(MISTRAL_AI_API_KEY)
-                    .modelName(MISTRAL_SMALL_LATEST)
-                    .timeout(ofSeconds(TIMEOUT))
-                    .temperature(TEMPERATURE)
-                    .maxTokens(MAX_NEW_TOKEN)
-                    .build();
+                        .apiKey(MISTRAL_AI_API_KEY)
+                        .modelName(MISTRAL_SMALL_LATEST)
+                        .timeout(ofSeconds(TIMEOUT))
+                        .temperature(TEMPERATURE)
+                        .maxTokens(MAX_NEW_TOKEN)
+                        .build();
                 logger.info("using Mistral AI " + MISTRAL_SMALL_LATEST + " chat model");
             } else if (usingHuggingFace()) {
                 chatModelForResource = HuggingFaceChatModel.builder()
-                    .accessToken(HUGGING_FACE_API_KEY)
-                    .modelId(HUGGING_FACE_LANGUAGE_MODEL_ID)
-                    .timeout(ofSeconds(120))
-                    .temperature(1.0)
-                    .maxNewTokens(200)
-                    .waitForModel(true)
-                    .build();
+                        .accessToken(HUGGING_FACE_API_KEY)
+                        .modelId(HUGGING_FACE_LANGUAGE_MODEL_ID)
+                        .timeout(ofSeconds(120))
+                        .temperature(1.0)
+                        .maxNewTokens(200)
+                        .waitForModel(true)
+                        .build();
                 logger.info("using Hugging Face " + HUGGING_FACE_LANGUAGE_MODEL_ID + " chat model");
             } else {
                 throw new Exception("No available platform to access model");
@@ -218,39 +227,39 @@ public class ModelBuilder {
         if (chatModelForWeb == null) {
             if (usingGithub()) {
                 chatModelForWeb = GitHubModelsChatModel.builder()
-                    .gitHubToken(GITHUB_API_KEY)
-                    .modelName(GITHUB_CHAT_MODEL_ID)
-                    .timeout(ofSeconds(TIMEOUT))
-                    .temperature(TEMPERATURE)
-                    .maxTokens(MAX_NEW_TOKEN)
-                    .build();
+                        .gitHubToken(GITHUB_API_KEY)
+                        .modelName(GITHUB_CHAT_MODEL_ID)
+                        .timeout(ofSeconds(TIMEOUT))
+                        .temperature(TEMPERATURE)
+                        .maxTokens(MAX_NEW_TOKEN)
+                        .build();
                 logger.info("using Github " + GITHUB_CHAT_MODEL_ID + " chat model for the web");
             } else if (usingOllama()) {
                 chatModelForWeb = OllamaChatModel.builder()
-                    .baseUrl(OLLAMA_BASE_URL)
-                    .modelName(OLLAMA_CHAT_MODEL_ID)
-                    .timeout(ofSeconds(TIMEOUT))
-                    .temperature(TEMPERATURE)
-                    .build();
+                        .baseUrl(OLLAMA_BASE_URL)
+                        .modelName(OLLAMA_CHAT_MODEL_ID)
+                        .timeout(ofSeconds(TIMEOUT))
+                        .temperature(TEMPERATURE)
+                        .build();
                 logger.info("using Ollama " + OLLAMA_CHAT_MODEL_ID + " chat model for the web");
             } else if (usingMistralAi()) {
                 chatModelForWeb = MistralAiChatModel.builder()
-                    .apiKey(MISTRAL_AI_API_KEY)
-                    .modelName(MISTRAL_AI_MISTRAL_CHAT_MODEL_ID)
-                    .timeout(ofSeconds(TIMEOUT))
-                    .temperature(TEMPERATURE)
-                    .maxTokens(MAX_NEW_TOKEN)
-                    .build();
+                        .apiKey(MISTRAL_AI_API_KEY)
+                        .modelName(MISTRAL_AI_MISTRAL_CHAT_MODEL_ID)
+                        .timeout(ofSeconds(TIMEOUT))
+                        .temperature(TEMPERATURE)
+                        .maxTokens(MAX_NEW_TOKEN)
+                        .build();
                 logger.info("using Mistral AI " + MISTRAL_AI_MISTRAL_CHAT_MODEL_ID + " chat model for the web");
             } else if (usingHuggingFace()) {
                 chatModelForWeb = HuggingFaceChatModel.builder()
-                    .accessToken(HUGGING_FACE_API_KEY)
-                    .modelId(HUGGING_FACE_CHAT_MODEL_ID)
-                    .timeout(ofSeconds(TIMEOUT))
-                    .temperature(TEMPERATURE)
-                    .maxNewTokens(MAX_NEW_TOKEN)
-                    .waitForModel(true)
-                    .build();
+                        .accessToken(HUGGING_FACE_API_KEY)
+                        .modelId(HUGGING_FACE_CHAT_MODEL_ID)
+                        .timeout(ofSeconds(TIMEOUT))
+                        .temperature(TEMPERATURE)
+                        .maxNewTokens(MAX_NEW_TOKEN)
+                        .waitForModel(true)
+                        .build();
                 logger.info("using Hugging Face " + HUGGING_FACE_CHAT_MODEL_ID + " chat model for the web");
 
             } else {
