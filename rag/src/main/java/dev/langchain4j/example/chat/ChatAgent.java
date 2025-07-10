@@ -60,8 +60,6 @@ import org.bson.conversions.Bson;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.model.CreateCollectionOptions;
 
-import io.github.cdimascio.dotenv.Dotenv;
-
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.ArrayList;
