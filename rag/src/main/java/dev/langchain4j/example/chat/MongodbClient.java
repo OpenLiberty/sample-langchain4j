@@ -20,14 +20,15 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class MongodbClient {
     @Inject
     @ConfigProperty(name = "mongo.uri.connection", defaultValue = "")
-    String connectionStr;
+    private String MOGODB_CONNECTION_STRING;
 
     @Produces
     public MongoClient createMongodbClient() {
-        if (connectionStr == "" || connectionStr == null) {
+        if (MOGODB_CONNECTION_STRING == "" || MOGODB_CONNECTION_STRING == null
+                || MOGODB_CONNECTION_STRING.equals("set it by env variable")) {
             throw new IllegalStateException("Mongodb Connection string can not be empty");
         }
-        return MongoClients.create(connectionStr);
+        return MongoClients.create(MOGODB_CONNECTION_STRING);
 
     }
 }

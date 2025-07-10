@@ -80,16 +80,10 @@ export HUGGING_FACE_API_KEY=<your Hugging Face read token>
 
 - To connect to the live cluster, use MogoDB's native drivers, install the driver, and copy the connection string.
 
-- Create an .env file in the rag directory and add the following to it:
+Set the `MONGO_URI_CONNECTION` environment variable.
 
 ```
-CONNECTION_URI=<Add-Your-Connection-String>
-```
-
-- Copy the path to the directory that contains the .env file:
-
-```
-export ENVIRON_PATH=</PATH/TO/ENVFILE>
+MONGO_URI_CONNECTION="<Add Connection String>"
 ```
 
 - Sign up or sign in to [Tavily](https://app.tavily.com/home) and create an api key.
@@ -122,6 +116,7 @@ Use the Maven wrapper to start the application by using the [Liberty dev mode](h
   - ```
     What is the Java EE 8 full platform and the Web Profile? Use the exact wording that you have.
     ```
+- Now, examine the responses and check their relevance and accuracy against the files provided to the AI in `sample-langchain4j/rag/src/main/resources/document_files/files.zip`
 
 ### Try out other models
 
