@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
 
-package io.openliberty.sample.langchain4j;
+package it.io.openliberty.sample.langchain4j;
 
 public class Util {
 
