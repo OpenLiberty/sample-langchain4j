@@ -57,7 +57,7 @@ public class ChatAgent {
                 .chatModel(model)
                 .tools(stackOverflowTools)
                 .hallucinatedToolNameStrategy(toolExecutionRequest -> ToolExecutionResultMessage.from(
-                    toolExecutionRequest, "Error: there is no tool with the following parameters called" + toolExecutionRequest.name()))
+                    toolExecutionRequest, "Error: there is no tool with the following parameters called " + toolExecutionRequest.name()))
                 .chatMemoryProvider(
                     sessionId -> MessageWindowChatMemory.withMaxMessages(MAX_MESSAGES))
                 .build();
