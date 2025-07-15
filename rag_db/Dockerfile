@@ -35,8 +35,8 @@ COPY --from=staging /tmp /home/mongodb/certs
 
 # Copy the configuration and setup files from
 # the host machine to the image.
-COPY assets/mongodb.conf /home/mongodb
-COPY assets/index.js /home/mongodb
+COPY rag_db/mongodb.conf /home/mongodb
+COPY rag_db/index.js /home/mongodb
 
 # Run MongodDB daemon and execute the setup script.
 RUN mongod \

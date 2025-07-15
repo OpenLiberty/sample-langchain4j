@@ -33,13 +33,18 @@ This guide uses Docker to run an instance of MongoDB. A multi-stage Dockerfile i
 You can find more details and configuration options on the https://docs.mongodb.com/manual/reference/configuration-options/[MongoDB website^]. For more information about the `mongo` image, see https://hub.docker.com/_/mongo[mongo^] in Docker Hub.
 
 **Running MongoDB in a Docker container**
+To run MongoDB in this example application, navigate to the `sample-langchain4j` directory:
+
+```
+cd sample-langchain4j
+```
 
 Run the following commands to use the Dockerfile to build the image, run the image in a Docker container, and map port `27017` from the container to your host machine:
 
 ifdef::cloud-hosted[]
 
 ```bash
-sed -i 's=latest=7.0.15-rc1=g' assets/Dockerfile
+sed -i 's=latest=7.0.15-rc1=g' rag_db/Dockerfile
 ```
 
 endif::[]
@@ -47,7 +52,7 @@ endif::[]
 [role='command']
 
 ```
-docker build -t mongo-sample -f assets/Dockerfile .
+docker build -t mongo-sample -f rag_db/Dockerfile .
 docker run --name mongo-guide -p 27017:27017 -d mongo-sample
 ```
 
@@ -64,10 +69,7 @@ include::{common-includes}/os-tabs.adoc[]
 ```
 docker cp ^
   mongo-guide:/home/mongodb/certs/truststore.p12 ^
-  start/src/main/liberty/config/resources/security
-docker cp ^
-  mongo-guide:/home/mongodb/certs/truststore.p12 ^
-  finish/src/main/liberty/config/resources/security
+  rag/src/main/liberty/config/resources/security
 ```
 
 --
@@ -76,12 +78,9 @@ docker cp ^
 [role='command']
 
 ```
-docker cp \
-  mongo-guide:/home/mongodb/certs/truststore.p12 \
-  start/src/main/liberty/config/resources/security
-docker cp \
-  mongo-guide:/home/mongodb/certs/truststore.p12 \
-  finish/src/main/liberty/config/resources/security
+docker cp ^
+  mongo-guide:/home/mongodb/certs/truststore.p12 ^
+  rag/src/main/liberty/config/resources/security
 ```
 
 --
@@ -90,22 +89,19 @@ docker cp \
 [role='command']
 
 ```
-docker cp \
-  mongo-guide:/home/mongodb/certs/truststore.p12 \
-  start/src/main/liberty/config/resources/security
-docker cp \
-  mongo-guide:/home/mongodb/certs/truststore.p12 \
-  finish/src/main/liberty/config/resources/security
+docker cp ^
+  mongo-guide:/home/mongodb/certs/truststore.p12 ^
+  rag/src/main/liberty/config/resources/security
 ```
 
 --
 
 ## Environment Set Up
 
-To run this example application, navigate to the `sample-langchain4j/tools` directory:
+To run this example application, navigate to the `sample-langchain4j/rag` directory:
 
 ```
-cd sample-langchain4j/tools
+cd sample-langchain4j/rag
 ```
 
 Set the `JAVA_HOME` environment variable:
@@ -162,13 +158,14 @@ Use the Maven wrapper to start the application by using the [Liberty dev mode](h
 
 If you are currently using one of the following model providers: GitHub, Ollama or MistralAI, you may proceed
 
-- Navigate to http://localhost:9080/toolChat.html
+- Navigate to http://localhost:9080
 - At the prompt, try the following message examples:
+
   - ```
-    What are some current problems users have with LangChain4J?
+        What are LLMs?
     ```
   - ```
-    What are some possible solutions to the problems?
+        How to install Open liberty?
     ```
 
 ## Running the tests
