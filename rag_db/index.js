@@ -7,5 +7,5 @@ db.createUser({
 // end::createUser[]
 
 // tag::createCollection[]
-db.createCollection("Crew");
+db.createCollection("Embeddings");
 // end::createCollection[]
