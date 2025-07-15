@@ -6,10 +6,7 @@ This example demonstrates LangChain4J in a Jakarta EE / MicroProfile application
 
 - [Java 21](https://developer.ibm.com/languages/java/semeru-runtimes/downloads)
 - Either one of the following model providers: - Github - Sign up and sign in to https://github.com. - Go to your [Settings](https://github.com/settings/profile)/[Developer Settings](https://github.com/settings/developers)/[Persional access tokens](https://github.com/settings/personal-access-tokens). - Generate a new token - Ollama - Download and install [Ollama](https://ollama.com/download) - see the [README.md](https://github.com/ollama/ollama/blob/main/README.md#ollama) - Pull the following model - `ollama pull llama3.2` - Mistral AI - Sign up and log in to https://console.mistral.ai/home. - Go to [Your API keys](https://console.mistral.ai/api-keys). - Create a new key. - Hugging Face - Sign up and log in to https://huggingface.co. - Go to [Access Tokens](https://huggingface.co/settings/tokens). - Create a new access token with `read` role.
-
-## Additional prerequisites
-
-You will use Docker to run an instance of MongoDB for a fast installation and setup. Install Docker by following the instructions in the official [Docker documentation](https://docs.docker.com/engine/installation), and start your Docker environment.
+- You will use Docker to run an instance of MongoDB for a fast installation and setup. Install Docker by following the instructions in the official [Docker documentation](https://docs.docker.com/engine/installation), and start your Docker environment.
 
 ## Setting up MongoDB
 
@@ -28,8 +25,8 @@ cd sample-langchain4j
 Run the following commands to use the Dockerfile to build the image, run the image in a Docker container, and map port `27017` from the container to your host machine:
 
 ```
-docker build -t mongo-sample -f rag_db/Dockerfile .
-docker run --name mongo-guide -p 27017:27017 -d mongo-sample
+docker build -t mongo-embeddings -f rag-db/Dockerfile .
+docker run --name mongo-embeddings --rm -p 27017:27017 -d mongo-embeddings
 ```
 
 ### Adding the truststore to the Open Liberty configuration
