@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
 
-package io.openliberty.sample.langchain4j.streaming.chat;
+package io.openliberty.sample.langchain4j;
 
 import java.util.logging.Logger;
 
