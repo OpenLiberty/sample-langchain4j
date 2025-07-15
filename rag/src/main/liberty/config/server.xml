@@ -1,27 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<server description="AI tools chat server">
-
+<server description="RAG Chat Server">
+    <!-- tag::featureManager[] -->
     <featureManager>
         <platform>jakartaee-10.0</platform>
         <platform>microprofile-7.0</platform>
+        <feature>beanValidation</feature>
+        <!-- tag::cdiFeature[] -->
         <feature>cdi</feature>
+        <!-- end::cdiFeature[] -->
         <feature>jsonb</feature>
-        <feature>mpConfig</feature>
-        <feature>mpMetrics</feature>
-        <feature>mpOpenAPI</feature>
+        <!-- tag::passwordUtilFeature[] -->
+        <feature>passwordUtilities-1.1</feature>
+        <!-- end::passwordUtilFeature[] -->
         <feature>restfulWS</feature>
-        <feature>websocket</feature>
+        <!-- tag::sslFeature[] -->
+        <feature>ssl-1.0</feature>
+        <!-- end::sslFeature[] -->
+        <!-- tag::mpConfigFeature[] -->
+        <feature>mpConfig</feature>
+        <!-- end::mpConfigFeature[] -->
+        <feature>mpOpenAPI</feature>
     </featureManager>
+    <!-- end::featureManager[] -->
 
-    <httpEndpoint host="*" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint"/>
+    <variable name="http.port" defaultValue="9080" />
+    <variable name="https.port" defaultValue="9443" />
+    <variable name="app.context.root" defaultValue="/" />
 
-    <applicationManager autoExpand="true"/>
+    <!-- tag::httpEndpoint[] -->
+    <httpEndpoint
+        host="*"
+        httpPort="${http.port}"
+        httpsPort="${https.port}"
+        id="defaultHttpEndpoint"
+    />
+    <!-- end::httpEndpoint[] -->
 
-    <webApplication contextRoot="/" location="jakartaee-microprofile-rag-example.war"/>
-
-    <mpMetrics authentication="false"/>
-
-    <logging consoleLogLevel="INFO"/>
-
-    <ssl id="defaultSSLConfig" keyStoreRef="defaultKeyStore" trustDefaultCerts="true"/>
+    <!-- tag::webApplication[] -->
+    <webApplication
+        location="jakartaee-microprofile-rag-example.war"
+        contextRoot="${app.context.root}"
+    />
+    <!-- end::webApplication[] -->
+    <!-- tag::sslContext[] -->
+    <!-- tag::keyStore[] -->
+    <keyStore
+        id="outboundTrustStore"
+        location="${server.output.dir}/resources/security/truststore.p12"
+        password="mongodb"
+        type="PKCS12"
+    />
+    <!-- end::keyStore[] -->
+    <!-- tag::ssl[] -->
+    <ssl
+        id="outboundSSLContext"
+        keyStoreRef="defaultKeyStore"
+        trustStoreRef="outboundTrustStore"
+        sslProtocol="TLS"
+    />
+    <!-- end::ssl[] -->
+    <!-- end::sslContext[] -->
 </server>
