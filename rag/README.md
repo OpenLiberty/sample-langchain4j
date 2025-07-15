@@ -35,7 +35,7 @@ The truststore that's created in the container needs to be added to the Open Lib
 
 ```
 docker cp \
-  mongo-guide:/home/mongodb/certs/truststore.p12 \
+  mongo-embeddings:/home/mongodb/certs/truststore.p12 \
   rag/src/main/liberty/config/resources/security
 ```
 
