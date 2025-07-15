@@ -105,7 +105,7 @@ If the tests pass, you see a similar output to the following example:
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
-[INFO] Running it.dev.langchan4j.example.ToolServiceIT
+[INFO] Running it.io.openliberty.sample.langchain4j.ToolServiceIT
 [INFO] ...
 [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.14 s...
 [INFO] Results:

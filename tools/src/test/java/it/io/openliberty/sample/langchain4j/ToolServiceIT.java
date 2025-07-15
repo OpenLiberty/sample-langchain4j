@@ -1,4 +1,4 @@
-package it.dev.langchan4j.example;
+package it.io.openliberty.sample.langchain4j;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;

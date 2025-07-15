@@ -5,7 +5,7 @@
     <display-name>Liberty Project</display-name>
 
     <welcome-file-list>
-        <welcome-file>chat.html</welcome-file>
+        <welcome-file>toolChat.html</welcome-file>
     </welcome-file-list>
 
 </web-app>
