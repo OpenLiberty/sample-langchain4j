@@ -79,21 +79,18 @@ public class StackOverflowTools {
     @Tool("Multiple JakartaEE Questions on stackoverflow")
     public ArrayList <String> searchJakartaEEQuestions() throws Exception {
         logger.info("AI is searching stackoverflow for JakartaEE");
-
         return questionAndAnswer(stackOverflowJakartaEE);
     }
 
     @Tool("Multiple MicroProfile Questions on stackoverflow")
     public ArrayList <String> searchMicroProfileQuestions() throws Exception {
         logger.info("AI is searching stackoverflow for MicroProfile");
-
         return questionAndAnswer(stackOverflowMicroProfile);
     }
 
     @Tool("Multiple LangChain4j Questions on stackoverflow")
     public ArrayList <String> searchLangChain4jQuestions() throws Exception {
         logger.info("AI is searching stackoverflow for langchain4j");
-
         System.out.println(questionAndAnswer(stackOverflowLangChain4j));
         return questionAndAnswer(stackOverflowLangChain4j);
     }
@@ -102,7 +99,7 @@ public class StackOverflowTools {
     public ArrayList <String> searchStackOverflow(@P("Question you are searching") String question) throws Exception {
         logger.info("AI called the searchStackOverflow Tool with question: " + question);
         String targetUrl = stackOverflowMethod + "&q=" + question;
-    
         return questionAndAnswer(targetUrl);
     }
+
 }
