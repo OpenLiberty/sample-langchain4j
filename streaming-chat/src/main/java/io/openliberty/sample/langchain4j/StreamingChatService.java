@@ -71,9 +71,9 @@ public class StreamingChatService {
 
     @OnClose
     public void onClose(Session session, CloseReason closeReason) {
+        agent.clearChatMemory(session.getId());
         logger.info("Session " + session.getId()
                     + " was closed with reason " + closeReason.getCloseCode());
-        agent.clearChatMemory(session.getId());
     }
 
     @OnError
