@@ -39,8 +39,8 @@ public class StackOverflowTools {
     private static String stackOverflowMethod = stackOverflowSite + filter + size + "&order=desc&sort=relevance&answers=1";
 
     private static String findAnswer = "https://api.stackexchange.com"
-                                    + "/2.3/questions/%s/answers?order=desc&sort=votes&site=stackoverflow&"
-                                    + "filter=CKAkJFla(8TLNtkfr1ytJZj94MlNVo6Ee";
+                                       + "/2.3/questions/%s/answers?order=desc&sort=votes&site=stackoverflow&"
+                                       + "filter=CKAkJFla(8TLNtkfr1ytJZj94MlNVo6Ee";
 
     private static Logger logger = Logger.getLogger(ChatService.class.getName());
 
@@ -66,7 +66,6 @@ public class StackOverflowTools {
         for (Map<String, Object> data : clientSearch(url)) {
             String topAnswer = clientSearch(String.format(findAnswer, data.get("question_id")))
                                     .get(0).get("body").toString();
-
             questionAnswer.add(
                 "Question id: " + data.get("question_id") + 
                 " Problem: " + data.get("body") +
