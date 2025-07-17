@@ -1,4 +1,4 @@
-FROM icr.io/appcafe/ibm-semeru-runtimes:open-11-jdk-ubi as staging
+FROM icr.io/appcafe/open-liberty:full-java21-openj9-ubi-minimal as staging
 
 # Define the variables for the OpenSSL subject.
 ARG COUNTRY=CA
@@ -35,8 +35,8 @@ COPY --from=staging /tmp /home/mongodb/certs
 
 # Copy the configuration and setup files from
 # the host machine to the image.
-COPY rag_db/mongodb.conf /home/mongodb
-COPY rag_db/index.js /home/mongodb
+COPY rag-db/mongodb.conf /home/mongodb
+COPY rag-db/index.js /home/mongodb
 
 # Run MongodDB daemon and execute the setup script.
 RUN mongod \
