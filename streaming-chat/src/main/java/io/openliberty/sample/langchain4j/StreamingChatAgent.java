@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
 
-package io.openliberty.sample.langchain4j.streaming.chat;
+package io.openliberty.sample.langchain4j;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -22,6 +22,7 @@ import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.TokenStream;
 import dev.langchain4j.service.UserMessage;
+import dev.langchain4j.service.memory.ChatMemoryAccess;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -42,7 +43,7 @@ public class StreamingChatAgent {
         void onPartialResponse(String token) throws Exception;
     }
 
-    interface StreamingAssistant {
+    interface StreamingAssistant extends ChatMemoryAccess {
        TokenStream streamingChat(@MemoryId String sessionId, @UserMessage String userMessage);
     }
 
@@ -74,6 +75,13 @@ public class StreamingChatAgent {
             .onError(future::completeExceptionally)
             .start();
         return future.get().finishReason();
+    }
+
+    public void clearChatMemory(String sessionId) {
+        if (assistant == null) {
+            throw new IllegalStateException("assistant not initialized");
+        }
+        assistant.evictChatMemory(sessionId);
     }
 
 }

@@ -92,7 +92,7 @@ If you are currently using one of the following model providers: GitHub, Ollama 
     What are some current problems users have with LangChain4J?
     ```
   - ```
-    What are some possible solutions to the problems?
+    What are some current problems users have when using Hugging Face?
     ```
 
 ## Running the tests
