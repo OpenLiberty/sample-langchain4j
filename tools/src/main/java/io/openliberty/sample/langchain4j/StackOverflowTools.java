@@ -39,8 +39,8 @@ public class StackOverflowTools {
     private static String stackOverflowMethod = stackOverflowSite + filter + size + "&order=desc&sort=relevance&answers=1";
 
     private static String findAnswer = "https://api.stackexchange.com"
-                                    + "/2.3/questions/%s/answers?order=desc&sort=votes&site=stackoverflow&"
-                                    + "filter=CKAkJFla(8TLNtkfr1ytJZj94MlNVo6Ee";
+                                       + "/2.3/questions/%s/answers?order=desc&sort=votes&site=stackoverflow&"
+                                       + "filter=CKAkJFla(8TLNtkfr1ytJZj94MlNVo6Ee";
 
     private static Logger logger = Logger.getLogger(ChatService.class.getName());
 
@@ -66,7 +66,6 @@ public class StackOverflowTools {
         for (Map<String, Object> data : clientSearch(url)) {
             String topAnswer = clientSearch(String.format(findAnswer, data.get("question_id")))
                                     .get(0).get("body").toString();
-
             questionAnswer.add(
                 "Question id: " + data.get("question_id") + 
                 " Problem: " + data.get("body") +
@@ -79,21 +78,19 @@ public class StackOverflowTools {
     @Tool("Multiple JakartaEE Questions on stackoverflow")
     public ArrayList <String> searchJakartaEEQuestions() throws Exception {
         logger.info("AI is searching stackoverflow for JakartaEE");
-
         return questionAndAnswer(stackOverflowJakartaEE);
     }
 
     @Tool("Multiple MicroProfile Questions on stackoverflow")
     public ArrayList <String> searchMicroProfileQuestions() throws Exception {
         logger.info("AI is searching stackoverflow for MicroProfile");
-
         return questionAndAnswer(stackOverflowMicroProfile);
     }
 
     @Tool("Multiple LangChain4j Questions on stackoverflow")
     public ArrayList <String> searchLangChain4jQuestions() throws Exception {
         logger.info("AI is searching stackoverflow for langchain4j");
-
+        
         return questionAndAnswer(stackOverflowLangChain4j);
     }
 
@@ -101,7 +98,7 @@ public class StackOverflowTools {
     public ArrayList <String> searchStackOverflow(@P("Question you are searching") String question) throws Exception {
         logger.info("AI called the searchStackOverflow Tool with question: " + question);
         String targetUrl = stackOverflowMethod + "&q=" + question;
-    
         return questionAndAnswer(targetUrl);
     }
+
 }
