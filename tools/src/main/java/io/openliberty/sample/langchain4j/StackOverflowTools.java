@@ -94,7 +94,6 @@ public class StackOverflowTools {
     public ArrayList <String> searchLangChain4jQuestions() throws Exception {
         logger.info("AI is searching stackoverflow for langchain4j");
 
-        System.out.println(questionAndAnswer(stackOverflowLangChain4j));
         return questionAndAnswer(stackOverflowLangChain4j);
     }
 
