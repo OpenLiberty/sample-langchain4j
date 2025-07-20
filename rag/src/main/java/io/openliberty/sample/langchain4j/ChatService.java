@@ -38,11 +38,12 @@ public class ChatService {
     }
 
     @OnMessage
-    @Timed(name = "chatProcessingTime", absolute = true, description = "Time needed chatting to the agent.")
+    @Timed(name = "chatProcessingTime", absolute = true,
+           description = "Time needed chatting to the agent.")
     public void onMessage(String message, Session session) {
 
         logger.info("Server received message \"" + message + "\" "
-                + "from session: " + session.getId());
+                    + "from session: " + session.getId());
 
         String answer;
         try {
@@ -63,13 +64,13 @@ public class ChatService {
     @OnClose
     public void onClose(Session session, CloseReason closeReason) {
         logger.info("Session " + session.getId()
-                + " was closed with reason " + closeReason.getCloseCode());
+                    + " was closed with reason " + closeReason.getCloseCode());
     }
 
     @OnError
     public void onError(Session session, Throwable throwable) {
         logger.info("WebSocket error for " + session.getId() + " "
-                + throwable.getMessage());
+                    + throwable.getMessage());
     }
 
 }
