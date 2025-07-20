@@ -101,7 +101,10 @@ Use the Maven wrapper to start the application by using the [Liberty dev mode](h
 
 If you are currently using one of the following model providers: GitHub, Ollama or MistralAI, you may proceed
 
-- Navigate to http://localhost:9080
+- Navigate to http://localhost:9080/mongo to use the chat application
+
+- Navigate to http://localhost:9080/openapi/ui/ to see the OpenAPI user interface (UI) that provides API documentation and a client to test the API endpoints for mongoDB.
+
 - At the prompt, try the following message examples:
 
   - ```

@@ -2,6 +2,7 @@ package io.openliberty.sample.langchain4j;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
+import java.util.List;
 
 // tag::Embedding[]
 public class Embedding {
@@ -16,7 +17,7 @@ public class Embedding {
     private String content;
 
     @NotEmpty(message = "Embeddings can not be empty")
-    private float[] embedding;
+    private List<Double> embedding;
 
     public String getEmbeddingID() {
         return embeddingID;
@@ -42,11 +43,11 @@ public class Embedding {
         this.content = content;
     }
 
-    public float[] getEmbedding() {
+    public List<Double> getEmbedding() {
         return embedding;
     }
 
-    public void setEmbedding(float[] embedding) {
+    public void setEmbedding(List<Double> embedding) {
         this.embedding = embedding;
     }
 
