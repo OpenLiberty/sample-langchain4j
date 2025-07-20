@@ -42,6 +42,11 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+import dev.langchain4j.model.embedding.EmbeddingModel;
+import dev.langchain4j.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
+import dev.langchain4j.data.segment.TextSegment;
+import java.util.List;
+import java.util.ArrayList;
 
 @Path("/embedding")
 @ApplicationScoped
@@ -100,6 +105,26 @@ public class EmbeddingService {
         newEmbedding.put("EmbeddingID", embedding.getEmbeddingID());
         newEmbedding.put("Tags", embedding.getTags());
         newEmbedding.put("Content", embedding.getContent());
+        newEmbedding.put("Summary", embedding.getSummary());
+
+        // whenever new content is stored, embedding is created and set
+        // the template for the embedding is the embedding model
+        EmbeddingModel embModel = new AllMiniLmL6V2EmbeddingModel();
+        // text segments are made from the content
+        TextSegment textSeg = TextSegment.from(embedding.getContent());
+        // langchain4j is used to create its langchain4j Embedding object
+        dev.langchain4j.data.embedding.Embedding contentEmb = embModel.embed(textSeg).content();
+        // the vector is stored as a List<Doubles> in the database since float[] was not
+        // supported. but the .vector returns a float[].
+        float[] embVectorFloat = contentEmb.vector();
+        // convert to List<Doubles>
+        List<Double> embVector = new ArrayList<>(embVectorFloat.length);
+        for (float num : embVectorFloat) {
+            embVector.add((double) num);
+        }
+        // In the embedding object from Embedding.java class, set the variable
+        embedding.setEmbedding(embVector);
+
         newEmbedding.put("Embedding", embedding.getEmbedding());
         // end::crewMemberCreation[]
 
@@ -205,6 +230,22 @@ public class EmbeddingService {
         newEmbedding.put("EmbeddingID", embedding.getEmbeddingID());
         newEmbedding.put("Tags", embedding.getTags());
         newEmbedding.put("Content", embedding.getContent());
+        newEmbedding.put("Summary", embedding.getSummary());
+        // embedding vector itself should not be updated by user, instead if content
+        // changes,
+        // a new embedding should be made.
+
+        EmbeddingModel embModel = new AllMiniLmL6V2EmbeddingModel();
+        TextSegment textSeg = TextSegment.from(embedding.getContent());
+        dev.langchain4j.data.embedding.Embedding contentEmb = embModel.embed(textSeg).content();
+        float[] embVectorFloat = contentEmb.vector();
+        List<Double> embVector = new ArrayList<>(embVectorFloat.length);
+        for (float num : embVectorFloat) {
+            embVector.add((double) num);
+        }
+        // In the embedding object from Embedding.java class, set the variable
+        embedding.setEmbedding(embVector);
+
         newEmbedding.put("Embedding", embedding.getEmbedding());
         // end::crewMemberUpdate[]
 
@@ -240,7 +281,7 @@ public class EmbeddingService {
     @Operation(summary = "Delete an embedding from the database.")
     // tag::remove[]
     public Response remove(
-            @Parameter(description = "EmbeddingId of the embedding to delete.", required = true) @PathParam("id") String id) {
+            @Parameter(description = "Object id of the embedding to delete.", required = true) @PathParam("id") String id) {
 
         ObjectId oid;
 

@@ -10,14 +10,24 @@ public class Embedding {
     @Pattern(regexp = "^\\d+$", message = "ID Number must be a non-negative integer!")
     private String embeddingID;
 
-    @Pattern(regexp = "(OpenLiberty|JakartaEE|Microprofile)", message = "Content of the embedding must be one of these types!")
+    @Pattern(regexp = "(microprofile|health|maven|dependency)", message = "Content of the embedding must be one of these types!")
     private String tags;
 
     @NotEmpty(message = "All embeddings must have some content!")
     private String content;
 
+    private String summary;
+
     @NotEmpty(message = "Embeddings can not be empty")
     private List<Double> embedding;
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
 
     public String getEmbeddingID() {
         return embeddingID;
