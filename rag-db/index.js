@@ -1,7 +1,7 @@
 db.createUser({
   user: "sampleUser",
   pwd: "openliberty",
-  roles: [{ role: "readWrite", db: "testdb" }]
+  roles: [{ role: "readWrite", db: "embeddingsdb" }]
 });
 
 db.createCollection('EmbeddingsStored');
