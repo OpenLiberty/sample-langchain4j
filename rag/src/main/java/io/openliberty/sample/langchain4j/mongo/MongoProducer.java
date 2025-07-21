@@ -36,7 +36,6 @@ import jakarta.inject.Inject;
 @ApplicationScoped
 public class MongoProducer {
 
-    // tag::mongoProducerInjections[]
     @Inject
     @ConfigProperty(name = "mongo.hostname", defaultValue = "localhost")
     String hostname;
@@ -56,33 +55,22 @@ public class MongoProducer {
     @Inject
     @ConfigProperty(name = "mongo.pass.encoded")
     String encodedPass;
-    // end::mongoProducerInjections[]
 
-    // tag::produces1[]
     @Produces
-    // end::produces1[]
-    // tag::createMongo[]
+
     public MongoClient createMongo() throws SSLException {
-        // tag::decode[]
+  
         String password = PasswordUtil.passwordDecode(encodedPass);
-        // end::decode[]
-        // tag::createCredential[]
         MongoCredential creds = MongoCredential.createCredential(
                 user,
                 dbName,
                 password.toCharArray());
-        // end::createCredential[]
 
-        // tag::sslContext[]
         SSLContext sslContext = JSSEHelper.getInstance().getSSLContext(
-                // tag::outboundSSLContext[]
                 "outboundSSLContext",
-                // end::outboundSSLContext[]
                 Collections.emptyMap(),
                 null);
-        // end::sslContext[]
 
-        // tag::mongoClient[]
         return MongoClients.create(MongoClientSettings.builder()
                 .applyConnectionString(
                         new ConnectionString("mongodb://" + hostname + ":" + port))
@@ -92,32 +80,18 @@ public class MongoProducer {
                     builder.context(sslContext);
                 })
                 .build());
-        // end::mongoClient[]
+         
     }
-    // end::createMongo[]
 
-    // tag::produces2[]
     @Produces
-    // end::produces2[]
-    // tag::createDB[]
     public MongoDatabase createDB(
-            // tag::injectMongoClient[]
             MongoClient client) {
-        // end::injectMongoClient[]
-        // tag::getDatabase[]
+ 
         return client.getDatabase(dbName);
-        // end::getDatabase[]
     }
-    // end::createDB[]
-
-    // tag::close[]
+   
     public void close(
-            // tag::disposes[]
             @Disposes MongoClient toClose) {
-        // end::disposes[]
-        // tag::toClose[]
         toClose.close();
-        // end::toClose[]
     }
-    // end::close[]
 }

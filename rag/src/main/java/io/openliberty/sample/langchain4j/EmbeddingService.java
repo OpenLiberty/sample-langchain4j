@@ -24,19 +24,18 @@ import jakarta.validation.Validator;
 import jakarta.validation.ConstraintViolation;
 
 import com.mongodb.client.FindIterable;
-// tag::bsonDocument[]
+
 import org.bson.Document;
-// end::bsonDocument[]
+
 import org.bson.types.ObjectId;
 
-// tag::mongoImports1[]
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-// end::mongoImports1[]
-// tag::mongoImports2[]
+
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-// end::mongoImports2[]
+
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
@@ -52,17 +51,12 @@ import java.util.ArrayList;
 @ApplicationScoped
 public class EmbeddingService {
 
-    // tag::dbInjection[]
     @Inject
     MongoDatabase db;
-    // end::dbInjection[]
 
-    // tag::beanValidator[]
     @Inject
     Validator validator;
-    // end::beanValidator[]
 
-    // tag::getViolations[]
     private JsonArray getViolations(Embedding embedding) {
         Set<ConstraintViolation<Embedding>> violations = validator.validate(
                 embedding);
@@ -75,7 +69,6 @@ public class EmbeddingService {
 
         return messages.build();
     }
-    // end::getViolations[]
 
     @POST
     @Path("/")
@@ -85,7 +78,7 @@ public class EmbeddingService {
             @APIResponse(responseCode = "200", description = "Successfully added embedding."),
             @APIResponse(responseCode = "400", description = "Invalid embedding configuration.") })
     @Operation(summary = "Add a new embedding to the database.")
-    // tag::add[]
+    
     public Response add(Embedding embedding) {
         JsonArray violations = getViolations(embedding);
 
@@ -96,11 +89,8 @@ public class EmbeddingService {
                     .build();
         }
 
-        // tag::getCollection[]
         MongoCollection<Document> embeddingStore = db.getCollection("EmbeddingsStored");
-        // end::getCollection[]
 
-        // tag::crewMemberCreation[]
         Document newEmbedding = new Document();
         newEmbedding.put("EmbeddingID", embedding.getEmbeddingID());
         newEmbedding.put("Tags", embedding.getTags());
@@ -126,18 +116,14 @@ public class EmbeddingService {
         embedding.setEmbedding(embVector);
 
         newEmbedding.put("Embedding", embedding.getEmbedding());
-        // end::crewMemberCreation[]
 
-        // tag::insertOne[]
         embeddingStore.insertOne(newEmbedding);
-        // end::insertOne[]
 
         return Response
                 .status(Response.Status.OK)
                 .entity(newEmbedding.toJson())
                 .build();
     }
-    // end::add[]
 
     @GET
     @Path("/")
@@ -146,19 +132,14 @@ public class EmbeddingService {
             @APIResponse(responseCode = "200", description = "Successfully listed the embeddings."),
             @APIResponse(responseCode = "500", description = "Failed to list the embeddings.") })
     @Operation(summary = "List the embeddings from the database.")
-    // tag::retrieve[]
     public Response retrieve() {
         StringWriter sb = new StringWriter();
 
         try {
-            // tag::getCollectionRead[]
             MongoCollection<Document> embeddingStore = db.getCollection("EmbeddingsStored");
-            // end::getCollectionRead[]
             sb.append("[");
             boolean first = true;
-            // tag::find[]
             FindIterable<Document> docs = embeddingStore.find();
-            // end::find[]
             for (Document d : docs) {
                 if (!first) {
                     sb.append(",");
@@ -181,7 +162,6 @@ public class EmbeddingService {
                 .entity(sb.toString())
                 .build();
     }
-    // end::retrieve[]
 
     @PUT
     @Path("/{id}")
@@ -192,7 +172,7 @@ public class EmbeddingService {
             @APIResponse(responseCode = "400", description = "Invalid object id or embeddings configuration."),
             @APIResponse(responseCode = "404", description = "Embeddings object id was not found.") })
     @Operation(summary = "Update an embedding in the database.")
-    // tag::update[]
+    
     public Response update(Embedding embedding,
             @Parameter(description = "Object id of the embedding to update.", required = true) @PathParam("id") String id) {
 
@@ -216,15 +196,13 @@ public class EmbeddingService {
                     .build();
         }
 
-        // tag::getCollectionUpdate[]
+        
         MongoCollection<Document> embeddingStore = db.getCollection("EmbeddingsStored");
-        // end::getCollectionUpdate[]
+        
 
-        // tag::queryUpdate[]
+        
         Document query = new Document("_id", oid);
-        // end::queryUpdate[]
-
-        // tag::crewMemberUpdate[]
+        
 
         Document newEmbedding = new Document();
         newEmbedding.put("EmbeddingID", embedding.getEmbeddingID());
@@ -247,15 +225,11 @@ public class EmbeddingService {
         embedding.setEmbedding(embVector);
 
         newEmbedding.put("Embedding", embedding.getEmbedding());
-        // end::crewMemberUpdate[]
 
-        // tag::replaceOne[]
         UpdateResult updateResult = embeddingStore.replaceOne(query, newEmbedding);
-        // end::replaceOne[]
 
-        // tag::getMatchedCount[]
         if (updateResult.getMatchedCount() == 0) {
-            // end::getMatchedCount[]
+
             return Response
                     .status(Response.Status.NOT_FOUND)
                     .entity("[\"_id was not found!\"]")
@@ -269,7 +243,6 @@ public class EmbeddingService {
                 .entity(newEmbedding.toJson())
                 .build();
     }
-    // end::update[]
 
     @DELETE
     @Path("/{id}")
@@ -279,7 +252,7 @@ public class EmbeddingService {
             @APIResponse(responseCode = "400", description = "Invalid object id."),
             @APIResponse(responseCode = "404", description = "Embedding object id was not found.") })
     @Operation(summary = "Delete an embedding from the database.")
-    // tag::remove[]
+
     public Response remove(
             @Parameter(description = "Object id of the embedding to delete.", required = true) @PathParam("id") String id) {
 
@@ -294,21 +267,13 @@ public class EmbeddingService {
                     .build();
         }
 
-        // tag::getCollectionDelete[]
         MongoCollection<Document> embeddingStore = db.getCollection("EmbeddingsStored");
-        // end::getCollectionDelete[]
 
-        // tag::queryDelete[]
         Document query = new Document("_id", oid);
-        // end::queryDelete[]
 
-        // tag::deleteOne[]
         DeleteResult deleteResult = embeddingStore.deleteOne(query);
-        // end::deleteOne[]
 
-        // tag::getDeletedCount[]
         if (deleteResult.getDeletedCount() == 0) {
-            // end::getDeletedCount[]
             return Response
                     .status(Response.Status.NOT_FOUND)
                     .entity("[\"_id was not found!\"]")
@@ -320,5 +285,4 @@ public class EmbeddingService {
                 .entity(query.toJson())
                 .build();
     }
-    // end::remove[]
 }

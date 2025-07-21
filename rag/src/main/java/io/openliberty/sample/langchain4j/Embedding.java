@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import java.util.List;
 
-// tag::Embedding[]
 public class Embedding {
 
     @Pattern(regexp = "^\\d+$", message = "ID Number must be a non-negative integer!")
@@ -62,4 +61,3 @@ public class Embedding {
     }
 
 }
-// end::Embedding[]
