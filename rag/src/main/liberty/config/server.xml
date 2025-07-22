@@ -12,6 +12,7 @@
         <feature>mpConfig</feature>
         <feature>mpOpenAPI</feature>
         <feature>websocket</feature>
+        <feature>appSecurity-5.0</feature>
     </featureManager>
 
     <variable name="http.port" defaultValue="9080" />
@@ -24,11 +25,36 @@
         httpsPort="${https.port}"
         id="defaultHttpEndpoint"
     />
+    
+    <applicationManager autoExpand="true"/>
 
-    <webApplication
-        location="jakartaee-microprofile-rag-example.war"
+    <basicRegistry id="basic" realm="WebRealm">
+        <user name="bob" password="{xor}PTA9Lyg7" />
+        <user name="alice" password="{xor}PjM2PDovKDs=" />
+        
+        <group name="admin">
+            <member name="bob" />
+        </group>
+        
+        <group name="user">
+            <member name="bob" />
+            <member name="alice" />
+        </group>
+    </basicRegistry>
+
+    <!-- Configures the application on a specified context root -->
+    <webApplication   
         contextRoot="${app.context.root}"
-    />
+        location="jakartaee-microprofile-rag-example.war">
+        <application-bnd>
+            <security-role name="admin">
+                <group name="admin" />
+            </security-role>
+            <security-role name="user">
+                <group name="user" />
+            </security-role>
+        </application-bnd>
+     </webApplication>
 
     <keyStore
         id="outboundTrustStore"

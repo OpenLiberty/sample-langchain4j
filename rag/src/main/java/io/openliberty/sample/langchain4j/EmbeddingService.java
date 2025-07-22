@@ -13,6 +13,7 @@ import java.util.Set;
 
 import java.io.StringWriter;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.json.JsonArray;
@@ -83,6 +84,7 @@ public class EmbeddingService {
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "admin" })
     @APIResponses({
             @APIResponse(responseCode = "200", description = "Successfully added embedding."),
             @APIResponse(responseCode = "400", description = "Invalid embedding configuration.") })
@@ -137,10 +139,12 @@ public class EmbeddingService {
     @GET
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "admin", "user" })
     @APIResponses({
             @APIResponse(responseCode = "200", description = "Successfully listed the embeddings."),
             @APIResponse(responseCode = "500", description = "Failed to list the embeddings.") })
     @Operation(summary = "List the embeddings from the database.")
+    
     public Response retrieve() {
         StringWriter sb = new StringWriter();
 
@@ -176,6 +180,7 @@ public class EmbeddingService {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "admin" })
     @APIResponses({
             @APIResponse(responseCode = "200", description = "Successfully updated embeddings."),
             @APIResponse(responseCode = "400", description = "Invalid object id or embeddings configuration."),
@@ -260,8 +265,9 @@ public class EmbeddingService {
             @APIResponse(responseCode = "200", description = "Successfully deleted the embedding."),
             @APIResponse(responseCode = "400", description = "Invalid object id."),
             @APIResponse(responseCode = "404", description = "Embedding object id was not found.") })
+    @RolesAllowed({ "admin" })
     @Operation(summary = "Delete an embedding from the database.")
-
+    
     public Response remove(
             @Parameter(description = "Object id of the embedding to delete.", required = true) @PathParam("id") String id) {
 
