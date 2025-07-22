@@ -135,6 +135,7 @@ public class EmbeddingService {
                 .entity(newEmbedding.toJson())
                 .build();
     }
+    
     @GET
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)

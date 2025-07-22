@@ -103,7 +103,12 @@ If you are currently using one of the following model providers: GitHub, Ollama 
 
 - Navigate to http://localhost:9080/mongo to use the chat application
 
-- Navigate to http://localhost:9080/openapi/ui/ to see the OpenAPI user interface (UI) that provides API documentation and a client to test the API endpoints for mongoDB.
+- Navigate to http://localhost:9080/openapi/ui/ to see the OpenAPI user interface (UI) that provides API documentation and a client to test the API endpoints for mongoDB. 
+  - Upon trying a particular api, authentication is required.
+  - The admin (read/write full access) and user (read only access) security roles are created. 
+  - For full admin access: username = bob , password = bobpwd 
+  - For read only access: username = alice , password = alicepwd
+  - Example: Bob is a member of group admin and Alice is a member of group user
 
 - At the prompt, try the following message examples:
 
