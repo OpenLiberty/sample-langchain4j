@@ -35,7 +35,7 @@ if (loc.protocol === "https:") {
     uri = "ws:";
 }
 uri += "//" + loc.host;
-uri += "/chat";
+uri += "/mongo/chat";
 
 // building websocket
 const webSocket = new WebSocket(uri);

@@ -1,27 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<server description="AI tools chat server">
-
+<server description="RAG Chat Server">
     <featureManager>
         <platform>jakartaee-10.0</platform>
         <platform>microprofile-7.0</platform>
+        <feature>beanValidation</feature>
         <feature>cdi</feature>
         <feature>jsonb</feature>
-        <feature>mpConfig</feature>
-        <feature>mpMetrics</feature>
-        <feature>mpOpenAPI</feature>
+        <feature>passwordUtilities-1.1</feature>
         <feature>restfulWS</feature>
+        <feature>ssl-1.0</feature>
+        <feature>mpConfig</feature>
+        <feature>mpOpenAPI</feature>
         <feature>websocket</feature>
+        <feature>appSecurity-5.0</feature>
     </featureManager>
 
-    <httpEndpoint host="*" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint"/>
+    <variable name="http.port" defaultValue="9080" />
+    <variable name="https.port" defaultValue="9443" />
+    <variable name="app.context.root" defaultValue="/mongo" />
 
+    <httpEndpoint
+        host="*"
+        httpPort="${http.port}"
+        httpsPort="${https.port}"
+        id="defaultHttpEndpoint"
+    />
+    
     <applicationManager autoExpand="true"/>
 
-    <webApplication contextRoot="/" location="jakartaee-microprofile-rag-example.war"/>
+    <basicRegistry id="basic" realm="WebRealm">
+        <user name="bob" password="{xor}PTA9Lyg7" />
+        <user name="alice" password="{xor}PjM2PDovKDs=" />
+        
+        <group name="admin">
+            <member name="bob" />
+        </group>
+        
+        <group name="user">
+            <member name="bob" />
+            <member name="alice" />
+        </group>
+    </basicRegistry>
 
-    <mpMetrics authentication="false"/>
+    <!-- Configures the application on a specified context root -->
+    <webApplication   
+        contextRoot="${app.context.root}"
+        location="jakartaee-microprofile-rag-example.war">
+        <application-bnd>
+            <security-role name="admin">
+                <group name="admin" />
+            </security-role>
+            <security-role name="user">
+                <group name="user" />
+            </security-role>
+        </application-bnd>
+     </webApplication>
 
-    <logging consoleLogLevel="INFO"/>
+    <keyStore
+        id="outboundTrustStore"
+        location="${server.output.dir}/resources/security/truststore.p12"
+        password="mongodb"
+        type="PKCS12"
+    />
 
-    <ssl id="defaultSSLConfig" keyStoreRef="defaultKeyStore" trustDefaultCerts="true"/>
+    <ssl
+        id="outboundSSLContext"
+        keyStoreRef="defaultKeyStore"
+        trustStoreRef="outboundTrustStore"
+        sslProtocol="TLS"
+    />
+
 </server>

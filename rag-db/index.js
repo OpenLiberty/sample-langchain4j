@@ -4,4 +4,4 @@ db.createUser({
   roles: [{ role: "readWrite", db: "embeddingsdb" }]
 });
 
-db.createCollection("Embeddings");
+db.createCollection('EmbeddingsStored');
