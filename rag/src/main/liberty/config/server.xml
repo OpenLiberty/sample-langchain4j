@@ -16,7 +16,6 @@
 
     <variable name="http.port" defaultValue="9080" />
     <variable name="https.port" defaultValue="9443" />
-    <variable name="app.context.root" defaultValue="/mongo" />
 
     <httpEndpoint
         host="*"
@@ -27,7 +26,7 @@
 
     <webApplication
         location="jakartaee-microprofile-rag-example.war"
-        contextRoot="${app.context.root}"
+        contextRoot="/"
     />
 
     <keyStore

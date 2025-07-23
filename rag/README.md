@@ -22,10 +22,15 @@ To run MongoDB in this example application, navigate to the `sample-langchain4j`
 cd sample-langchain4j
 ```
 
-Run the following commands to use the Dockerfile to build the image, run the image in a Docker container, and map port `27017` from the container to your host machine:
+Run the following commands to use the Dockerfile to build the image:
 
 ```
 docker build -t mongo-embeddings -f rag-db/Dockerfile .
+```
+
+Run the image in a Docker container and map port `27017` from the container to your host machine:
+
+```
 docker run --name mongo-embeddings --rm -p 27017:27017 -d mongo-embeddings
 ```
 

@@ -54,16 +54,17 @@ public class MongoProducer {
     String encodedPass;
 
     @Produces
-
     public MongoClient createMongo() throws SSLException {
   
         String password = PasswordUtil.passwordDecode(encodedPass);
-        MongoCredential creds = MongoCredential.createCredential(
+        MongoCredential creds =
+            MongoCredential.createCredential(
                 user,
                 dbName,
                 password.toCharArray());
 
-        SSLContext sslContext = JSSEHelper.getInstance().getSSLContext(
+        SSLContext sslContext =
+            JSSEHelper.getInstance().getSSLContext(
                 "outboundSSLContext",
                 Collections.emptyMap(),
                 null);
@@ -81,14 +82,12 @@ public class MongoProducer {
     }
 
     @Produces
-    public MongoDatabase createDB(
-            MongoClient client) {
- 
-        return client.getDatabase(dbName);
+    public MongoDatabase createDB(MongoClient client) {
+         return client.getDatabase(dbName);
     }
    
-    public void close(
-            @Disposes MongoClient toClose) {
+    public void close(@Disposes MongoClient toClose) {
         toClose.close();
     }
+
 }
