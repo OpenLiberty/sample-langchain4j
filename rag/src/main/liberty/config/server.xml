@@ -6,11 +6,11 @@
         <feature>beanValidation</feature>
         <feature>cdi</feature>
         <feature>jsonb</feature>
+        <feature>mpConfig</feature>
+        <feature>mpOpenAPI</feature>
         <feature>passwordUtilities-1.1</feature>
         <feature>restfulWS</feature>
         <feature>ssl-1.0</feature>
-        <feature>mpConfig</feature>
-        <feature>mpOpenAPI</feature>
         <feature>websocket</feature>
     </featureManager>
 
