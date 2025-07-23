@@ -1,27 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<server description="AI tools chat server">
-
+<server description="RAG Chat Server">
     <featureManager>
         <platform>jakartaee-10.0</platform>
         <platform>microprofile-7.0</platform>
+        <feature>beanValidation</feature>
         <feature>cdi</feature>
         <feature>jsonb</feature>
         <feature>mpConfig</feature>
-        <feature>mpMetrics</feature>
         <feature>mpOpenAPI</feature>
+        <feature>passwordUtilities-1.1</feature>
         <feature>restfulWS</feature>
+        <feature>ssl-1.0</feature>
         <feature>websocket</feature>
     </featureManager>
 
-    <httpEndpoint host="*" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint"/>
+    <variable name="http.port" defaultValue="9080" />
+    <variable name="https.port" defaultValue="9443" />
 
-    <applicationManager autoExpand="true"/>
+    <httpEndpoint
+        host="*"
+        httpPort="${http.port}"
+        httpsPort="${https.port}"
+        id="defaultHttpEndpoint"
+    />
 
-    <webApplication contextRoot="/" location="jakartaee-microprofile-rag-example.war"/>
+    <webApplication
+        location="jakartaee-microprofile-rag-example.war"
+        contextRoot="/"
+    />
 
-    <mpMetrics authentication="false"/>
+    <keyStore
+        id="outboundTrustStore"
+        location="${server.output.dir}/resources/security/truststore.p12"
+        password="mongodb"
+        type="PKCS12"
+    />
+
+    <ssl
+        id="outboundSSLContext"
+        keyStoreRef="defaultKeyStore"
+        trustStoreRef="outboundTrustStore"
+        sslProtocol="TLS"
+    />
 
     <logging consoleLogLevel="INFO"/>
 
-    <ssl id="defaultSSLConfig" keyStoreRef="defaultKeyStore" trustDefaultCerts="true"/>
 </server>

@@ -43,7 +43,7 @@ RUN mongod \
         --fork \
         --config /home/mongodb/mongodb.conf \
     && mongosh \
-        testdb \
+        embeddingsdb \
         -tls \
         --tlsCAFile /home/mongodb/certs/cert.pem \
         --tlsCertificateKeyFile: /home/mongodb/certs/mongodb_tls.pem \
