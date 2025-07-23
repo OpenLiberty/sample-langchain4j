@@ -139,7 +139,7 @@
                 <plugin>
                     <groupId>io.openliberty.tools</groupId>
                     <artifactId>liberty-maven-plugin</artifactId>
-                    <version>3.11.3</version>
+                    <version>3.11.4</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -160,7 +160,6 @@
                 <configuration>
                     <systemPropertyVariables>
                         <app.http.port>${liberty.var.http.port}</app.http.port>
-                        <app.context.root>${liberty.var.app.context.root}</app.context.root>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
