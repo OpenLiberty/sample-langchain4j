@@ -16,7 +16,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <liberty.var.http.port>9080</liberty.var.http.port>
         <liberty.var.https.port>9443</liberty.var.https.port>
-        <app.name>${project.artifactId}</app.name>
     </properties>
     <dependencies>
 
@@ -129,7 +128,6 @@
     </dependencies>
 
     <build>
-        <defaultGoal>clean package liberty:run-server</defaultGoal>
         <finalName>${project.artifactId}</finalName>
         <pluginManagement>
             <plugins>
