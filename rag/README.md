@@ -106,9 +106,7 @@ Use the Maven wrapper to start the application by using the [Liberty dev mode](h
 
 If you are currently using one of the following model providers: GitHub, Ollama or MistralAI, you may proceed
 
-- Navigate to http://localhost:9080/mongo to use the chat application
-
-- Navigate to http://localhost:9080/openapi/ui/ to see the OpenAPI user interface (UI) that provides API documentation and a client to test the API endpoints for mongoDB.
+- Navigate to http://localhost:9080/ to use the chat application
 
 - At the prompt, try the following message examples:
 
@@ -119,6 +117,13 @@ If you are currently using one of the following model providers: GitHub, Ollama 
         How to install Open liberty?
     ```
 
+- Navigate to http://localhost:9080/openapi/ui/ to see the OpenAPI user interface (UI) that provides API documentation and a client to test the API endpoints for mongoDB.
+  - To try a particular api, authentication is required.
+  - The admin (read/write full access) and user (read only access) security roles are created. 
+  - For full admin access: username = bob , password = bobpwd 
+  - For read only access: username = alice , password = alicepwd
+  - Example: Bob is a member of group admin and Alice is a member of group user.
+  
 ## Running the tests
 
 Because you started Liberty in dev mode, you can run the provided tests by pressing the `enter/return` key from the command-line session where you started dev mode.
