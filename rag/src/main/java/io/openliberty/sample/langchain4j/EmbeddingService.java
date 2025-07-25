@@ -73,41 +73,19 @@ public class EmbeddingService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @APIResponses({
-        @APIResponse(responseCode = "200", description = "Successfully added embedding."),
-        @APIResponse(responseCode = "400", description = "Invalid embedding configuration.")})
+            @APIResponse(responseCode = "200", description = "Successfully added embedding."),
+            @APIResponse(responseCode = "400", description = "Invalid embedding configuration.") })
     @Parameters(value = {
-        @Parameter(
-            name = "embeddingID", in = ParameterIn.QUERY,
-            description = "The id of the embedding",
-            required = true, example = "12345",
-            schema = @Schema(type = SchemaType.STRING)),
-        @Parameter(
-            name = "tags", in = ParameterIn.QUERY,
-            description = "The tags of the embedding",
-            required = true, example = "jakartaee,liberty,maven,microprofile",
-            schema = @Schema(type = SchemaType.STRING)),
-        @Parameter(
-            name = "summary", in = ParameterIn.QUERY,
-            description = "The summary of the embedding",
-            required = true,
-            schema = @Schema(type = SchemaType.STRING)),
-        @Parameter(
-            name = "content", in = ParameterIn.QUERY,
-            description = "The content of the embedding",
-            required = true,
-            schema = @Schema(type = SchemaType.STRING))})
+            @Parameter(name = "summary", in = ParameterIn.QUERY, description = "The summary of the embedding", required = true, schema = @Schema(type = SchemaType.STRING)),
+            @Parameter(name = "content", in = ParameterIn.QUERY, description = "The content of the embedding", required = true, schema = @Schema(type = SchemaType.STRING)) })
     @Operation(summary = "Add a new embedding to the database.")
     public Response add(
-        @QueryParam("embeddingID") String embeddingID,
-        @QueryParam("tags") String tags,
-        @QueryParam("summary") String summary,
-        @QueryParam("content") String content) {
+            @QueryParam("summary") String summary,
+            @QueryParam("content") String content) {
 
         MongoCollection<Document> embeddingStore = db.getCollection("EmbeddingsStored");
 
         Document newEmbedding = new Document();
-        newEmbedding.put("EmbeddingID", embeddingID);
-        newEmbedding.put("Tags", tags);
         newEmbedding.put("Summary", summary);
         newEmbedding.put("Content", content);
         newEmbedding.put("Vector", toBytes(embModel.embed(summary).content().vector()));
@@ -115,17 +93,17 @@ public class EmbeddingService {
         embeddingStore.insertOne(newEmbedding);
 
         return Response
-            .status(Response.Status.OK)
-            .entity(newEmbedding.toJson())
-            .build();
+                .status(Response.Status.OK)
+                .entity(newEmbedding.toJson())
+                .build();
     }
 
     @GET
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     @APIResponses({
-        @APIResponse(responseCode = "200", description = "Successfully listed the embeddings."),
-        @APIResponse(responseCode = "500", description = "Failed to list the embeddings.") })
+            @APIResponse(responseCode = "200", description = "Successfully listed the embeddings."),
+            @APIResponse(responseCode = "500", description = "Failed to list the embeddings.") })
     @Operation(summary = "List the embeddings from the database.")
     public Response retrieve() {
         StringWriter sb = new StringWriter();
@@ -146,14 +124,14 @@ public class EmbeddingService {
         } catch (Exception e) {
             e.printStackTrace(System.out);
             return Response
-                .status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity("[\"Unable to list embeddings!\"]")
-                .build();
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("[\"Unable to list embeddings!\"]")
+                    .build();
         }
         return Response
-            .status(Response.Status.OK)
-            .entity(sb.toString())
-            .build();
+                .status(Response.Status.OK)
+                .entity(sb.toString())
+                .build();
     }
 
     @PUT
@@ -161,58 +139,32 @@ public class EmbeddingService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @APIResponses({
-        @APIResponse(responseCode = "200", description = "Successfully updated embeddings."),
-        @APIResponse(responseCode = "400", description = "Invalid object id or embeddings configuration."),
-        @APIResponse(responseCode = "404", description = "Embeddings object id was not found.") })
+            @APIResponse(responseCode = "200", description = "Successfully updated embeddings."),
+            @APIResponse(responseCode = "400", description = "Invalid object id or embeddings configuration."),
+            @APIResponse(responseCode = "404", description = "Embeddings object id was not found.") })
     @Parameters(value = {
-        @Parameter(
-            name = "id", in = ParameterIn.PATH,
-            description = "The object id of the embedding",
-            required = true, example = "6880f9eef887c128f1ed0bf1",
-            schema = @Schema(type = SchemaType.STRING)),
-        @Parameter(
-            name = "embeddingID", in = ParameterIn.QUERY,
-            description = "The id of the embedding",
-            required = true, example = "12345",
-            schema = @Schema(type = SchemaType.STRING)),
-        @Parameter(
-            name = "tags", in = ParameterIn.QUERY,
-            description = "The tags of the embedding",
-            required = true, example = "health,jakartaee,maven,microprofile",
-            schema = @Schema(type = SchemaType.STRING)),
-        @Parameter(
-            name = "summary", in = ParameterIn.QUERY,
-            description = "The summary of the embedding",
-            required = true,
-            schema = @Schema(type = SchemaType.STRING)),
-        @Parameter(
-            name = "content", in = ParameterIn.QUERY,
-            description = "The content of the embedding",
-            required = true,
-            schema = @Schema(type = SchemaType.STRING))})
+            @Parameter(name = "id", in = ParameterIn.PATH, description = "The object id of the embedding", required = true, example = "6880f9eef887c128f1ed0bf1", schema = @Schema(type = SchemaType.STRING)),
+            @Parameter(name = "summary", in = ParameterIn.QUERY, description = "The summary of the embedding", required = true, schema = @Schema(type = SchemaType.STRING)),
+            @Parameter(name = "content", in = ParameterIn.QUERY, description = "The content of the embedding", required = true, schema = @Schema(type = SchemaType.STRING)) })
     @Operation(summary = "Update an embedding in the database.")
     public Response update(
-        @PathParam("id") String id,
-        @QueryParam("embeddingID") String embeddingID,
-        @QueryParam("tags") String tags,
-        @QueryParam("summary") String summary,
-        @QueryParam("content") String content) {
+            @PathParam("id") String id,
+            @QueryParam("summary") String summary,
+            @QueryParam("content") String content) {
 
         ObjectId oid;
         try {
             oid = new ObjectId(id);
         } catch (Exception e) {
             return Response
-                .status(Response.Status.BAD_REQUEST)
-                .entity("[\"Invalid object id!\"]")
-                .build();
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("[\"Invalid object id!\"]")
+                    .build();
         }
 
         MongoCollection<Document> embeddingStore = db.getCollection("EmbeddingsStored");
         Document query = new Document("_id", oid);
         Document newEmbedding = new Document();
-        newEmbedding.put("EmbeddingID", embeddingID);
-        newEmbedding.put("Tags", tags);
         newEmbedding.put("Summary", summary);
         newEmbedding.put("Content", content);
         newEmbedding.put("Vector", toBytes(embModel.embed(summary).content().vector()));
@@ -220,26 +172,26 @@ public class EmbeddingService {
         UpdateResult updateResult = embeddingStore.replaceOne(query, newEmbedding);
         if (updateResult.getMatchedCount() == 0) {
             return Response
-                .status(Response.Status.NOT_FOUND)
-                .entity("[\"_id was not found!\"]")
-                .build();
+                    .status(Response.Status.NOT_FOUND)
+                    .entity("[\"_id was not found!\"]")
+                    .build();
         }
 
         newEmbedding.put("_id", oid);
 
         return Response
-            .status(Response.Status.OK)
-            .entity(newEmbedding.toJson())
-            .build();
+                .status(Response.Status.OK)
+                .entity(newEmbedding.toJson())
+                .build();
     }
 
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @APIResponses({
-        @APIResponse(responseCode = "200", description = "Successfully deleted the embedding."),
-        @APIResponse(responseCode = "400", description = "Invalid object id."),
-        @APIResponse(responseCode = "404", description = "Embedding object id was not found.") })
+            @APIResponse(responseCode = "200", description = "Successfully deleted the embedding."),
+            @APIResponse(responseCode = "400", description = "Invalid object id."),
+            @APIResponse(responseCode = "404", description = "Embedding object id was not found.") })
     @Parameter(description = "Object id of the embedding to delete.", required = true)
     @Operation(summary = "Delete an embedding from the database.")
     public Response remove(@PathParam("id") String id) {
@@ -249,9 +201,9 @@ public class EmbeddingService {
             oid = new ObjectId(id);
         } catch (Exception e) {
             return Response
-                .status(Response.Status.BAD_REQUEST)
-                .entity("[\"Invalid object id!\"]")
-                .build();
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("[\"Invalid object id!\"]")
+                    .build();
         }
 
         MongoCollection<Document> embeddingStore = db.getCollection("EmbeddingsStored");
@@ -259,15 +211,15 @@ public class EmbeddingService {
         DeleteResult deleteResult = embeddingStore.deleteOne(query);
         if (deleteResult.getDeletedCount() == 0) {
             return Response
-                .status(Response.Status.NOT_FOUND)
-                .entity("[\"_id was not found!\"]")
-                .build();
+                    .status(Response.Status.NOT_FOUND)
+                    .entity("[\"_id was not found!\"]")
+                    .build();
         }
 
         return Response
-            .status(Response.Status.OK)
-            .entity(query.toJson())
-            .build();
+                .status(Response.Status.OK)
+                .entity(query.toJson())
+                .build();
     }
 
 }
