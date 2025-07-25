@@ -77,16 +77,6 @@ public class EmbeddingService {
         @APIResponse(responseCode = "400", description = "Invalid embedding configuration.")})
     @Parameters(value = {
         @Parameter(
-            name = "embeddingID", in = ParameterIn.QUERY,
-            description = "The id of the embedding",
-            required = true, example = "12345",
-            schema = @Schema(type = SchemaType.STRING)),
-        @Parameter(
-            name = "tags", in = ParameterIn.QUERY,
-            description = "The tags of the embedding",
-            required = true, example = "jakartaee,liberty,maven,microprofile",
-            schema = @Schema(type = SchemaType.STRING)),
-        @Parameter(
             name = "summary", in = ParameterIn.QUERY,
             description = "The summary of the embedding",
             required = true,
@@ -98,16 +88,12 @@ public class EmbeddingService {
             schema = @Schema(type = SchemaType.STRING))})
     @Operation(summary = "Add a new embedding to the database.")
     public Response add(
-        @QueryParam("embeddingID") String embeddingID,
-        @QueryParam("tags") String tags,
         @QueryParam("summary") String summary,
         @QueryParam("content") String content) {
 
         MongoCollection<Document> embeddingStore = db.getCollection("EmbeddingsStored");
 
         Document newEmbedding = new Document();
-        newEmbedding.put("EmbeddingID", embeddingID);
-        newEmbedding.put("Tags", tags);
         newEmbedding.put("Summary", summary);
         newEmbedding.put("Content", content);
         newEmbedding.put("Vector", toBytes(embModel.embed(summary).content().vector()));
@@ -171,16 +157,6 @@ public class EmbeddingService {
             required = true, example = "6880f9eef887c128f1ed0bf1",
             schema = @Schema(type = SchemaType.STRING)),
         @Parameter(
-            name = "embeddingID", in = ParameterIn.QUERY,
-            description = "The id of the embedding",
-            required = true, example = "12345",
-            schema = @Schema(type = SchemaType.STRING)),
-        @Parameter(
-            name = "tags", in = ParameterIn.QUERY,
-            description = "The tags of the embedding",
-            required = true, example = "health,jakartaee,maven,microprofile",
-            schema = @Schema(type = SchemaType.STRING)),
-        @Parameter(
             name = "summary", in = ParameterIn.QUERY,
             description = "The summary of the embedding",
             required = true,
@@ -193,8 +169,6 @@ public class EmbeddingService {
     @Operation(summary = "Update an embedding in the database.")
     public Response update(
         @PathParam("id") String id,
-        @QueryParam("embeddingID") String embeddingID,
-        @QueryParam("tags") String tags,
         @QueryParam("summary") String summary,
         @QueryParam("content") String content) {
 
@@ -211,8 +185,6 @@ public class EmbeddingService {
         MongoCollection<Document> embeddingStore = db.getCollection("EmbeddingsStored");
         Document query = new Document("_id", oid);
         Document newEmbedding = new Document();
-        newEmbedding.put("EmbeddingID", embeddingID);
-        newEmbedding.put("Tags", tags);
         newEmbedding.put("Summary", summary);
         newEmbedding.put("Content", content);
         newEmbedding.put("Vector", toBytes(embModel.embed(summary).content().vector()));
