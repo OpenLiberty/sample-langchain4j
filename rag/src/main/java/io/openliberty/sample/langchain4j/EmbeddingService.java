@@ -73,15 +73,21 @@ public class EmbeddingService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @APIResponses({
-            @APIResponse(responseCode = "200", description = "Successfully added embedding."),
-            @APIResponse(responseCode = "400", description = "Invalid embedding configuration.") })
+        @APIResponse(responseCode = "200", description = "Successfully added embedding."),
+        @APIResponse(responseCode = "400", description = "Invalid embedding configuration.") })
     @Parameters(value = {
-            @Parameter(name = "summary", in = ParameterIn.QUERY, description = "The summary of the embedding", required = true, schema = @Schema(type = SchemaType.STRING)),
-            @Parameter(name = "content", in = ParameterIn.QUERY, description = "The content of the embedding", required = true, schema = @Schema(type = SchemaType.STRING)) })
+        @Parameter(name = "summary", in = ParameterIn.QUERY, 
+                   description = "The summary of the embedding", 
+                   required = true, 
+                   schema = @Schema(type = SchemaType.STRING)),
+        @Parameter(name = "content", in = ParameterIn.QUERY, 
+                   description = "The content of the embedding", 
+                   required = true, 
+                   schema = @Schema(type = SchemaType.STRING)) })
     @Operation(summary = "Add a new embedding to the database.")
     public Response add(
-            @QueryParam("summary") String summary,
-            @QueryParam("content") String content) {
+        @QueryParam("summary") String summary,
+        @QueryParam("content") String content) {
 
         MongoCollection<Document> embeddingStore = db.getCollection("EmbeddingsStored");
 
@@ -102,8 +108,8 @@ public class EmbeddingService {
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     @APIResponses({
-            @APIResponse(responseCode = "200", description = "Successfully listed the embeddings."),
-            @APIResponse(responseCode = "500", description = "Failed to list the embeddings.") })
+        @APIResponse(responseCode = "200", description = "Successfully listed the embeddings."),
+        @APIResponse(responseCode = "500", description = "Failed to list the embeddings.") })
     @Operation(summary = "List the embeddings from the database.")
     public Response retrieve() {
         StringWriter sb = new StringWriter();
@@ -129,9 +135,9 @@ public class EmbeddingService {
                     .build();
         }
         return Response
-                .status(Response.Status.OK)
-                .entity(sb.toString())
-                .build();
+            .status(Response.Status.OK)
+            .entity(sb.toString())
+            .build();
     }
 
     @PUT
@@ -139,9 +145,9 @@ public class EmbeddingService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @APIResponses({
-            @APIResponse(responseCode = "200", description = "Successfully updated embeddings."),
-            @APIResponse(responseCode = "400", description = "Invalid object id or embeddings configuration."),
-            @APIResponse(responseCode = "404", description = "Embeddings object id was not found.") })
+        @APIResponse(responseCode = "200", description = "Successfully updated embeddings."),
+        @APIResponse(responseCode = "400", description = "Invalid object id or embeddings configuration."),
+        @APIResponse(responseCode = "404", description = "Embeddings object id was not found.") })
     @Parameters(value = {
             @Parameter(name = "id", in = ParameterIn.PATH, description = "The object id of the embedding", required = true, example = "6880f9eef887c128f1ed0bf1", schema = @Schema(type = SchemaType.STRING)),
             @Parameter(name = "summary", in = ParameterIn.QUERY, description = "The summary of the embedding", required = true, schema = @Schema(type = SchemaType.STRING)),
@@ -180,18 +186,18 @@ public class EmbeddingService {
         newEmbedding.put("_id", oid);
 
         return Response
-                .status(Response.Status.OK)
-                .entity(newEmbedding.toJson())
-                .build();
+            .status(Response.Status.OK)
+            .entity(newEmbedding.toJson())
+            .build();
     }
 
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @APIResponses({
-            @APIResponse(responseCode = "200", description = "Successfully deleted the embedding."),
-            @APIResponse(responseCode = "400", description = "Invalid object id."),
-            @APIResponse(responseCode = "404", description = "Embedding object id was not found.") })
+        @APIResponse(responseCode = "200", description = "Successfully deleted the embedding."),
+        @APIResponse(responseCode = "400", description = "Invalid object id."),
+        @APIResponse(responseCode = "404", description = "Embedding object id was not found.") })
     @Parameter(description = "Object id of the embedding to delete.", required = true)
     @Operation(summary = "Delete an embedding from the database.")
     public Response remove(@PathParam("id") String id) {
