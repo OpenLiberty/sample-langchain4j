@@ -33,6 +33,7 @@ import com.mongodb.client.result.UpdateResult;
 
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -72,6 +73,7 @@ public class EmbeddingService {
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "admin" })
     @APIResponses({
         @APIResponse(responseCode = "200", description = "Successfully added embedding."),
         @APIResponse(responseCode = "400", description = "Invalid embedding configuration.")})
@@ -109,6 +111,7 @@ public class EmbeddingService {
     @GET
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "admin", "user" })
     @APIResponses({
         @APIResponse(responseCode = "200", description = "Successfully listed the embeddings."),
         @APIResponse(responseCode = "500", description = "Failed to list the embeddings.") })
@@ -146,6 +149,7 @@ public class EmbeddingService {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "admin" })
     @APIResponses({
         @APIResponse(responseCode = "200", description = "Successfully updated embeddings."),
         @APIResponse(responseCode = "400", description = "Invalid object id or embeddings configuration."),
@@ -208,6 +212,7 @@ public class EmbeddingService {
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "admin" })
     @APIResponses({
         @APIResponse(responseCode = "200", description = "Successfully deleted the embedding."),
         @APIResponse(responseCode = "400", description = "Invalid object id."),

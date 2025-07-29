@@ -12,10 +12,12 @@
         <feature>restfulWS</feature>
         <feature>ssl-1.0</feature>
         <feature>websocket</feature>
+        <feature>appSecurity</feature>
     </featureManager>
 
     <variable name="http.port" defaultValue="9080" />
     <variable name="https.port" defaultValue="9443" />
+    <variable name="app.context.root" defaultValue="/" />
 
     <httpEndpoint
         host="*"
@@ -24,10 +26,34 @@
         id="defaultHttpEndpoint"
     />
 
+    <applicationManager autoExpand="true" />
+
+    <basicRegistry id="basic" realm="WebRealm">
+        <user name="bob" password="{xor}PTA9Lyg7" />
+        <user name="alice" password="{xor}PjM2PDovKDs=" />
+
+        <group name="admin">
+            <member name="bob" />
+        </group>
+
+        <group name="user">
+            <member name="bob" />
+            <member name="alice" />
+        </group>
+    </basicRegistry>
+
     <webApplication
-        location="jakartaee-microprofile-rag-example.war"
-        contextRoot="/"
-    />
+        contextRoot="${app.context.root}"
+        location="jakartaee-microprofile-rag-example.war">
+        <application-bnd>
+            <security-role name="admin">
+                <group name="admin" />
+            </security-role>
+            <security-role name="user">
+                <group name="user" />
+            </security-role>
+        </application-bnd>
+    </webApplication>
 
     <keyStore
         id="outboundTrustStore"
@@ -43,6 +69,6 @@
         sslProtocol="TLS"
     />
 
-    <logging consoleLogLevel="INFO"/>
+    <logging consoleLogLevel="INFO" />
 
 </server>

@@ -160,6 +160,7 @@
                 <configuration>
                     <systemPropertyVariables>
                         <app.http.port>${liberty.var.http.port}</app.http.port>
+                        <app.context.root>${liberty.var.app.context.root}</app.context.root>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
