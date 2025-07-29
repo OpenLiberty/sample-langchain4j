@@ -12,7 +12,7 @@
         <feature>restfulWS</feature>
         <feature>ssl-1.0</feature>
         <feature>websocket</feature>
-        <feature>appSecurity-5.0</feature>
+        <feature>appSecurity</feature>
     </featureManager>
 
     <variable name="http.port" defaultValue="9080" />
@@ -54,7 +54,6 @@
             </security-role>
         </application-bnd>
     </webApplication>
-
 
     <keyStore
         id="outboundTrustStore"
