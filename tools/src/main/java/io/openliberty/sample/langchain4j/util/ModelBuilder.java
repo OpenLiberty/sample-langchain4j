@@ -17,7 +17,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.github.GitHubModelsChatModel;
-import dev.langchain4j.model.huggingface.HuggingFaceChatModel;
+import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
 import dev.langchain4j.model.mistralai.MistralAiChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -27,18 +27,6 @@ import jakarta.inject.Inject;
 public class ModelBuilder {
 
     private static Logger logger = Logger.getLogger(ModelBuilder.class.getName());
-
-    @Inject
-    @ConfigProperty(name = "hugging.face.api.key")
-    private String HUGGING_FACE_API_KEY;
-
-    @Inject
-    @ConfigProperty(name = "hugging.face.language.model.id")
-    private String HUGGING_FACE_LANGUAGE_MODEL_ID;
-
-    @Inject
-    @ConfigProperty(name = "hugging.face.chat.model.id")
-    private String HUGGING_FACE_CHAT_MODEL_ID;
 
     @Inject
     @ConfigProperty(name = "github.api.key")
@@ -63,6 +51,14 @@ public class ModelBuilder {
     @Inject
     @ConfigProperty(name = "mistral.ai.chat.model.id")
     private String MISTRAL_AI_MISTRAL_CHAT_MODEL_ID;
+
+    @Inject
+    @ConfigProperty(name = "gemini.ai.chat.model.id")
+    private String GEMINI_CHAT_MODEL_ID;
+
+    @Inject
+    @ConfigProperty(name = "gemini.ai.api.key")
+    private String GEMINI_AI_API_KEY;
 
     @Inject
     @ConfigProperty(name = "chat.model.timeout")
@@ -90,8 +86,8 @@ public class ModelBuilder {
         return MISTRAL_AI_API_KEY.length() > 30;
     }
 
-    public boolean usingHuggingFace() {
-        return HUGGING_FACE_API_KEY.startsWith("hf_");
+    public boolean usingGeminiAi() {
+        return GEMINI_AI_API_KEY.length() > 30;
     }
 
     public ChatModel getChatModel() throws Exception {
@@ -123,16 +119,15 @@ public class ModelBuilder {
                     .maxTokens(MAX_NEW_TOKEN)
                     .build();
                 logger.info("using Mistral AI " + MISTRAL_AI_MISTRAL_CHAT_MODEL_ID + " chat model for the web");
-            } else if (usingHuggingFace()) {
-                chatModel = HuggingFaceChatModel.builder()
-                    .accessToken(HUGGING_FACE_API_KEY)
-                    .modelId(HUGGING_FACE_CHAT_MODEL_ID)
+            } else if (usingGeminiAi()) {
+                chatModel = GoogleAiGeminiChatModel.builder()
+                    .apiKey(GEMINI_AI_API_KEY)
+                    .modelName(GEMINI_CHAT_MODEL_ID)
                     .timeout(ofSeconds(TIMEOUT))
                     .temperature(TEMPERATURE)
-                    .maxNewTokens(MAX_NEW_TOKEN)
-                    .waitForModel(true)
+                    .maxOutputTokens(MAX_NEW_TOKEN)
                     .build();
-                logger.info("using Hugging Face " + HUGGING_FACE_CHAT_MODEL_ID + " chat model for the web");
+                logger.info("using Google AI " + GEMINI_CHAT_MODEL_ID + " chat model for the web");
 
             } else {
                 throw new Exception("No available platform to access model");
