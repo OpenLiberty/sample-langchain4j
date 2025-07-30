@@ -34,30 +34,18 @@ public class ToolServiceIT {
 
     @Test
     public void testJakartaEE() throws Exception {
-        if (Util.usingHuggingFace()) {
-            return;
-        }
-
         client.sendMessage("What are some current problems users have with JakartaEE?");
         countDown.await(120, TimeUnit.SECONDS);
     }
 
     @Test
     public void testMicroProfile() throws Exception {
-        if (Util.usingHuggingFace()) {
-            return;
-        }
-
         client.sendMessage("What are some current problems users have with MicroProfile?");
         countDown.await(120, TimeUnit.SECONDS);
     }
 
     @Test
     public void testLangChain4j() throws Exception {
-        if (Util.usingHuggingFace()) {
-            return;
-        }
-
         client.sendMessage("What are some current problems users have with LangChain4J?");
         countDown.await(120, TimeUnit.SECONDS);
     }
