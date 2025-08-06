@@ -1,0 +1,8 @@
+---
+summary: Testing liveness health check via health endpoint after deployment
+tags: [microprofile, health, liveness, deployment]
+---
+
+After you implement and deploy your liveness health check, you can verify its operation by accessing the liveness endpoint at `http://<host>:<port>/health/live`.
+
+The endpoint will report "UP" if the CPU usage is below the threshold you set in your health check class.

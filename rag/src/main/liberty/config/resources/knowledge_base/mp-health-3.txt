@@ -1,0 +1,64 @@
+---
+summary: Java class implementing MicroProfile liveness health check for CPU usage below a threshold
+tags: [microprofile, health, liveness, cpu]
+---
+
+You can implement a custom liveness health check by creating a Java class that uses the MicroProfile Health API to monitor CPU usage. The following example checks if CPU usage is below 95%:
+
+```java
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Liveness;
+
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
+import java.lang.reflect.Method;
+import com.sun.management.OperatingSystemMXBean;
+
+@Liveness
+public class CpuUsageHealthCheck implements HealthCheck {
+
+    private static final double CPU_USAGE_THRESHOLD = 95.0;
+
+    @Override
+    public HealthCheckResponse call() {
+        boolean isCpuUsageBelowThreshold = checkCpuUsage();
+
+        if (isCpuUsageBelowThreshold) {
+            return HealthCheckResponse.up("CPU usage is below the threshold of " + CPU_USAGE_THRESHOLD + "%");
+        } else {
+            return HealthCheckResponse.down("CPU usage exceeds the threshold of " + CPU_USAGE_THRESHOLD + "%");
+        }
+    }
+
+    private boolean checkCpuUsage() {
+        try {
+            OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
+            // Get system load average
+            double[] loadTicks = new double[3];
+            Method method = osBean.getClass().getMethod("getSystemLoadAverage");
+            if (method != null) {
+                double loadAvg = (Double) method.invoke(osBean);
+                if (loadAvg > 0 && loadAvg < CPU_USAGE_THRESHOLD / 100.0 * Runtime.getRuntime().availableProcessors()) {
+                    return true;
+                }
+            }
+
+            // Get process CPU load
+            Method getSystemCpuLoad = osBean.getClass().getMethod("getSystemCpuLoad");
+            double systemCpuLoad = (Double) getSystemCpuLoad.invoke(osBean);
+
+            if(systemCpuLoad < CPU_USAGE_THRESHOLD / 100.0){
+                return true;
+            }
+        } catch (Exception e) {
+            // Handle exception
+            System.err.println("Failed to check CPU usage: " + e.getMessage());
+        }
+
+        return false;
+    }
+}
+```
+
+This health check returns "UP" if CPU usage is below 95%, and "DOWN" otherwise.
