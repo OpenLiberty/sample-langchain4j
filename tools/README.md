@@ -65,15 +65,6 @@ unset OLLAMA_BASE_URL
 export MISTRAL_AI_API_KEY=<your Mistral AI API key>
 ```
 
-Set the `GEMINI_AI_API_KEY` environment variable if using Google AI.
-
-```
-unset GITHUB_API_KEY
-unset OLLAMA_BASE_URL
-unset MISTRAL_AI_API_KEY
-export GEMINI_AI_API_KEY=<your Google AI API key>
-```
-
 ## Start the application
 
 Use the Maven wrapper to start the application by using the [Liberty dev mode](https://openliberty.io/docs/latest/development-mode.html):
