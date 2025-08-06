@@ -2,14 +2,9 @@ package it.io.openliberty.sample.langchain4j;
 
 public class Util {
 
-	private static String geminiApiKey = System.getenv("GEMINI_AI_API_KEY");
 	private static String githubApiKey = System.getenv("GITHUB_API_KEY");
 	private static String ollamaBaseUrl = System.getenv("OLLAMA_BASE_URL");
 	private static String mistralAiApiKey = System.getenv("MISTRAL_AI_API_KEY");
-
-	public static boolean usingGemini() {
-		return geminiApiKey != null && geminiApiKey.length() > 30;
-	}
 
 	public static boolean usingGithub() {
 		return githubApiKey != null && githubApiKey.startsWith("ghp_");

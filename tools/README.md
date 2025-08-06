@@ -1,6 +1,6 @@
 # LangChain4j in Jakarta EE and MicroProfile
 
-This example demonstrates LangChain4j in a Jakarta EE / MicroProfile application on Open Liberty. The application is a chatbot built with LangChain4j and uses Jakarta CDI, Jakarta RESTful Web Services, Jakarta WebSocket, MicroProfile Config, MicroProfile Metrics, and MicroProfile OpenAPI features. The application can use models from either GitHub, Ollama, Mistral AI or Google AI.
+This example demonstrates LangChain4j in a Jakarta EE / MicroProfile application on Open Liberty. The application is a chatbot built with LangChain4j and uses Jakarta CDI, Jakarta RESTful Web Services, Jakarta WebSocket, MicroProfile Config, MicroProfile Metrics, and MicroProfile OpenAPI features. The application can use models from either GitHub, Ollama, or Mistral AI.
 
 ## Prerequisites:
 
@@ -19,10 +19,6 @@ This example demonstrates LangChain4j in a Jakarta EE / MicroProfile application
         -   Sign up and log in to https://console.mistral.ai/home.
         -   Go to [Your API keys](https://console.mistral.ai/api-keys).
         -   Create a new key.
-    -   Google AI
-        -   Sign up and log in to https://aistudio.google.com.
-        -   Click [Get API key](https://aistudio.google.com/apikey).
-        -   Create a new API key.
 
 ## Environment Set Up
 
@@ -41,7 +37,6 @@ export JAVA_HOME=<your Java 21 home path>
 Set the `GITHUB_API_KEY` environment variable if using GitHub.
 
 ```
-unset GEMINI_AI_API_KEY
 unset OLLAMA_BASE_URL
 unset MISTRAL_AI_API_KEY
 export GITHUB_API_KEY=<your GitHub API token>
@@ -50,7 +45,6 @@ export GITHUB_API_KEY=<your GitHub API token>
 Set the `OLLAMA_BASE_URL` environment variable if using Ollama. Use your Ollama URL if not using the default.
 
 ```
-unset GEMINI_AI_API_KEY
 unset GITHUB_API_KEY
 unset MISTRAL_AI_API_KEY
 export OLLAMA_BASE_URL=http://localhost:11434
@@ -59,7 +53,6 @@ export OLLAMA_BASE_URL=http://localhost:11434
 Set the `MISTRAL_AI_API_KEY` environment variable if using Mistral AI.
 
 ```
-unset GEMINI_AI_API_KEY
 unset GITHUB_API_KEY
 unset OLLAMA_BASE_URL
 export MISTRAL_AI_API_KEY=<your Mistral AI API key>
