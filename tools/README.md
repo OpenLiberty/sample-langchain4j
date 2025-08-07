@@ -74,7 +74,7 @@ Use the Maven wrapper to start the application by using the [Liberty dev mode](h
     What are some current problems users have with LangChain4j?
     ```
   - ```
-    What are some current problems users have when using Ollama Face?
+    What are some current problems users have when using Ollama?
     ```
 
 ## Running the tests
