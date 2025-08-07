@@ -130,6 +130,11 @@
             <artifactId>langchain4j-document-parser-apache-tika</artifactId>
             <version>1.2.0-beta8</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>10.2.2</version>
+        </dependency>
     </dependencies>
 
     <build>
