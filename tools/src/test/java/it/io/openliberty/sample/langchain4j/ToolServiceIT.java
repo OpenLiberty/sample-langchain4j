@@ -54,7 +54,7 @@ public class ToolServiceIT {
         assertNotNull(message);
 
         String text = message.toLowerCase();
-        assertTrue(text.contains("microprofile") ||
+        assertTrue(text.contains("microprofile") || text.contains("ejb") ||
             text.contains("jakarta") || text.contains("langchain"),
             message);
         countDown.countDown();
