@@ -52,6 +52,7 @@ public class StreamingChatService {
         try {
             String sessionId = session.getId();
             switch (agent.streamingChat(sessionId, message, token -> {
+                if (token.equals("")) return;
                 remote.sendText(token);
                 Thread.sleep(100);
             })) {
