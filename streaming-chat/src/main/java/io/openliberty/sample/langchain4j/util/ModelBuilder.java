@@ -29,14 +29,6 @@ public class ModelBuilder {
     private static Logger logger = Logger.getLogger(ModelBuilder.class.getName());
 
     @Inject
-    @ConfigProperty(name = "hugging.face.api.key")
-    private String HUGGING_FACE_API_KEY;
-
-    @Inject
-    @ConfigProperty(name = "hugging.face.chat.model.id")
-    private String HUGGING_FACE_CHAT_MODEL_ID;
-
-    @Inject
     @ConfigProperty(name = "github.api.key")
     private String GITHUB_API_KEY;
 
@@ -86,10 +78,6 @@ public class ModelBuilder {
         return MISTRAL_AI_API_KEY.length() > 30;
     }
 
-    public boolean usingHuggingFace() {
-        return HUGGING_FACE_API_KEY.startsWith("hf_");
-    }
-
     public StreamingChatModel getStreamingChatModel() throws Exception {
         if (streamingChatModel == null) {
             if (usingGithub()) {
@@ -119,8 +107,6 @@ public class ModelBuilder {
                     .maxTokens(MAX_NEW_TOKEN)
                     .build();
                 logger.info("using Mistral AI " + MISTRAL_AI_MISTRAL_CHAT_MODEL_ID + " streaming chat model for the web");
-            } else if (usingHuggingFace()) {
-                throw new Exception("LangChain4J Hugging Face APIs do not support streaming chat model");
             } else {
                 throw new Exception("No available platform to access model");
             }
