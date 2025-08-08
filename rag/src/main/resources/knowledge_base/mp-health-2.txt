@@ -1,4 +1,3 @@
----
 summary: Enable the MicroProfile Health feature in server.xml for Open Liberty deployment
 tags: [microprofile, health, deployment, testing]
 ---

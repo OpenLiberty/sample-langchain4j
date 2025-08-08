@@ -1,7 +1,5 @@
----
 summary: Java class implementing MicroProfile liveness health check for CPU usage below a threshold
 tags: [microprofile, health, liveness, cpu]
----
 
 You can implement a custom liveness health check by creating a Java class that uses the MicroProfile Health API to monitor CPU usage. The following example checks if CPU usage is below 95%:
 

@@ -1,0 +1,11 @@
+---
+summary: Add platform features to your installation or deploy the application to an Open Liberty installation that has platform features example Core Profile Function enabling
+tags: [jakartaEE, Open Liberty]
+---
+Also, consider these definitions when you deploy applications to an Open Liberty server. If your application needs support for enterprise connectivity APIs, 
+you must add platform features to your installation or deploy the application to an Open Liberty installation that has platform features.
+
+To quickly add support for Jakarta EE, specify the Web Profile or Jakarta EE Platform convenience features in your server.xml file.
+A third convenience feature, Jakarta EE Application Client, is also available to quickly configure an application client component. For more information about convenience features, see Convenience features. 
+A Core Profile convenience feature is not provided. 
+You can enable all Core Profile function by adding the Jakarta RESTful Web Services and Jakarta JSON Binding features to your server.xml file.
