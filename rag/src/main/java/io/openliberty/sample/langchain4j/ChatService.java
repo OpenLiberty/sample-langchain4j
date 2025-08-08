@@ -11,12 +11,12 @@ package io.openliberty.sample.langchain4j;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -69,7 +69,7 @@ public class ChatService {
     private int MAX_RESULTS = 3;
 
     private EmbeddingModel embModel = new AllMiniLmL6V2EmbeddingModel();
-    
+
     private PriorityQueue<Map.Entry<String, Float>> maxHeap = new PriorityQueue<>(Map.Entry.comparingByValue(Comparator.reverseOrder()));
 
     @Inject
@@ -82,14 +82,19 @@ public class ChatService {
     @OnOpen
     public void onOpen(Session session) {
         logger.info("Server connected to session: " + session.getId());
-        File file = new File("resources/knowledge_base");
-        String fullPath = file.getAbsolutePath();
-        List<Document> documents = FileSystemDocumentLoader.loadDocuments(fullPath, new ApacheTikaDocumentParser());
+        try{
+            URL urlResourcePath = getClass().getClassLoader().getResource("knowledge_base/");
+            String resourcePath = Paths.get(urlResourcePath.toURI()).toString();
+            
+            List<Document> documents = FileSystemDocumentLoader.loadDocuments(resourcePath, new ApacheTikaDocumentParser());
 
-        var docSplitter = DocumentSplitters.recursive(2500, 50);
+            var docSplitter = DocumentSplitters.recursive(2500, 50);
 
-        List<TextSegment> textSeg = docSplitter.splitAll(documents);
-        insertToDatabase(textSeg);
+            List<TextSegment> textSeg = docSplitter.splitAll(documents);
+            insertToDatabase(textSeg);
+        }catch(Exception e){
+            logger.warning("Could not load knowledge base into MongoDB.");
+        }
     }
     
     public void insertToDatabase(List<TextSegment> contentSeg){
@@ -118,7 +123,7 @@ public class ChatService {
                     }
                     
                 }catch(Exception e){
-                    logger.warning("Could not load knowledge base into MongoDB.");
+                    logger.warning("Could not load knowledge base into MongoDB. Please check internet connection.");
                 }
             }catch(Exception e){
                     logger.warning("Could not load knowledge base into MongoDB.");            
