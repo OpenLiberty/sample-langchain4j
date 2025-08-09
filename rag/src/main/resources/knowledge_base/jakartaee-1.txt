@@ -1,7 +1,7 @@
----
+
 summary: Add platform features to your installation or deploy the application to an Open Liberty installation that has platform features example Core Profile Function enabling
 tags: [jakartaEE, Open Liberty]
----
+
 Also, consider these definitions when you deploy applications to an Open Liberty server. If your application needs support for enterprise connectivity APIs, 
 you must add platform features to your installation or deploy the application to an Open Liberty installation that has platform features.
 

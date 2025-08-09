@@ -23,7 +23,7 @@ public class RAGChatServiceIT {
     @BeforeEach
     public void setup() throws Exception {
         countDown = new CountDownLatch(1);
-        URI uri = new URI("ws://localhost:9080");
+        URI uri = new URI("ws://localhost:9080/chat");
         client = new RAGChatClient(uri);
     }
 
