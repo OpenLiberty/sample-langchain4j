@@ -111,11 +111,17 @@ If you are currently using one of the following model providers: GitHub, Ollama 
 - At the prompt, try the following message examples:
 
   - ```
-        What are LLMs?
+      Create a Java class that uses the MicroProfile Health API to check/montior if the CPU usage is below 95%.
     ```
   - ```
-        How to install Open liberty?
+      How to enable the Jakarta EE Web Profile in Open Liberty?
     ```
+  - ```
+      How to chat with the assistant using langchain4j?
+    ```
+
+Use the `sample-langchain4j/rag/src/main/resources/knowledge_base` files to compare the AI responses to the provided files.
+
 
 - Navigate to http://localhost:9080/openapi/ui/ to see the OpenAPI user interface (UI) that provides API documentation and a client to test the API endpoints for mongoDB.
   - To try a particular api, authentication is required.
@@ -123,6 +129,8 @@ If you are currently using one of the following model providers: GitHub, Ollama 
   - For full admin access: username = bob , password = bobpwd 
   - For read only access: username = alice , password = alicepwd
   - Example: Bob is a member of group admin and Alice is a member of group user.
+
+After visiting the chat application at http://localhost:9080/, select the 'GET' request in the http://localhost:9080/openapi/ui/. The content from the `sample-langchain4j/rag/src/main/resources/knowledge_base` should be displayed.
   
 ## Running the tests
 

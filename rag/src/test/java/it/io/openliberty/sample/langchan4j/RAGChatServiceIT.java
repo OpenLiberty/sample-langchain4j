@@ -58,7 +58,7 @@ public class RAGChatServiceIT {
             return;
         }
         
-        client.sendMessage("Create Java class that uses the MicroProfile Health API to check/montior CPU usage is below 95%:\n");
+        client.sendMessage("Create a Java class that uses the MicroProfile Health API to check/montior if the CPU usage is below 95%.\n");
         countDown.await(120, TimeUnit.SECONDS);
     }
 

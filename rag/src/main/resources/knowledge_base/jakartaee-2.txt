@@ -1,4 +1,4 @@
-summary: Jakarta EE Platform, Web Profile, and Core Profile - Open Liberty Docs
+description: Jakarta EE Platform, Web Profile, and Core Profile - Open Liberty Docs
 tags: [jakartaEE, Open Liberty]
 
 Jakarta EE Platform, Web Profile, and Core Profile

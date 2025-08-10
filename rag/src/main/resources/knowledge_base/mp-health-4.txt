@@ -1,4 +1,4 @@
-summary: Testing liveness health check via health endpoint after deployment
+description: Testing liveness health check via health endpoint after deployment
 tags: [microprofile, health, liveness, deployment]
 
 

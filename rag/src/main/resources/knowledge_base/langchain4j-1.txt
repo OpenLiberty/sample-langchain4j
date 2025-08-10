@@ -1,7 +1,5 @@
----
-summary: Information about AI services with java using Langchain4j
+description: Information about AI services with java using Langchain4j
 tags: [langchain4j]
----
 
 Source: Langchain4j Docs
 Link: https://docs.langchain4j.dev/tutorials/ai-services

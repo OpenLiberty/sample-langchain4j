@@ -1,7 +1,5 @@
----
-summary: MicroProfile Health API dependency configuration for Maven project to use health check features
+description: MicroProfile Health API dependency configuration for Maven project to use health check features
 tags: [microprofile, health, maven, dependency]
----
 
 To use MicroProfile Health in your project, add the following dependency to your `pom.xml` file:
 
