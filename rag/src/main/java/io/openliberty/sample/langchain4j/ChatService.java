@@ -78,36 +78,48 @@ public class ChatService {
     @Inject
     private MongoDatabase db;
 
-    
+    public boolean contentAlreadyStored(){
+
+        MongoCollection<org.bson.Document> embeddingStore = db.getCollection("EmbeddingsStored");
+        return embeddingStore.countDocuments() > 0 ? true : false;
+
+    }
     @OnOpen
     public void onOpen(Session session) {
         logger.info("Server connected to session: " + session.getId());
-        try{
-            URL urlResourcePath = getClass().getClassLoader().getResource("knowledge_base/");
-            String resourcePath = Paths.get(urlResourcePath.toURI()).toString();
-            
-            List<Document> documents = FileSystemDocumentLoader.loadDocuments(resourcePath, new ApacheTikaDocumentParser());
+        
+        if (!contentAlreadyStored()){
+            try{
+                URL urlResourcePath = getClass().getClassLoader().getResource("knowledge_base/");
 
-            var docSplitter = DocumentSplitters.recursive(2500, 50);
+                String resourcePath = Paths.get(urlResourcePath.toURI()).toString();
+                
+                List<Document> documents = FileSystemDocumentLoader.loadDocuments(resourcePath, new ApacheTikaDocumentParser());
 
-            List<TextSegment> textSeg = docSplitter.splitAll(documents);
-            insertToDatabase(textSeg);
-        }catch(Exception e){
-            logger.warning("Could not load knowledge base into MongoDB.");
+                var docSplitter = DocumentSplitters.recursive(2500, 50);
+
+                List<TextSegment> textSeg = docSplitter.splitAll(documents);
+
+                insertToDatabase(textSeg);
+
+            }catch(Exception e){
+
+                logger.warning("Could not load knowledge base into MongoDB.");
+
+            }
         }
+        
     }
     
     public void insertToDatabase(List<TextSegment> contentSeg){
         
         String startURL = "http://localhost:9080/api/embedding?";
-        int i = 0;
 
         for (TextSegment content : contentSeg){
-            i +=1;
             String contentEncoded = "";
             try{
                 contentEncoded = URLEncoder.encode(content.text(), "UTF-8");
-                String parameters = String.format("summary=%s&content=%s",i,contentEncoded);
+                String parameters = String.format("summary=%s&content=%s",contentEncoded,contentEncoded);
                 try{
                     URL url = new URI(startURL+parameters).toURL();
                     HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();

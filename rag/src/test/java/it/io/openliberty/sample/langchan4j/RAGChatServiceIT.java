@@ -38,7 +38,7 @@ public class RAGChatServiceIT {
             return;
         }
 
-        client.sendMessage("How can I chat with the assisstant using langchain4j?");
+        client.sendMessage("How to chat with the assistant using langchain4j?");
         countDown.await(120, TimeUnit.SECONDS);
     }
 
