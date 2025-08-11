@@ -75,7 +75,7 @@ public class ModelBuilder {
     private ChatModel chatModel = null;
 
     public boolean usingGithub() {
-        return GITHUB_API_KEY.startsWith("ghp_");
+        return GITHUB_API_KEY.startsWith("ghp_") || GITHUB_API_KEY.startsWith("github_pat_");
     }
 
     public boolean usingOllama() {
