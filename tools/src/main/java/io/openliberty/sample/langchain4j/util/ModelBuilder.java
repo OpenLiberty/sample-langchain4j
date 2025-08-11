@@ -17,7 +17,6 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.github.GitHubModelsChatModel;
-import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
 import dev.langchain4j.model.mistralai.MistralAiChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -75,7 +74,7 @@ public class ModelBuilder {
     private ChatModel chatModel = null;
 
     public boolean usingGithub() {
-        return GITHUB_API_KEY.startsWith("ghp_");
+        return GITHUB_API_KEY.startsWith("ghp_") || GITHUB_API_KEY.startsWith("github_pat_");
     }
 
     public boolean usingOllama() {
@@ -84,10 +83,6 @@ public class ModelBuilder {
 
     public boolean usingMistralAi() {
         return MISTRAL_AI_API_KEY.length() > 30;
-    }
-
-    public boolean usingGeminiAi() {
-        return GEMINI_AI_API_KEY.length() > 30;
     }
 
     public ChatModel getChatModel() throws Exception {
@@ -119,16 +114,6 @@ public class ModelBuilder {
                     .maxTokens(MAX_NEW_TOKEN)
                     .build();
                 logger.info("using Mistral AI " + MISTRAL_AI_MISTRAL_CHAT_MODEL_ID + " chat model for the web");
-            } else if (usingGeminiAi()) {
-                chatModel = GoogleAiGeminiChatModel.builder()
-                    .apiKey(GEMINI_AI_API_KEY)
-                    .modelName(GEMINI_CHAT_MODEL_ID)
-                    .timeout(ofSeconds(TIMEOUT))
-                    .temperature(TEMPERATURE)
-                    .maxOutputTokens(MAX_NEW_TOKEN)
-                    .build();
-                logger.info("using Google AI " + GEMINI_CHAT_MODEL_ID + " chat model for the web");
-
             } else {
                 throw new Exception("No available platform to access model");
             }
