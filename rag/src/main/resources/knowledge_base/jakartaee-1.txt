@@ -1,11 +1,28 @@
-
-description: Add platform features to your installation or deploy the application to an Open Liberty installation that has platform features example Core Profile Function enabling
+description: Jakarta EE Platform, Web Profile, and Core Profile - Open Liberty Docs
 tags: [jakartaEE, Open Liberty]
 
-Also, consider these definitions when you deploy applications to an Open Liberty server. If your application needs support for enterprise connectivity APIs, 
-you must add platform features to your installation or deploy the application to an Open Liberty installation that has platform features.
+Jakarta EE Platform, Web Profile, and Core Profile
 
-To quickly add support for Jakarta EE, specify the Web Profile or Jakarta EE Platform convenience features in your server.xml file.
-A third convenience feature, Jakarta EE Application Client, is also available to quickly configure an application client component. For more information about convenience features, see Convenience features. 
-A Core Profile convenience feature is not provided. 
-You can enable all Core Profile function by adding the Jakarta RESTful Web Services and Jakarta JSON Binding features to your server.xml file.
+The Jakarta EE specification defines the platform Enterprise Edition. The Web Profile is a properly defined subset of the platform. The Core Profile is introduced in Jakarta EE 10 and is a properly defined subset of the Web Profile.
+- Core Profile
+The Core Profile is added in Jakarta EE 10 and includes the Jakarta EE features that are needed for modern cloud native applications. 
+This subset of function includes all Jakarta EE functions that are required for MicroProfile-based applications.
+- Web Profile
+The Web Profile defines a reasonably complete stack that targets modern web applications. This stack is a subset of the platform standard APIs that can address the needs of most web applications.
+his feature combines the Liberty features that support the Jakarta EE 10.0 Web Profile.
+If you are updating your application from using Jakarta EE 9.1 features to using Jakarta EE 10.0 features, changes in API behavior might require you to update your application code. For more information, 
+see Differences between Jakarta EE 10 and 9.1.
+Enabling this feature
+To enable the Jakarta EE Web Profile 10.0 feature, add the following element declaration into your server.xml file, inside the featureManager element:
+Copy code block
+'''
+<feature>webProfile-10.0</feature>
+'''
+Feature configuration elements
+ a. authData
+ b. classloading
+ c. transaction
+
+
+Platform
+The platform defines the full complement of the Jakarta EE programming model. In addition to the Web Profile features, the platform has specifications for advanced business capabilities that an enterprise needs, such as for connectivity, enterprise beans, messaging, and application clients.

@@ -61,7 +61,6 @@ export JAVA_HOME=<your Java 21 home path>
 Set the `GITHUB_API_KEY` environment variable if using Github.
 
 ```
-unset HUGGING_FACE_API_KEY
 unset OLLAMA_BASE_URL
 unset MISTRAL_AI_API_KEY
 export GITHUB_API_KEY=<your Github API token>
@@ -70,7 +69,6 @@ export GITHUB_API_KEY=<your Github API token>
 Set the `OLLAMA_BASE_URL` environment variable if using Ollama. Use your Ollama URL if not using the default.
 
 ```
-unset HUGGING_FACE_API_KEY
 unset GITHUB_API_KEY
 unset MISTRAL_AI_API_KEY
 export OLLAMA_BASE_URL=http://localhost:11434
@@ -79,19 +77,9 @@ export OLLAMA_BASE_URL=http://localhost:11434
 Set the `MISTRAL_AI_API_KEY` environment variable if using Mistral AI.
 
 ```
-unset HUGGING_FACE_API_KEY
 unset GITHUB_API_KEY
 unset OLLAMA_BASE_URL
 export MISTRAL_AI_API_KEY=<your Mistral AI API key>
-```
-
-Set the `HUGGING_FACE_API_KEY` environment variable if using Hugging Face.
-
-```
-unset GITHUB_API_KEY
-unset OLLAMA_BASE_URL
-unset MISTRAL_AI_API_KEY
-export HUGGING_FACE_API_KEY=<your Hugging Face read token>
 ```
 
 ## Start the application
