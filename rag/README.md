@@ -139,3 +139,12 @@ If the tests pass, you see a similar output to the following example:
 ```
 
 When you are done checking out the service, exit dev mode by pressing `Ctrl+C` in the command-line session where you ran Liberty, or by typing `q` and then pressing the `enter/return` key.
+
+Then, run the following commands to tear down the environment: 
+
+```
+docker stop mongo-embeddings
+docker rmi mongo-embeddings
+
+```
+
