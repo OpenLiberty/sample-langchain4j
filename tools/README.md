@@ -1,12 +1,6 @@
 # LangChain4j in Jakarta EE and MicroProfile
 
-<<<<<<< HEAD
-This example demonstrates LangChain4J in a Jakarta EE / MicroProfile application on Open Liberty. The application is a chatbot built with LangChain4J and uses Jakarta CDI, Jakarta RESTful Web Services, Jakarta WebSocket, MicroProfile Config, MicroProfile Metrics, and MicroProfile OpenAPI features. The application allows to use models from either Github, Ollama, Mistral AI or Google AI.
-||||||| 750ec18
-This example demonstrates LangChain4J in a Jakarta EE / MicroProfile application on Open Liberty. The application is a chatbot built with LangChain4J and uses Jakarta CDI, Jakarta RESTful Web Services, Jakarta WebSocket, MicroProfile Config, MicroProfile Metrics, and MicroProfile OpenAPI features. The application allows to use models from either Github, Ollama, or Hugging Face.
-=======
 This example demonstrates LangChain4j in a Jakarta EE / MicroProfile application on Open Liberty. The application is a chatbot built with LangChain4j and uses Jakarta CDI, Jakarta RESTful Web Services, Jakarta WebSocket, MicroProfile Config, MicroProfile Metrics, and MicroProfile OpenAPI features. The application can use models from either GitHub, Ollama, or Mistral AI.
->>>>>>> a8a66775355ff8fd33fe6314a7c57d3bad16b7f5
 
 ## Prerequisites:
 
@@ -25,18 +19,6 @@ This example demonstrates LangChain4j in a Jakarta EE / MicroProfile application
         -   Sign up and log in to https://console.mistral.ai/home.
         -   Go to [Your API keys](https://console.mistral.ai/api-keys).
         -   Create a new key.
-<<<<<<< HEAD
-    -   Google AI
-        -   Sign up and log in to https://aistudio.google.com.
-        -   Click [Get API key](https://aistudio.google.com/apikey).
-        -   Create a new API key.
-||||||| 750ec18
-    -   Hugging Face
-        -   Sign up and log in to https://huggingface.co.
-        -   Go to [Access Tokens](https://huggingface.co/settings/tokens).
-        -   Create a new access token with `read` role.
-=======
->>>>>>> a8a66775355ff8fd33fe6314a7c57d3bad16b7f5
 
 ## Environment Set Up
 
