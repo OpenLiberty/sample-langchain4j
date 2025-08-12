@@ -1,0 +1,12 @@
+description: Enable the MicroProfile Health feature in server.xml for Open Liberty deployment
+tags: [microprofile, health, deployment, testing]
+
+If you are deploying your application to Open Liberty, enable the MicroProfile Health feature in your `server.xml` configuration:
+
+```xml
+<featureManager>
+    <feature>mpHealth-4.0</feature> <!-- match the Microprofile version you're targeting -->
+</featureManager>
+```
+
+This setting allows Liberty to detect and register your health check classes and expose the `/health` endpoints.
