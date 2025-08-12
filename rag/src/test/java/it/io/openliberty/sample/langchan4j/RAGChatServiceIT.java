@@ -3,6 +3,8 @@ package it.io.openliberty.sample.langchan4j;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
@@ -51,9 +53,19 @@ public class RAGChatServiceIT {
             httpConnection.setRequestMethod("POST");
             httpConnection.setRequestProperty("Accept", "*/*");
             httpConnection.setDoOutput(false);
+            BufferedReader bufferReader = new BufferedReader(new InputStreamReader(httpConnection.getInputStream()));
+        
+            String line = "";
+            StringBuilder res = new StringBuilder();
+
+            while ((line = bufferReader.readLine()) != null) {
+                res.append(line);
+            }
+            
+            httpConnection.disconnect(); 
 
         }catch(Exception exception){
-
+            
             throw new Exception("Error in initializing the knowledge base.");
         
         }
