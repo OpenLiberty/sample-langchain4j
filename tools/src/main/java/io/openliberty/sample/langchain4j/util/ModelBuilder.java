@@ -52,14 +52,6 @@ public class ModelBuilder {
     private String MISTRAL_AI_MISTRAL_CHAT_MODEL_ID;
 
     @Inject
-    @ConfigProperty(name = "gemini.ai.chat.model.id")
-    private String GEMINI_CHAT_MODEL_ID;
-
-    @Inject
-    @ConfigProperty(name = "gemini.ai.api.key")
-    private String GEMINI_AI_API_KEY;
-
-    @Inject
     @ConfigProperty(name = "chat.model.timeout")
     private Integer TIMEOUT;
 
