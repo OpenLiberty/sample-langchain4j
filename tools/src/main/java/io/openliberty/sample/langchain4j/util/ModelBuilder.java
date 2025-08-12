@@ -17,7 +17,6 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.github.GitHubModelsChatModel;
-import dev.langchain4j.model.huggingface.HuggingFaceChatModel;
 import dev.langchain4j.model.mistralai.MistralAiChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -27,18 +26,6 @@ import jakarta.inject.Inject;
 public class ModelBuilder {
 
     private static Logger logger = Logger.getLogger(ModelBuilder.class.getName());
-
-    @Inject
-    @ConfigProperty(name = "hugging.face.api.key")
-    private String HUGGING_FACE_API_KEY;
-
-    @Inject
-    @ConfigProperty(name = "hugging.face.language.model.id")
-    private String HUGGING_FACE_LANGUAGE_MODEL_ID;
-
-    @Inject
-    @ConfigProperty(name = "hugging.face.chat.model.id")
-    private String HUGGING_FACE_CHAT_MODEL_ID;
 
     @Inject
     @ConfigProperty(name = "github.api.key")
@@ -79,7 +66,7 @@ public class ModelBuilder {
     private ChatModel chatModel = null;
 
     public boolean usingGithub() {
-        return GITHUB_API_KEY.startsWith("ghp_");
+        return GITHUB_API_KEY.startsWith("ghp_") || GITHUB_API_KEY.startsWith("github_pat_");
     }
 
     public boolean usingOllama() {
@@ -88,10 +75,6 @@ public class ModelBuilder {
 
     public boolean usingMistralAi() {
         return MISTRAL_AI_API_KEY.length() > 30;
-    }
-
-    public boolean usingHuggingFace() {
-        return HUGGING_FACE_API_KEY.startsWith("hf_");
     }
 
     public ChatModel getChatModel() throws Exception {
@@ -123,17 +106,6 @@ public class ModelBuilder {
                     .maxTokens(MAX_NEW_TOKEN)
                     .build();
                 logger.info("using Mistral AI " + MISTRAL_AI_MISTRAL_CHAT_MODEL_ID + " chat model for the web");
-            } else if (usingHuggingFace()) {
-                chatModel = HuggingFaceChatModel.builder()
-                    .accessToken(HUGGING_FACE_API_KEY)
-                    .modelId(HUGGING_FACE_CHAT_MODEL_ID)
-                    .timeout(ofSeconds(TIMEOUT))
-                    .temperature(TEMPERATURE)
-                    .maxNewTokens(MAX_NEW_TOKEN)
-                    .waitForModel(true)
-                    .build();
-                logger.info("using Hugging Face " + HUGGING_FACE_CHAT_MODEL_ID + " chat model for the web");
-
             } else {
                 throw new Exception("No available platform to access model");
             }
