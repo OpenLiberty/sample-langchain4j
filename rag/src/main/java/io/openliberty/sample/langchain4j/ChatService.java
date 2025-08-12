@@ -12,11 +12,6 @@ package io.openliberty.sample.langchain4j;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -29,11 +24,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Projections;
 
-import dev.langchain4j.data.document.Document;
-import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
-import dev.langchain4j.data.document.parser.apache.tika.ApacheTikaDocumentParser;
-import dev.langchain4j.data.document.splitter.DocumentSplitters;
-import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -48,7 +38,6 @@ import jakarta.websocket.server.ServerEndpoint;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Base64;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
@@ -62,10 +51,6 @@ public class ChatService {
    
     private static Logger logger = Logger.getLogger(ChatService.class.getName());
 
-    private final String ADMIN_USERNAME = "bob";
-
-    private final String ADMIN_PASSWD = "bobpwd";
-
     private int MAX_RESULTS = 3;
 
     private EmbeddingModel embModel = new AllMiniLmL6V2EmbeddingModel();
@@ -74,75 +59,17 @@ public class ChatService {
 
     @Inject
     ChatAgent agent = null;
-    
+   
     @Inject
     private MongoDatabase db;
 
-    public boolean contentAlreadyStored(){
-
-        MongoCollection<org.bson.Document> embeddingStore = db.getCollection("EmbeddingsStored");
-        return embeddingStore.countDocuments() > 0 ? true : false;
-
-    }
     @OnOpen
     public void onOpen(Session session) {
+
         logger.info("Server connected to session: " + session.getId());
-        
-        if (!contentAlreadyStored()){
-            try{
-                URL urlResourcePath = getClass().getClassLoader().getResource("knowledge_base/");
-
-                String resourcePath = Paths.get(urlResourcePath.toURI()).toString();
-                
-                List<Document> documents = FileSystemDocumentLoader.loadDocuments(resourcePath, new ApacheTikaDocumentParser());
-
-                var docSplitter = DocumentSplitters.recursive(2500, 50);
-
-                List<TextSegment> textSeg = docSplitter.splitAll(documents);
-
-                insertToDatabase(textSeg);
-
-            }catch(Exception e){
-
-                logger.warning("Could not load knowledge base into MongoDB.");
-
-            }
-        }
         
     }
     
-    public void insertToDatabase(List<TextSegment> contentSeg){
-        
-        String startURL = "http://localhost:9080/api/embedding?";
-
-        for (TextSegment content : contentSeg){
-            String contentEncoded = "";
-            try{
-                contentEncoded = URLEncoder.encode(content.text(), "UTF-8");
-                String parameters = String.format("summary=%s&content=%s",contentEncoded,contentEncoded);
-                try{
-                    URL url = new URI(startURL+parameters).toURL();
-                    HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
-                    String login = ADMIN_USERNAME + ":" + ADMIN_PASSWD;
-                    String encodedCredentials = Base64.getEncoder().encodeToString((login).getBytes());
-                    String value = "Basic " + encodedCredentials;
-                    httpConnection.setRequestProperty("Authorization", value);
-                    httpConnection.setRequestMethod("POST");
-                    httpConnection.setRequestProperty("Accept", "*/*");
-                    httpConnection.setDoOutput(false);
-                    if (httpConnection.getResponseCode() != 200){
-                        logger.warning("Could not connect to api");
-                    }
-                    
-                }catch(Exception e){
-                    logger.warning("Could not load knowledge base into MongoDB. Please check internet connection.");
-                }
-            }catch(Exception e){
-                    logger.warning("Could not load knowledge base into MongoDB.");            
-            }
-        }
-
-    } 
     @OnMessage
     @Timed(name = "chatProcessingTime", absolute = true,
            description = "Time needed chatting to the agent.")

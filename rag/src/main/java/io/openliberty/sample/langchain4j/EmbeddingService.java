@@ -13,6 +13,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URL;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -25,12 +29,17 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameters;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 
+import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
+import dev.langchain4j.data.document.parser.apache.tika.ApacheTikaDocumentParser;
+import dev.langchain4j.data.document.splitter.DocumentSplitters;
+import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
 import jakarta.annotation.security.RolesAllowed;
@@ -106,6 +115,65 @@ public class EmbeddingService {
             .status(Response.Status.OK)
             .entity(newEmbedding.toJson())
             .build();
+    }
+
+    @POST
+    @Path("/init")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "admin" })
+    @APIResponses({
+        @APIResponse(responseCode = "200", description = "Successfully added knowledge base."),
+        @APIResponse(responseCode = "400", description = "Invalid embedding configuration.")})
+    @Operation(summary = "Add the knowledge base embeddings to the database.")
+    public Response initializeDatabase() {
+
+        if (!contentAlreadyStored()){
+
+            try{
+
+                URL urlResourcePath = getClass().getClassLoader().getResource("knowledge_base/");
+
+                String resourcePath = Paths.get(urlResourcePath.toURI()).toString();
+                
+                List<dev.langchain4j.data.document.Document> documents = FileSystemDocumentLoader.loadDocuments(resourcePath, new ApacheTikaDocumentParser());
+
+                var docSplitter = DocumentSplitters.recursive(2500, 50);
+
+                List<TextSegment> textSeg = docSplitter.splitAll(documents);
+
+                List<Response> embeddingResponses = new ArrayList<>();
+
+                for (TextSegment content : textSeg){
+                    embeddingResponses.add(add(content.toString(),content.toString()));
+                }
+
+                return Response
+                    .status(Response.Status.OK)
+                    .entity(new ObjectMapper().writeValueAsString(embeddingResponses))
+                    .build();
+
+            }catch(Exception exception){
+            
+                return Response
+                .status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity("[\"Could not load knowledge base into MongoDB.\"]")
+                .build();
+
+            }
+        }
+
+        return Response
+            .status(Response.Status.OK)
+            .entity("[\"Knowledge base already initialized.\"]")
+            .build();
+
+    }
+
+    
+    public boolean contentAlreadyStored(){
+        MongoCollection<org.bson.Document> embeddingStore = db.getCollection("EmbeddingsStored");
+        return embeddingStore.countDocuments() > 0 ? true : false;
     }
 
     @GET
