@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.ParameterIn;
@@ -28,6 +29,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Projections;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 
@@ -143,6 +145,47 @@ public class EmbeddingService {
             .status(Response.Status.OK)
             .entity(sb.toString())
             .build();
+    }
+    @GET
+    @Path("/all")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "admin", "user" })
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Successfully listed all embeddings."),
+            @APIResponse(responseCode = "500", description = "Failed to list embeddings.") })
+    @Operation(summary = "List all the embeddings from the database.")
+    
+    public Response retrieveAllEmbeddings() {
+        StringWriter sb = new StringWriter();
+
+        try {
+            MongoCollection<Document> embeddingStore = db.getCollection("EmbeddingsStored");
+            sb.append("[");
+            boolean first = true;
+            Bson projection = Projections.fields(Projections.include( "Vector"));
+            FindIterable<Document> docs = embeddingStore.find().projection(projection);
+            for (Document d : docs) {
+                if (!first) {
+                    sb.append(",");
+                } else {
+                    first = false;
+                }
+                
+                sb.append(d.toJson());
+            }
+            sb.append("]");
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("[\"Unable to list embeddings!\"]")
+                    .build();
+        }
+
+        return Response
+                .status(Response.Status.OK)
+                .entity(sb.toString())
+                .build();
     }
 
     @PUT

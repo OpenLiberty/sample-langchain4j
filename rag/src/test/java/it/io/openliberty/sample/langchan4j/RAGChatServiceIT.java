@@ -33,12 +33,22 @@ public class RAGChatServiceIT {
     }
 
     @Test
+    public void testLangChain4j() throws Exception {
+        if (Util.usingHuggingFace()) {
+            return;
+        }
+
+        client.sendMessage("How to chat with the assistant using langchain4j?");
+        countDown.await(120, TimeUnit.SECONDS);
+    }
+
+    @Test
     public void testJakartaEE() throws Exception {
         if (Util.usingHuggingFace()) {
             return;
         }
 
-        client.sendMessage("What are some current problems users have with JakartaEE?");
+        client.sendMessage("How to enable the Jakarta EE Web Profile in Open Liberty?");
         countDown.await(120, TimeUnit.SECONDS);
     }
 
@@ -47,27 +57,17 @@ public class RAGChatServiceIT {
         if (Util.usingHuggingFace()) {
             return;
         }
-
-        client.sendMessage("What are some current problems users have with MicroProfile?");
-        countDown.await(120, TimeUnit.SECONDS);
-    }
-
-    @Test
-    public void testLangChain4j() throws Exception {
-        if (Util.usingHuggingFace()) {
-            return;
-        }
-
-        client.sendMessage("What are some current problems users have with LangChain4J?");
+        
+        client.sendMessage("Create a Java class that uses the MicroProfile Health API to check/montior if the CPU usage is below 95%.\n");
         countDown.await(120, TimeUnit.SECONDS);
     }
 
     public static void verify(String message) {
         assertNotNull(message);
 
-        String text = message.toLowerCase();
-        assertTrue(text.contains("microprofile") ||
-            text.contains("jakarta") || text.contains("langchain"),
+        assertTrue(message.toLowerCase().contains("microprofile") || message.contains("OperatingSystemMXBean") ||
+            message.toLowerCase().contains("jakarta") || message.contains("webProfile-10.0") || 
+            message.toLowerCase().contains("langchain") || message.toLowerCase().contains("assistant.chat") || message.toLowerCase().contains("interface Assistant"),
             message);
         countDown.countDown();
     }
