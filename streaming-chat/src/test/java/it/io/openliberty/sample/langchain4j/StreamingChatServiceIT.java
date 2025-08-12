@@ -30,9 +30,6 @@ public class StreamingChatServiceIT {
 
     @Test
     public void testChat() throws Exception {
-        if (Util.usingHuggingFace()) {
-            return;
-        }
         URI uri = new URI("ws://localhost:9080/streamingchat");
         StreamingChatClient client = new StreamingChatClient(uri);
         future = new CompletableFuture<>();
