@@ -1,0 +1,55 @@
+description: Information about AI services with java using Langchain4j
+tags: [langchain4j]
+
+Source: Langchain4j Docs
+Link: https://docs.langchain4j.dev/tutorials/ai-services
+
+AI Services
+
+So far, we have been covering low-level components like ChatModel, ChatMessage, ChatMemory, etc. Working at this level is very flexible and gives you total freedom, but it also forces you to write a lot of boilerplate code. Since LLM-powered applications usually require not just a single component but multiple components working together (e.g., prompt templates, chat memory, LLMs, output parsers, RAG components: embedding models and stores) and often involve multiple interactions, orchestrating them all becomes even more cumbersome.
+We want you to focus on business logic, not on low-level implementation details. Thus, there are currently two high-level concepts in LangChain4j that can help with that: AI Services and Chains.
+Chains (legacy)
+The concept of Chains originates from Python's LangChain (before the introduction of LCEL). The idea is to have a Chain for each common use case, like a chatbot, RAG, etc. Chains combine multiple low-level components and orchestrate interactions between them. The main problem with them is that they are too rigid if you need to customize something. LangChain4j has only two Chains implemented (ConversationalChain and ConversationalRetrievalChain), and we do not plan to add more at this moment.
+AI Services
+We propose another solution called AI Services, tailored for Java. The idea is to hide the complexities of interacting with LLMs and other components behind a simple API.
+This approach is very similar to Spring Data JPA or Retrofit: you declaratively define an interface with the desired API, and LangChain4j provides an object (proxy) that implements this interface. You can think of AI Service as a component of the service layer in your application. It provides AI services. Hence the name.
+AI Services handle the most common operations:
+
+Formatting inputs for the LLM
+Parsing outputs from the LLM
+They also support more advanced features:
+
+Chat memory
+Tools
+RAG
+AI Services can be used to build stateful chatbots that facilitate back-and-forth interactions, as well as to automate processes where each call to the LLM is isolated.
+
+Let's take a look at the simplest possible AI Service. After that, we will explore more complex examples.
+
+Simplest AI Service
+
+First, we define an interface with a single method, chat, which takes a String as input and returns a String.
+'''
+interface Assistant {
+
+    String chat(String userMessage);
+}
+'''
+
+Then, we create our low-level components. These components will be used under the hood of our AI Service. In this case, we just need the ChatModel:
+'''
+ChatModel model = OpenAiChatModel.builder()
+    .apiKey(System.getenv("OPENAI_API_KEY"))
+    .modelName(GPT_4_O_MINI)
+    .build();
+'''
+Finally, we can use the AiServices class to create an instance of our AI Service:
+
+'''
+Assistant assistant = AiServices.create(Assistant.class, model);
+'''
+Now we can use Assistant:
+'''
+String answer = assistant.chat("Hello");
+System.out.println(answer); // Hello, how can I help you?
+'''

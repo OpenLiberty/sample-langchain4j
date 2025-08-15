@@ -3,13 +3,19 @@ package it.io.openliberty.sample.langchan4j;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
+import java.util.Base64;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
@@ -20,11 +26,49 @@ public class RAGChatServiceIT {
 
     private static RAGChatClient client;
     
+    private final String ADMIN_USERNAME = "bob";
+
+    private final String ADMIN_PASSWD = "bobpwd";
+
     @BeforeEach
     public void setup() throws Exception {
         countDown = new CountDownLatch(1);
         URI uri = new URI("ws://localhost:9080/chat");
         client = new RAGChatClient(uri);
+        initializeDatabase();
+    }
+    
+    public void initializeDatabase() throws Exception{
+        
+        String startURL = "http://localhost:9080/api/embedding/init";
+
+        try{
+
+            URL url = new URI(startURL).toURL();
+            HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
+            String login = ADMIN_USERNAME + ":" + ADMIN_PASSWD;
+            String encodedCredentials = Base64.getEncoder().encodeToString((login).getBytes());
+            String value = "Basic " + encodedCredentials;
+            httpConnection.setRequestProperty("Authorization", value);
+            httpConnection.setRequestMethod("POST");
+            httpConnection.setRequestProperty("Accept", "*/*");
+            httpConnection.setDoOutput(false);
+            BufferedReader bufferReader = new BufferedReader(new InputStreamReader(httpConnection.getInputStream()));
+        
+            String line = "";
+            StringBuilder res = new StringBuilder();
+
+            while ((line = bufferReader.readLine()) != null) {
+                res.append(line);
+            }
+            
+            httpConnection.disconnect(); 
+
+        }catch(Exception exception){
+            
+            throw new Exception("Error in initializing the knowledge base.");
+        
+        }
     }
 
     @AfterEach
@@ -33,12 +77,22 @@ public class RAGChatServiceIT {
     }
 
     @Test
+    public void testLangChain4j() throws Exception {
+        if (Util.usingHuggingFace()) {
+            return;
+        }
+
+        client.sendMessage("How to chat with the assistant using langchain4j?");
+        countDown.await(120, TimeUnit.SECONDS);
+    }
+
+    @Test
     public void testJakartaEE() throws Exception {
         if (Util.usingHuggingFace()) {
             return;
         }
 
-        client.sendMessage("What are some current problems users have with JakartaEE?");
+        client.sendMessage("How to enable the Jakarta EE Web Profile in Open Liberty?");
         countDown.await(120, TimeUnit.SECONDS);
     }
 
@@ -47,27 +101,17 @@ public class RAGChatServiceIT {
         if (Util.usingHuggingFace()) {
             return;
         }
-
-        client.sendMessage("What are some current problems users have with MicroProfile?");
-        countDown.await(120, TimeUnit.SECONDS);
-    }
-
-    @Test
-    public void testLangChain4j() throws Exception {
-        if (Util.usingHuggingFace()) {
-            return;
-        }
-
-        client.sendMessage("What are some current problems users have with LangChain4J?");
+        
+        client.sendMessage("Create a Java class that uses the MicroProfile Health API to check/montior if the CPU usage is below 95%.\n");
         countDown.await(120, TimeUnit.SECONDS);
     }
 
     public static void verify(String message) {
         assertNotNull(message);
 
-        String text = message.toLowerCase();
-        assertTrue(text.contains("microprofile") ||
-            text.contains("jakarta") || text.contains("langchain"),
+        assertTrue(message.toLowerCase().contains("microprofile") || message.contains("OperatingSystemMXBean") ||
+            message.toLowerCase().contains("jakarta") || message.contains("webProfile-10.0") || 
+            message.toLowerCase().contains("langchain") || message.toLowerCase().contains("assistant.chat") || message.toLowerCase().contains("interface Assistant"),
             message);
         countDown.countDown();
     }
