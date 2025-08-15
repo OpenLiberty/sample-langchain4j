@@ -1,0 +1,13 @@
+version: 2
+updates:
+- package-ecosystem: maven
+  directory: "/tools"
+  schedule:
+    interval: monthly
+  open-pull-requests-limit: 50
+- package-ecosystem: maven
+  directory: "/streaming-chat"
+  schedule:
+    interval: monthly
+  open-pull-requests-limit: 50
+
