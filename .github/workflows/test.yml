@@ -69,7 +69,7 @@ jobs:
       - run: unset _JAVA_OPTIONS
       - name: Run tests
         env:
-          GITHUB_API_KEY: ${{ secrets.GITHUB_API_KEY }}
+          MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
         run: |
           cd "${{ matrix.project }}"
           ../scripts/testApp.sh
