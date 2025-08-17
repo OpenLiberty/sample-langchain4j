@@ -4,7 +4,6 @@ on:
   pull_request:
     branches: [ main ]
     paths:
-      - 'rag/**'
       - 'streaming-chat/**'
       - 'tools/**'
       - 'scripts/**'
@@ -24,9 +23,6 @@ jobs:
         uses: dorny/paths-filter@v3
         with:
           filters: |
-            rag:
-              - 'rag/**'
-              - 'scripts/**'
             streaming-chat:
               - 'streaming-chat/**'
               - 'scripts/**'
@@ -38,7 +34,6 @@ jobs:
         id: set-matrix
         run: |
           projects=()
-          [ "${{ steps.changes.outputs.rag }}" = "true" ] && projects+=("rag")
           [ "${{ steps.changes.outputs.streaming-chat }}" = "true" ] && projects+=("streaming-chat")
           [ "${{ steps.changes.outputs.tools }}" = "true" ] && projects+=("tools")
 
