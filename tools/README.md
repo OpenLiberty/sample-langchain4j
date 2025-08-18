@@ -1,19 +1,19 @@
 # LangChain4j in Jakarta EE and MicroProfile
 
-This example demonstrates LangChain4j in a Jakarta EE / MicroProfile application on Open Liberty. The application is a chatbot built with LangChain4j and uses Jakarta CDI, Jakarta RESTful Web Services, Jakarta WebSocket, MicroProfile Config, MicroProfile Metrics, and MicroProfile OpenAPI features. The application can use models from either GitHub, Ollama, or Mistral AI.
+This example demonstrates LangChain4j in a Jakarta EE / MicroProfile application on Open Liberty. The application is a chatbot built with LangChain4j and uses Jakarta CDI, Jakarta RESTful Web Services, Jakarta WebSocket, MicroProfile Config, MicroProfile Metrics, and MicroProfile OpenAPI features. The application uses models from either GitHub, Ollama, or Mistral AI depending on the provided API key.
 
-## Prerequisites:
+## Prerequisites
 
 -   [Java 21](https://developer.ibm.com/languages/java/semeru-runtimes/downloads)
 -   Any one of the following model providers:
     -   GitHub
         -   Sign up and sign in to https://github.com.
-        -   Go to your [Settings](https://github.com/settings/profile)/[Developer Settings](https://github.com/settings/developers)/[Persional access tokens](https://github.com/settings/personal-access-tokens).
-        -   Generate a new token
+        -   Go to your [Settings/Developer Settings/Personal access tokens](https://github.com/settings/personal-access-tokens).
+        -   Generate a new token.
     -   Ollama
-        -   Download and install [Ollama](https://ollama.com/download)
-            -   see the [README.md](https://github.com/ollama/ollama/blob/main/README.md#ollama)
-        -   Pull the following model
+        -   Download and install [Ollama](https://ollama.com/download).
+            -   see the [README.md](https://github.com/ollama/ollama/blob/main/README.md#ollama).
+        -   Pull the following model.
             -   `ollama pull llama3.2`
     -   Mistral AI
         -   Sign up and log in to https://console.mistral.ai/home.
@@ -69,7 +69,7 @@ Use the Maven wrapper to start the application by using the [Liberty dev mode](h
 ## Try out the application
 
 - Navigate to http://localhost:9080/toolChat.html
-- At the prompt, try the following message examples:
+- At the prompt, try the following messages:
   - ```
     What are some current problems users have with LangChain4j?
     ```
