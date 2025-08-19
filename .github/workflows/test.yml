@@ -17,13 +17,12 @@ jobs:
       has_changes: ${{ steps.set-matrix.outputs.has_changes }}
     steps:
       - uses: actions/checkout@v4
-
       - name: Detect changed projects
         id: changes
         uses: dorny/paths-filter@v3
         with:
           filters: |
-            streaming-chat:
+            streaming_chat:
               - 'streaming-chat/**'
               - 'scripts/**'
             tools:
@@ -34,7 +33,7 @@ jobs:
         id: set-matrix
         run: |
           projects=()
-          [ "${{ steps.changes.outputs.streaming-chat }}" = "true" ] && projects+=("streaming-chat")
+          [ "${{ steps.changes.outputs.streaming_chat }}" = "true" ] && projects+=("streaming-chat")
           [ "${{ steps.changes.outputs.tools }}" = "true" ] && projects+=("tools")
 
           if [ "${#projects[@]}" -eq 0 ]; then
@@ -67,9 +66,21 @@ jobs:
           distribution: 'semeru'
           java-version: 21
       - run: unset _JAVA_OPTIONS
-      - name: Run tests
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | bash
+          ollama --version
+      - name: Pull Ollama model
+        run: ollama pull llama3.2
+      - name: Run tests with GITHUB_API_KEY
         env:
-          MISTRAL_AI_API_KEY: ${{ secrets.MISTRAL_AI_API_KEY }}
+          GITHUB_API_KEY: ${{ secrets.ADMIN_BACKLOG }}
+        run: |
+          cd "${{ matrix.project }}"
+          ../scripts/testApp.sh
+      - name: Run tests with OLLAMA_BASE_URL
+        env:
+          OLLAMA_BASE_URL: http://127.0.0.1:11434
         run: |
           cd "${{ matrix.project }}"
           ../scripts/testApp.sh
