@@ -73,7 +73,6 @@ jobs:
       - name: Setup Ollama
         run: |
           ollama pull llama3.2
-          ollama serve &
           for i in {1..40}; do
             if curl -sf http://127.0.0.1:11434/api/tags >/dev/null; then
               break
@@ -85,10 +84,11 @@ jobs:
         run: |
           cd "${{ matrix.project }}"
           ../scripts/testApp.sh
-          logs_dir="$(find target -type d -path 'liberty/wlp/usr/servers/defaultServer/logs' -print -quit || true)"
+          logs_dir="$(find . -type d -path '*/liberty/wlp/usr/servers/*/logs' -print -quit || true)"
           if [ -n "$logs_dir" ]; then
-            mkdir -p "../_run-logs/${{ matrix.project }}/github"
-            cp -r "$logs_dir" "../_run-logs/${{ matrix.project }}/github/" || true
+            dest="../_run-logs/${{ matrix.project }}/github/defaultServer"
+            mkdir -p "$dest"
+            cp -r "$logs_dir" "$dest/" || true
           fi
       - name: Run tests with OLLAMA_BASE_URL
         env:
@@ -96,16 +96,17 @@ jobs:
         run: |
           cd "${{ matrix.project }}"
           ../scripts/testApp.sh
-          logs_dir="$(find target -type d -path 'liberty/wlp/usr/servers/defaultServer/logs' -print -quit || true)"
+          logs_dir="$(find . -type d -path '*/liberty/wlp/usr/servers/*/logs' -print -quit || true)"
           if [ -n "$logs_dir" ]; then
-            mkdir -p "../_run-logs/${{ matrix.project }}/ollama"
-            cp -r "$logs_dir" "../_run-logs/${{ matrix.project }}/ollama/" || true
+            dest="../_run-logs/${{ matrix.project }}/ollama/defaultServer"
+            mkdir -p "$dest"
+            cp -r "$logs_dir" "$dest/" || true
           fi
       - name: Post tests
         if: always()
         run: |
           shopt -s nullglob
-          for dir in _run-logs/${{ matrix.project }}/*/logs; do
+          for dir in _run-logs/${{ matrix.project }}/*/*/logs; do
             echo "==> Logs under $dir"
             if [ -f "$dir/console.log" ]; then
               grep -F "Launching" "$dir/console.log" || true
