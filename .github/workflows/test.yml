@@ -70,29 +70,51 @@ jobs:
         run: |
           curl -fsSL https://ollama.com/install.sh | bash
           ollama --version
-      - name: Pull Ollama model
-        run: ollama pull llama3.2
+      - name: Setup Ollama
+        run: |
+          ollama pull llama3.2
+          ollama serve &
+          for i in {1..40}; do
+            if curl -sf http://127.0.0.1:11434/api/tags >/dev/null; then
+              break
+            fi
+          done
       - name: Run tests with GITHUB_API_KEY
         env:
           GITHUB_API_KEY: ${{ secrets.ADMIN_BACKLOG }}
         run: |
           cd "${{ matrix.project }}"
           ../scripts/testApp.sh
+          logs_dir="$(find target -type d -path 'liberty/wlp/usr/servers/defaultServer/logs' -print -quit || true)"
+          if [ -n "$logs_dir" ]; then
+            mkdir -p "../_run-logs/${{ matrix.project }}/github"
+            cp -r "$logs_dir" "../_run-logs/${{ matrix.project }}/github/" || true
+          fi
       - name: Run tests with OLLAMA_BASE_URL
         env:
           OLLAMA_BASE_URL: http://127.0.0.1:11434
         run: |
           cd "${{ matrix.project }}"
           ../scripts/testApp.sh
+          logs_dir="$(find target -type d -path 'liberty/wlp/usr/servers/defaultServer/logs' -print -quit || true)"
+          if [ -n "$logs_dir" ]; then
+            mkdir -p "../_run-logs/${{ matrix.project }}/ollama"
+            cp -r "$logs_dir" "../_run-logs/${{ matrix.project }}/ollama/" || true
+          fi
       - name: Post tests
         if: always()
         run: |
-          logsPath=$(find "${{ matrix.project }}" -type f -name "console.log" -print -quit || true)
-          [ -n "$logsPath" ] && grep -F "Launching" "$logsPath" || true
+          shopt -s nullglob
+          for dir in _run-logs/${{ matrix.project }}/*/logs; do
+            echo "==> Logs under $dir"
+            if [ -f "$dir/console.log" ]; then
+              grep -F "Launching" "$dir/console.log" || true
+            fi
+          done
       - name: Archive server logs if failed
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: server-logs-${{ matrix.project }}
           path: |
-            ${{ matrix.project }}/target/liberty/wlp/usr/servers/defaultServer/logs/
+            _run-logs/${{ matrix.project }}/**/logs/
