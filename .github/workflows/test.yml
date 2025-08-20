@@ -1,0 +1,121 @@
+name: Test applications
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'streaming-chat/**'
+      - 'tools/**'
+      - 'scripts/**'
+      - '.github/workflows/**'
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      has_changes: ${{ steps.set-matrix.outputs.has_changes }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Detect changed projects
+        id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            streaming_chat:
+              - 'streaming-chat/**'
+              - 'scripts/**'
+            tools:
+              - 'tools/**'
+              - 'scripts/**'
+
+      - name: Build test matrix
+        id: set-matrix
+        run: |
+          projects=()
+          [ "${{ steps.changes.outputs.streaming_chat }}" = "true" ] && projects+=("streaming-chat")
+          [ "${{ steps.changes.outputs.tools }}" = "true" ] && projects+=("tools")
+
+          if [ "${#projects[@]}" -eq 0 ]; then
+            echo 'matrix={"include":[]}' >> "$GITHUB_OUTPUT"
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          json='{"include":['
+          sep=""
+          for p in "${projects[@]}"; do
+            json="${json}${sep}{\"project\":\"${p}\"}"
+            sep=","
+          done
+          json="${json}]}"
+          echo "matrix=${json}" >> "$GITHUB_OUTPUT"
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+  test-app:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.has_changes == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'semeru'
+          java-version: 21
+      - run: unset _JAVA_OPTIONS
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | bash
+          ollama --version
+      - name: Setup Ollama
+        run: |
+          ollama pull llama3.2
+          for i in {1..40}; do
+            if curl -sf http://127.0.0.1:11434/api/tags >/dev/null; then
+              break
+            fi
+          done
+      - name: Run tests with GITHUB_API_KEY
+        env:
+          GITHUB_API_KEY: ${{ secrets.ADMIN_BACKLOG }}
+        run: |
+          cd "${{ matrix.project }}"
+          ../scripts/testApp.sh
+          logs_dir="$(find . -type d -path '*/liberty/wlp/usr/servers/*/logs' -print -quit || true)"
+          if [ -n "$logs_dir" ]; then
+            dest="../_run-logs/${{ matrix.project }}/github/defaultServer"
+            mkdir -p "$dest"
+            cp -r "$logs_dir" "$dest/" || true
+          fi
+      - name: Run tests with OLLAMA_BASE_URL
+        env:
+          OLLAMA_BASE_URL: http://127.0.0.1:11434
+        run: |
+          cd "${{ matrix.project }}"
+          ../scripts/testApp.sh
+          logs_dir="$(find . -type d -path '*/liberty/wlp/usr/servers/*/logs' -print -quit || true)"
+          if [ -n "$logs_dir" ]; then
+            dest="../_run-logs/${{ matrix.project }}/ollama/defaultServer"
+            mkdir -p "$dest"
+            cp -r "$logs_dir" "$dest/" || true
+          fi
+      - name: Post tests
+        if: always()
+        run: |
+          shopt -s nullglob
+          for dir in _run-logs/${{ matrix.project }}/*/*/logs; do
+            echo "==> Logs under $dir"
+            if [ -f "$dir/console.log" ]; then
+              grep -F "Launching" "$dir/console.log" || true
+            fi
+          done
+      - name: Archive server logs if failed
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-logs-${{ matrix.project }}
+          path: |
+            _run-logs/${{ matrix.project }}/**/logs/
