@@ -94,7 +94,7 @@ Use the Maven wrapper to start the application by using the [Liberty dev mode](h
 
 If you are currently using one of the following model providers: GitHub, Ollama or MistralAI, you may proceed.
 
-- Navigate to http://localhost:9080/openapi/ui/ to see the OpenAPI user interface (UI) that provides API documentation and a client to test the API endpoints for mongoDB.
+- Navigate to http://localhost:9081/openapi/ui/ to see the OpenAPI user interface (UI) that provides API documentation and a client to test the API endpoints for mongoDB.
   - To try a particular api, authentication is required.
   - The admin (read/write full access) and user (read only access) security roles are created. 
   - For full admin access: username = bob , password = bobpwd 
@@ -106,18 +106,15 @@ If you are currently using one of the following model providers: GitHub, Ollama 
   - Try the POST request at `/api/embedding/init`. This adds the knowledge base embeddings to MongoDB.
   - Try the GET request at `/api/embedding` again. The content from the `sample-langchain4j/rag/src/main/resources/knowledge_base` should be displayed.
 
-- Navigate to http://localhost:9080/ to use the chat application
+- Navigate to http://localhost:9081/ to use the chat application
 
 - At the prompt, try the following message examples:
 
   - ```
-      Create a Java class that uses the MicroProfile Health API to check/montior if the CPU usage is below 95%.
+      what A, E, I, O, R, W character stands for in the log entries finding in the messages.log file?
     ```
   - ```
-      How to enable the Jakarta EE Web Profile in Open Liberty?
-    ```
-  - ```
-      How to chat with the assistant using langchain4j?
+      I got an java.lang.InternalError exception when tried to log in via SAML.
     ```
 
 Use the `sample-langchain4j/rag/src/main/resources/knowledge_base` files to compare the AI responses to the provided files.
