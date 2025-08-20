@@ -48,7 +48,6 @@ public class StreamingChatService {
                     + "from session: " + session.getId());
 
         RemoteEndpoint.Basic remote = session.getBasicRemote();
-
         try {
             String sessionId = session.getId();
             switch (agent.streamingChat(sessionId, message, token -> {
