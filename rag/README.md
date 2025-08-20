@@ -61,7 +61,6 @@ export JAVA_HOME=<your Java 21 home path>
 Set the `GITHUB_API_KEY` environment variable if using Github.
 
 ```
-unset HUGGING_FACE_API_KEY
 unset OLLAMA_BASE_URL
 unset MISTRAL_AI_API_KEY
 export GITHUB_API_KEY=<your Github API token>
@@ -70,7 +69,6 @@ export GITHUB_API_KEY=<your Github API token>
 Set the `OLLAMA_BASE_URL` environment variable if using Ollama. Use your Ollama URL if not using the default.
 
 ```
-unset HUGGING_FACE_API_KEY
 unset GITHUB_API_KEY
 unset MISTRAL_AI_API_KEY
 export OLLAMA_BASE_URL=http://localhost:11434
@@ -79,19 +77,9 @@ export OLLAMA_BASE_URL=http://localhost:11434
 Set the `MISTRAL_AI_API_KEY` environment variable if using Mistral AI.
 
 ```
-unset HUGGING_FACE_API_KEY
 unset GITHUB_API_KEY
 unset OLLAMA_BASE_URL
 export MISTRAL_AI_API_KEY=<your Mistral AI API key>
-```
-
-Set the `HUGGING_FACE_API_KEY` environment variable if using Hugging Face.
-
-```
-unset GITHUB_API_KEY
-unset OLLAMA_BASE_URL
-unset MISTRAL_AI_API_KEY
-export HUGGING_FACE_API_KEY=<your Hugging Face read token>
 ```
 
 ## Start the application
@@ -104,26 +92,35 @@ Use the Maven wrapper to start the application by using the [Liberty dev mode](h
 
 ## Try out the application
 
-If you are currently using one of the following model providers: GitHub, Ollama or MistralAI, you may proceed
+If you are currently using one of the following model providers: GitHub, Ollama or MistralAI, you may proceed.
 
-- Navigate to http://localhost:9080/ to use the chat application
-
-- At the prompt, try the following message examples:
-
-  - ```
-        What are LLMs?
-    ```
-  - ```
-        How to install Open liberty?
-    ```
-
-- Navigate to http://localhost:9080/openapi/ui/ to see the OpenAPI user interface (UI) that provides API documentation and a client to test the API endpoints for mongoDB.
+- Navigate to http://localhost:9081/openapi/ui/ to see the OpenAPI user interface (UI) that provides API documentation and a client to test the API endpoints for mongoDB.
   - To try a particular api, authentication is required.
   - The admin (read/write full access) and user (read only access) security roles are created. 
   - For full admin access: username = bob , password = bobpwd 
   - For read only access: username = alice , password = alicepwd
   - Example: Bob is a member of group admin and Alice is a member of group user.
-  
+
+
+  - Try the GET request at `/api/embedding`. Initially the database is empty.
+  - Try the POST request at `/api/embedding/init`. This adds the knowledge base embeddings to MongoDB.
+  - Try the GET request at `/api/embedding` again. The content from the `sample-langchain4j/rag/src/main/resources/knowledge_base` should be displayed.
+
+- Navigate to http://localhost:9081/ to use the chat application
+
+- At the prompt, try the following message examples:
+
+  - ```
+      what A, E, I, O, R, W character stands for in the log entries finding in the messages.log file?
+    ```
+  - ```
+      I got an java.lang.InternalError exception when tried to log in via SAML.
+    ```
+
+Use the `sample-langchain4j/rag/src/main/resources/knowledge_base` files to compare the AI responses to the provided files.
+
+- In the `rag` directory, running the `./mvnw liberty:dev` again and submitting the GET request gives the embeddings that are stored in MongoDB previously. Similarly, the POST request to `/api/embedding/init` indicates that the knowledge base has already been initialized. 
+
 ## Running the tests
 
 Because you started Liberty in dev mode, you can run the provided tests by pressing the `enter/return` key from the command-line session where you started dev mode.
@@ -143,3 +140,12 @@ If the tests pass, you see a similar output to the following example:
 ```
 
 When you are done checking out the service, exit dev mode by pressing `Ctrl+C` in the command-line session where you ran Liberty, or by typing `q` and then pressing the `enter/return` key.
+
+Then, run the following commands to tear down the environment: 
+
+```
+docker stop mongo-embeddings
+docker rmi mongo-embeddings
+
+```
+

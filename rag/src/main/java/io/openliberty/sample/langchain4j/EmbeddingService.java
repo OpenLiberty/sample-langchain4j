@@ -9,10 +9,14 @@
  *******************************************************************************/
 package io.openliberty.sample.langchain4j;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -31,8 +35,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 
-import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
+import io.openliberty.sample.langchain4j.util.ModelBuilder;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -52,7 +55,12 @@ import jakarta.ws.rs.core.Response;
 @ApplicationScoped
 public class EmbeddingService {
 
-    private EmbeddingModel embModel = new AllMiniLmL6V2EmbeddingModel();
+    private static final String[] MD_FILES = {
+            "logs-1.md", "security-1.md"
+    };
+
+    @Inject
+    private ModelBuilder modelBuilder;
 
     @Inject
     private MongoDatabase db;
@@ -98,7 +106,8 @@ public class EmbeddingService {
         Document newEmbedding = new Document();
         newEmbedding.put("Summary", summary);
         newEmbedding.put("Content", content);
-        newEmbedding.put("Vector", toBytes(embModel.embed(summary).content().vector()));
+        newEmbedding.put("Vector",
+            toBytes(modelBuilder.getEmbeddingModel().embed(summary).content().vector()));
 
         embeddingStore.insertOne(newEmbedding);
 
@@ -106,6 +115,67 @@ public class EmbeddingService {
             .status(Response.Status.OK)
             .entity(newEmbedding.toJson())
             .build();
+    }
+
+    @POST
+    @Path("/init")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    @RolesAllowed({ "admin" })
+    @APIResponses({
+        @APIResponse(responseCode = "200", description = "Successfully added knowledge base."),
+        @APIResponse(responseCode = "400", description = "Invalid embedding configuration.")})
+    @Operation(summary = "Add the knowledge base embeddings to the database.")
+    public Response initializeDatabase() {
+
+        if (!contentAlreadyStored()) {
+            try {
+                MongoCollection<Document> embeddingStore = db.getCollection("EmbeddingsStored");
+                ClassLoader classLoader = EmbeddingService.class.getClassLoader();
+                for (String txtFile: MD_FILES) {
+                    InputStream inStream = classLoader.getResourceAsStream("knowledge_base/" + txtFile);
+                    if (inStream != null) {
+                        InputStreamReader reader = new InputStreamReader(inStream,StandardCharsets.UTF_8);
+                        BufferedReader br = new BufferedReader(reader);
+                        String summary = br.readLine();
+                        StringBuffer content = new StringBuffer();
+                        String line;
+                        while ((line = br.readLine()) != null) {
+                            content.append(line).append("\n");
+                        }
+                        br.close();
+                        reader.close();
+                        inStream.close();
+                        Document newEmbedding = new Document();
+                        newEmbedding.put("Summary", summary);
+                        newEmbedding.put("Content", content.toString());
+                        newEmbedding.put("Vector",
+                            toBytes(modelBuilder.getEmbeddingModel().embed(summary).content().vector()));
+                        embeddingStore.insertOne(newEmbedding);
+                    }
+                }
+                return Response
+                    .status(Response.Status.OK)
+                    .entity("Successfully loaded knowledge base into MongoDB.")
+                    .build();
+            } catch(Exception exception) {
+                return Response
+                .status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity("Could not load knowledge base into MongoDB.")
+                .build();
+            }
+        }
+
+        return Response
+            .status(Response.Status.OK)
+            .entity("Knowledge base already initialized.]")
+            .build();
+
+    }
+    
+    public boolean contentAlreadyStored(){
+        MongoCollection<org.bson.Document> embeddingStore = db.getCollection("EmbeddingsStored");
+        return embeddingStore.countDocuments() > 0;
     }
 
     @GET
@@ -191,7 +261,8 @@ public class EmbeddingService {
         Document newEmbedding = new Document();
         newEmbedding.put("Summary", summary);
         newEmbedding.put("Content", content);
-        newEmbedding.put("Vector", toBytes(embModel.embed(summary).content().vector()));
+        newEmbedding.put("Vector", toBytes(
+            modelBuilder.getEmbeddingModel().embed(summary).content().vector()));
 
         UpdateResult updateResult = embeddingStore.replaceOne(query, newEmbedding);
         if (updateResult.getMatchedCount() == 0) {
