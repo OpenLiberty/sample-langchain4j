@@ -33,14 +33,14 @@ public class RAGChatServiceIT {
     @BeforeEach
     public void setup() throws Exception {
         countDown = new CountDownLatch(1);
-        URI uri = new URI("ws://localhost:9080/chat");
+        URI uri = new URI("ws://localhost:9081/chat");
         client = new RAGChatClient(uri);
         initializeDatabase();
     }
     
     public void initializeDatabase() throws Exception{
         
-        String startURL = "http://localhost:9080/api/embedding/init";
+        String startURL = "http://localhost:9081/api/embedding/init";
 
         try{
 
@@ -77,42 +77,33 @@ public class RAGChatServiceIT {
     }
 
     @Test
-    public void testLangChain4j() throws Exception {
+    public void testLogs() throws Exception {
         if (Util.usingHuggingFace()) {
             return;
         }
 
-        client.sendMessage("How to chat with the assistant using langchain4j?");
+        client.sendMessage("what A, E, I, O, R, W character stands for in the log entries finding in the messages.log file?\n");
         countDown.await(120, TimeUnit.SECONDS);
     }
 
     @Test
-    public void testJakartaEE() throws Exception {
+    public void testSecurity() throws Exception {
         if (Util.usingHuggingFace()) {
             return;
         }
 
-        client.sendMessage("How to enable the Jakarta EE Web Profile in Open Liberty?");
+        client.sendMessage("I got an java.lang.InternalError exception when tried to log in via SAML.\n");
         countDown.await(120, TimeUnit.SECONDS);
     }
 
-    @Test
-    public void testMicroProfile() throws Exception {
-        if (Util.usingHuggingFace()) {
-            return;
-        }
-        
-        client.sendMessage("Create a Java class that uses the MicroProfile Health API to check/montior if the CPU usage is below 95%.\n");
-        countDown.await(120, TimeUnit.SECONDS);
-    }
 
     public static void verify(String message) {
         assertNotNull(message);
 
-        assertTrue(message.toLowerCase().contains("microprofile") || message.contains("OperatingSystemMXBean") ||
-            message.toLowerCase().contains("jakarta") || message.contains("webProfile-10.0") || 
-            message.toLowerCase().contains("langchain") || message.toLowerCase().contains("assistant.chat") || message.toLowerCase().contains("interface Assistant"),
-            message);
+        assertTrue((message.toLowerCase().contains("audit") || message.toLowerCase().contains("error") || 
+        message.toLowerCase().contains("information") || message.toLowerCase().contains("system.out") || 
+        message.toLowerCase().contains("system.err") || message.toLowerCase().contains("warning")) || 
+        (message.toLowerCase().contains("securerandom.source") || message.toLowerCase().contains("file:/dev/urandom") || message.contains("java.security")), message);
         countDown.countDown();
     }
 
