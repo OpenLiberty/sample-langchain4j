@@ -168,7 +168,7 @@ public class EmbeddingService {
 
         return Response
             .status(Response.Status.OK)
-            .entity("Knowledge base already initialized.]")
+            .entity("Knowledge base already initialized.")
             .build();
 
     }
