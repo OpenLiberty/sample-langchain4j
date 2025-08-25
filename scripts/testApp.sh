@@ -8,5 +8,6 @@ set -euxo pipefail
     -q clean package liberty:create liberty:install-feature liberty:deploy
 
 ./mvnw -ntp liberty:start
+sleep 10
 ./mvnw -ntp failsafe:integration-test liberty:stop
 ./mvnw -ntp failsafe:verify
