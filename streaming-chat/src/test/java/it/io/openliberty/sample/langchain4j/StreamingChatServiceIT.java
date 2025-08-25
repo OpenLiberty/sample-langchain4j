@@ -34,7 +34,7 @@ public class StreamingChatServiceIT {
         StreamingChatClient client = new StreamingChatClient(uri);
         future = new CompletableFuture<>();
         builder = new StringBuilder();
-        client.sendMessage("LangChain4j is a Java framework launched in 2023 to connect to AI model providers. When was LangChain4j launched?");
+        client.sendMessage("What are large language models?");
         String message;
         try {
             message = future.get(20, TimeUnit.SECONDS);
@@ -43,7 +43,7 @@ public class StreamingChatServiceIT {
         }
         client.close();
         assertNotNull(message);
-        assertTrue(message.contains("2023"), message);
+        assertTrue(message.contains("artificial intelligence"), message);
     }
 
     public static void verify(String message) {
