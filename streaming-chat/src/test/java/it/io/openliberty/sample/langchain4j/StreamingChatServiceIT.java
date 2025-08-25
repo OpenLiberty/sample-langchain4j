@@ -34,7 +34,7 @@ public class StreamingChatServiceIT {
         StreamingChatClient client = new StreamingChatClient(uri);
         future = new CompletableFuture<>();
         builder = new StringBuilder();
-        client.sendMessage("When was the LangChain4j launched?");
+        client.sendMessage("What are large language models?");
         String message;
         try {
             message = future.get(20, TimeUnit.SECONDS);
@@ -43,9 +43,7 @@ public class StreamingChatServiceIT {
         }
         client.close();
         assertNotNull(message);
-        assertTrue(message.contains("2020") || message.contains("2021") ||
-            message.contains("2022") || message.contains("2023"),
-            message);
+        assertTrue(message.contains("artificial intelligence"), message);
     }
 
     public static void verify(String message) {
