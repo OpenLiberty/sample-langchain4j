@@ -32,6 +32,7 @@ import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class MongoProducer {
+    //private final String CONNECTION_STRING = "mongodb://sampleUser:pass@localhost:27017/knowledgeBase?authSource=admin&directConnection=true";
 
     @Inject
     @ConfigProperty(name = "mongo.hostname", defaultValue = "localhost")
@@ -78,14 +79,13 @@ public class MongoProducer {
                     builder.context(sslContext);
                 })
                 .build());
-         
     }
 
     @Produces
     public MongoDatabase createDB(MongoClient client) {
-         return client.getDatabase(dbName);
+        return client.getDatabase(dbName);
     }
-   
+    
     public void close(@Disposes MongoClient toClose) {
         toClose.close();
     }

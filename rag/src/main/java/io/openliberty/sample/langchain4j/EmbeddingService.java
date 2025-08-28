@@ -34,7 +34,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-
+import io.openliberty.sample.langchain4j.mongo.AtlasMongoDB;
 import io.openliberty.sample.langchain4j.util.ModelBuilder;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -64,7 +64,7 @@ public class EmbeddingService {
 
     @Inject
     private MongoDatabase db;
-
+    AtlasMongoDB mongodbFunction = new AtlasMongoDB();
     private byte[] toBytes(float[] vector) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try (DataOutputStream dos = new DataOutputStream(bos)) {
@@ -130,39 +130,44 @@ public class EmbeddingService {
 
         if (!contentAlreadyStored()) {
             try {
-                MongoCollection<Document> embeddingStore = db.getCollection("EmbeddingsStored");
-                ClassLoader classLoader = EmbeddingService.class.getClassLoader();
-                for (String txtFile: MD_FILES) {
-                    InputStream inStream = classLoader.getResourceAsStream("knowledge_base/" + txtFile);
-                    if (inStream != null) {
-                        InputStreamReader reader = new InputStreamReader(inStream,StandardCharsets.UTF_8);
-                        BufferedReader br = new BufferedReader(reader);
-                        String summary = br.readLine();
-                        StringBuffer content = new StringBuffer();
-                        String line;
-                        while ((line = br.readLine()) != null) {
-                            content.append(line).append("\n");
+                mongodbFunction.createIndex();
+                try {
+                    MongoCollection<Document> embeddingStore = db.getCollection("EmbeddingsStored");
+                    ClassLoader classLoader = EmbeddingService.class.getClassLoader();
+                    for (String txtFile: MD_FILES) {
+                        InputStream inStream = classLoader.getResourceAsStream("knowledge_base/" + txtFile);
+                        if (inStream != null) {
+                            InputStreamReader reader = new InputStreamReader(inStream,StandardCharsets.UTF_8);
+                            BufferedReader br = new BufferedReader(reader);
+                            String summary = br.readLine();
+                            StringBuffer content = new StringBuffer();
+                            String line;
+                            while ((line = br.readLine()) != null) {
+                                content.append(line).append("\n");
+                            }
+                            br.close();
+                            reader.close();
+                            inStream.close();
+                            Document newEmbedding = new Document();
+                            newEmbedding.put("Summary", summary);
+                            newEmbedding.put("Content", content.toString());
+                            newEmbedding.put("Vector",
+                                toBytes(modelBuilder.getEmbeddingModel().embed(summary).content().vector()));
+                            embeddingStore.insertOne(newEmbedding);
                         }
-                        br.close();
-                        reader.close();
-                        inStream.close();
-                        Document newEmbedding = new Document();
-                        newEmbedding.put("Summary", summary);
-                        newEmbedding.put("Content", content.toString());
-                        newEmbedding.put("Vector",
-                            toBytes(modelBuilder.getEmbeddingModel().embed(summary).content().vector()));
-                        embeddingStore.insertOne(newEmbedding);
                     }
-                }
-                return Response
-                    .status(Response.Status.OK)
-                    .entity("Successfully loaded knowledge base into MongoDB.")
+                    return Response
+                        .status(Response.Status.OK)
+                        .entity("Successfully loaded knowledge base into MongoDB.")
+                        .build();
+                } catch(Exception exception) {
+                    return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Could not load knowledge base into MongoDB.")
                     .build();
-            } catch(Exception exception) {
-                return Response
-                .status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity("Could not load knowledge base into MongoDB.")
-                .build();
+                }
+            }catch(Exception exception){
+                System.out.println("ERROR in search index: Please retry again." + exception.getMessage());
             }
         }
 
