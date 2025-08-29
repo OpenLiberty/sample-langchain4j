@@ -1,67 +1,46 @@
-var messagesTableBody = document.getElementById('messagesTableBody');
-var thinkingRow = document.createElement('tr');
-thinkingRow.setAttribute('id', 'thinking');
-thinkingRow.innerHTML = '<td><p class=\"thinking-msg\">thinking...</p></td>' +
-                        '<td></td>';
-
-function getTime() {
-    var now = new Date();
-    var hours = now.getHours();
-    hours = hours < 10 ? '0' + hours : hours;
-    var minutes = now.getMinutes();
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    var seconds = now.getSeconds();
-    seconds = seconds < 10 ? '0' + seconds : seconds;
-    var time = hours + ":" + minutes + ":" + seconds;
-    return time;
-}
+var input = document.getElementById('myMessage');
+var sendButton = document.getElementById('sendButton');
+var messages = document.getElementById('messagesTableBody');
 
 function sendMessage() {
-    var myMessageRow = document.createElement('tr');
-    var myMessage = document.getElementById('myMessage').value;
-    myMessageRow.innerHTML = '<td><p class=\"my-msg\">' + myMessage + '</p></td>' +
-                             '<td>' + getTime() + '</td>';
-    messagesTableBody.appendChild(myMessageRow);
-    messagesTableBody.appendChild(thinkingRow);
-    webSocket.send(myMessage);
-    document.getElementById('myMessage').value = "";
-    document.getElementById('sendButton').disabled = true;
+    var message = input.value;
+    appendMessage('my-msg', message, new Date().toLocaleTimeString());
+    appendMessage('thinking-msg', 'thinking...');
+    webSocket.send(message);
+    input.value = "";
+    sendButton.disabled = true;
+};
+
+function appendMessage(className, textContent, timeContent) {
+    var messageRow = document.createElement('tr');
+    messageRow.innerHTML = '<td><p></p></td><td></td>';
+    messageRow.querySelector('p').className = className;
+    messageRow.querySelector('p').textContent = textContent;
+    messageRow.querySelector('td:nth-child(2)').textContent = timeContent;
+    messages.append(messageRow);
 }
 
-// Getting the used url from browser
-var loc = window.location, uri;
-if (loc.protocol === "https:") {
-    uri = "wss:";
-} else {
-    uri = "ws:";
-}
-uri += "//" + loc.host;
-uri += "/" + "streamingchat";
-// buildign websocket
-const webSocket = new WebSocket(uri);
+// Connect to websocket
+var webSocket = new WebSocket('/streamingchat');
 
 webSocket.onopen = function (event) {
     console.log(event);
 };
  
 webSocket.onmessage = function (event) {
-    var data = event.data;
-    if (data === "") {  // messages are ended with an empty string
-        document.getElementById('sendButton').disabled = false;
-        return;
+    if (event.data != '') {
+        if (messages.lastChild.querySelector('.thinking-msg')) {  // if this is the first token
+            messages.removeChild(messages.lastChild);
+            appendMessage('agent-msg', '', new Date().toLocaleTimeString());
+        }
+        messages.lastChild.querySelector('.agent-msg').textContent += event.data;
+    } else {  // stream ends with empty string
+        sendButton.disabled = false;
     }
-    if (!thinkingRow.parentNode) {  // if a token has been sent already
-        var existing = messagesTableBody.lastChild.firstChild.firstChild;
-        existing.innerHTML += data.replaceAll("\n", "<br/>");
-        return;
-    }
-    messagesTableBody.removeChild(thinkingRow);
-    var agentMessageRow = document.createElement('tr');
-    agentMessageRow.innerHTML = '<td><p class=\"agent-msg\">' + data + '</p></td>' +
-                                '<td>' + getTime() + '</td>';
-    messagesTableBody.appendChild(agentMessageRow);
 };
 
-webSocket.onerror = function (event) {
+webSocket.onclose = function (event) {
     console.log(event);
+    appendMessage('agent-msg', 'Error: Connection closed unexpectedly.');
+    sendButton.disabled = true;
 };

@@ -37,10 +37,10 @@
                 </div>
             </div>
         </section>
-        <div class="my_message_container">
+        <form class="my_message_container" onsubmit="sendMessage()" action="javascript:void 0">
             <label id="myMsgLabel">My message:</label>
             <input type="text" size="50" id="myMessage"/>
-            <button id="sendButton" type="button" onclick="sendMessage()">Send</button>
+            <button id="sendButton" type="submit">Send</button>
         </div>
         <footer class="bodyFooter">
             <div class="bodyFooterLink">
