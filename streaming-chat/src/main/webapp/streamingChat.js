@@ -7,7 +7,7 @@ function sendMessage() {
     appendMessage('my-msg', message, new Date().toLocaleTimeString());
     appendMessage('thinking-msg', 'thinking...');
     webSocket.send(message);
-    input.value = "";
+    input.value = '';
     sendButton.disabled = true;
 };
 
