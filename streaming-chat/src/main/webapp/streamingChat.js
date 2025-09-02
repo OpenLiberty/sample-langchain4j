@@ -45,6 +45,6 @@ webSocket.onerror = function (event) {
 
 webSocket.onclose = function (event) {
     console.log(event);
-    appendMessage('agent-msg', 'The connection to the streaming chat serivce was closed.');
+    appendMessage('agent-msg', 'The connection to the streaming chat service was closed.');
     sendButton.disabled = true;
 };
