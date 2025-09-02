@@ -26,7 +26,7 @@ var webSocket = new WebSocket('/streamingchat');
 webSocket.onopen = function (event) {
     console.log(event);
 };
- 
+
 webSocket.onmessage = function (event) {
     if (event.data != '') {
         if (messages.lastChild.querySelector('.thinking-msg')) {  // if this is the first token
@@ -37,6 +37,10 @@ webSocket.onmessage = function (event) {
     } else {  // stream ends with empty string
         sendButton.disabled = false;
     }
+};
+
+webSocket.onerror = function (event) {
+    console.log('Error: ' + event);
 };
 
 webSocket.onclose = function (event) {

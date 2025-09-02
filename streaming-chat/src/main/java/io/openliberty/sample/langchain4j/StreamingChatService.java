@@ -10,11 +10,15 @@
 
 package io.openliberty.sample.langchain4j;
 
+import static dev.langchain4j.model.output.FinishReason.LENGTH;
+
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
-import java.util.logging.Level;
+
+import org.eclipse.microprofile.metrics.annotation.Timed;
 
 import dev.langchain4j.model.chat.response.ChatResponse;
+import io.openliberty.sample.langchain4j.StreamingChatAgent.StreamingAssistant;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.websocket.CloseReason;
@@ -22,14 +26,8 @@ import jakarta.websocket.OnClose;
 import jakarta.websocket.OnError;
 import jakarta.websocket.OnMessage;
 import jakarta.websocket.OnOpen;
-import jakarta.websocket.RemoteEndpoint;
 import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpoint;
-import org.eclipse.microprofile.metrics.annotation.Timed;
-
-import static dev.langchain4j.model.output.FinishReason.LENGTH;
-
-import io.openliberty.sample.langchain4j.StreamingChatAgent.StreamingAssistant;
 
 @ApplicationScoped
 @ServerEndpoint("/streamingchat")
@@ -70,9 +68,10 @@ public class StreamingChatService {
             .onCompleteResponse(response::complete)
             .onError(response::completeExceptionally)
             .start();
-        if (response.get().finishReason() == LENGTH)
+        if (response.get().finishReason() == LENGTH) {
             session.getBasicRemote().sendText(" ...");
-	session.getBasicRemote().sendText("");
+        }
+	    session.getBasicRemote().sendText("");
 
         logger.info("Server finished response to session: " + session.getId());
     }
@@ -80,14 +79,14 @@ public class StreamingChatService {
     @OnClose
     public void onClose(Session session, CloseReason closeReason) throws Exception {
         logger.info("Session " + session.getId() + " was closed with reason " + closeReason.getCloseCode());
-	assistant.evictChatMemory(session.getId());
+	    assistant.evictChatMemory(session.getId());
     }
 
     @OnError
     public void onError(Session session, Throwable error) throws Exception {
         logger.info("WebSocket error for " + session.getId() + " " + error.getMessage());
-	session.getBasicRemote().sendText("My failure reason is:\n\n" + error.getMessage());
-	session.getBasicRemote().sendText("");
+	    session.getBasicRemote().sendText("My failure reason is:\n\n" + error.getMessage());
+	    session.getBasicRemote().sendText("");
     }
 
 }
