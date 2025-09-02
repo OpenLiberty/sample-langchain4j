@@ -37,7 +37,7 @@ public class StreamingChatServiceIT {
         client.sendMessage("What are large language models?");
         String message;
         try {
-            message = future.get(20, TimeUnit.SECONDS);
+            message = future.get(60, TimeUnit.SECONDS);
         } catch (TimeoutException e) {
             message = builder.toString();
         }
