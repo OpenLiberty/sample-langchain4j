@@ -16,6 +16,7 @@ import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.MemoryId;
+import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.TokenStream;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.memory.ChatMemoryAccess;
@@ -40,6 +41,7 @@ public class StreamingChatAgent {
     }
 
     interface StreamingAssistant extends ChatMemoryAccess {
+       @SystemMessage("You are a helpful chat bot knowledgeable about the OpenLiberty application server.")
        TokenStream streamingChat(@MemoryId String sessionId, @UserMessage String userMessage);
     }
 
