@@ -41,8 +41,8 @@ public class StreamingChatAgent {
     }
 
     interface StreamingAssistant extends ChatMemoryAccess {
-       @SystemMessage("You are a helpful chat bot knowledgeable about the OpenLiberty application server.")
-       TokenStream streamingChat(@MemoryId String sessionId, @UserMessage String userMessage);
+        @SystemMessage("You are a helpful chat bot knowledgeable about the Open Liberty application server runtime.")
+        TokenStream streamingChat(@MemoryId String sessionId, @UserMessage String userMessage);
     }
 
     private StreamingAssistant assistant = null;
