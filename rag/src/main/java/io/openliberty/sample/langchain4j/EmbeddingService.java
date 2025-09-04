@@ -10,13 +10,12 @@
 package io.openliberty.sample.langchain4j;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -56,27 +55,35 @@ import jakarta.ws.rs.core.Response;
 public class EmbeddingService {
 
     private static final String[] MD_FILES = {
-            "logs-1.md", "security-1.md"
+        "logs-1.md", "security-1.md"
     };
+
+    AtlasMongoDB mongodbFunction = new AtlasMongoDB();
 
     @Inject
     private ModelBuilder modelBuilder;
 
     @Inject
-    private MongoDatabase db;
-    AtlasMongoDB mongodbFunction = new AtlasMongoDB();
-    private byte[] toBytes(float[] vector) {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try (DataOutputStream dos = new DataOutputStream(bos)) {
-            for (float f : vector) {
-                dos.writeFloat(f);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return bos.toByteArray();
+    MongoDatabase db;
+
+    private static boolean initialized = false;
+
+    public static boolean getInitialized() {
+        return initialized;
     }
 
+    public static void setInitialized(boolean initialized) {
+        EmbeddingService.initialized = initialized;
+    }
+
+    private List<Float> toFloat(float[] embedding){
+        List<Float> vector = new ArrayList<>();
+        for (float elem : embedding) {
+            vector.add(elem);
+        }
+        return vector;
+    }
+    
     @POST
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -107,7 +114,7 @@ public class EmbeddingService {
         newEmbedding.put("Summary", summary);
         newEmbedding.put("Content", content);
         newEmbedding.put("Vector",
-            toBytes(modelBuilder.getEmbeddingModel().embed(summary).content().vector()));
+            toFloat(modelBuilder.getEmbeddingModel().embed(summary).content().vector()));
 
         embeddingStore.insertOne(newEmbedding);
 
@@ -127,10 +134,9 @@ public class EmbeddingService {
         @APIResponse(responseCode = "400", description = "Invalid embedding configuration.")})
     @Operation(summary = "Add the knowledge base embeddings to the database.")
     public Response initializeDatabase() {
-
-        if (!contentAlreadyStored()) {
+        if (!getInitialized()) {
             try {
-                mongodbFunction.createIndex();
+                mongodbFunction.createIndex(db);
                 try {
                     MongoCollection<Document> embeddingStore = db.getCollection("EmbeddingsStored");
                     ClassLoader classLoader = EmbeddingService.class.getClassLoader();
@@ -152,10 +158,11 @@ public class EmbeddingService {
                             newEmbedding.put("Summary", summary);
                             newEmbedding.put("Content", content.toString());
                             newEmbedding.put("Vector",
-                                toBytes(modelBuilder.getEmbeddingModel().embed(summary).content().vector()));
+                                toFloat(modelBuilder.getEmbeddingModel().embed(summary).content().vector()));
                             embeddingStore.insertOne(newEmbedding);
                         }
                     }
+                    setInitialized(true);
                     return Response
                         .status(Response.Status.OK)
                         .entity("Successfully loaded knowledge base into MongoDB.")
@@ -177,11 +184,6 @@ public class EmbeddingService {
             .build();
 
     }
-    
-    public boolean contentAlreadyStored(){
-        MongoCollection<org.bson.Document> embeddingStore = db.getCollection("EmbeddingsStored");
-        return embeddingStore.countDocuments() > 0;
-    }
 
     @GET
     @Path("/")
@@ -192,12 +194,15 @@ public class EmbeddingService {
         @APIResponse(responseCode = "500", description = "Failed to list the embeddings.") })
     @Operation(summary = "List the embeddings from the database.")
     public Response retrieve() {
+        
         StringWriter sb = new StringWriter();
+        
         try {
             MongoCollection<Document> embeddingStore = db.getCollection("EmbeddingsStored");
             sb.append("[");
             boolean first = true;
             FindIterable<Document> docs = embeddingStore.find();
+
             for (Document d : docs) {
                 if (!first) {
                     sb.append(",");
@@ -266,7 +271,7 @@ public class EmbeddingService {
         Document newEmbedding = new Document();
         newEmbedding.put("Summary", summary);
         newEmbedding.put("Content", content);
-        newEmbedding.put("Vector", toBytes(
+        newEmbedding.put("Vector", toFloat(
             modelBuilder.getEmbeddingModel().embed(summary).content().vector()));
 
         UpdateResult updateResult = embeddingStore.replaceOne(query, newEmbedding);

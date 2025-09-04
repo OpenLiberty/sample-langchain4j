@@ -55,20 +55,4 @@
         </application-bnd>
     </webApplication>
 
-    <keyStore
-        id="outboundTrustStore"
-        location="${server.output.dir}/resources/security/truststore.p12"
-        password="mongodb"
-        type="PKCS12"
-    />
-
-    <ssl
-        id="outboundSSLContext"
-        keyStoreRef="defaultKeyStore"
-        trustStoreRef="outboundTrustStore"
-        sslProtocol="TLS"
-    />
-
-    <logging consoleLogLevel="INFO" />
-
 </server>
