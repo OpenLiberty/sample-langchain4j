@@ -37,7 +37,7 @@ public class ChatService {
     ChatAgent agent = null;
 
     @Inject     
-    AtlasMongoDB mongodbFunction;
+    AtlasMongoDB mongoDB;
 
     @OnOpen
     public void onOpen(Session session) {
@@ -65,9 +65,9 @@ public class ChatService {
         String answer;
         try {
             String sessionId = session.getId();
-            float[] userQueryEmbedding = mongodbFunction.convertUserQueryToEmbedding(message);
+            float[] userQueryEmbedding = mongoDB.convertUserQueryToEmbedding(message);
             List<Float> result = toFloat(userQueryEmbedding);
-            List<String> output = mongodbFunction.retrieveContent(result,message);
+            List<String> output = mongoDB.retrieveContent(result,message);
             message += "Here are some relevent information from the knowledge base:";
             message += output;
             answer = agent.chat(sessionId, message);

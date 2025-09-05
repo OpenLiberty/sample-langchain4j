@@ -37,6 +37,7 @@ public class AtlasMongoDB {
     MongoDatabase db;
     
     public void getContentStored() {
+        
         MongoCollection<Document> embeddingStore = db.getCollection(COLLECTION_NAME);
         
         FindIterable<Document> docs = embeddingStore.find();

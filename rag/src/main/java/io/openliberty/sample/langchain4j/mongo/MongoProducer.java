@@ -11,6 +11,7 @@ package io.openliberty.sample.langchain4j.mongo;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import com.ibm.websphere.crypto.PasswordUtil;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 
@@ -46,15 +47,16 @@ public class MongoProducer {
     @ConfigProperty(name = "mongo.pass.encoded")
     String encodedPass;
     
-    private final String CONNECTION_STRING = "mongodb://sampleUser:openliberty@localhost:27018/embeddingsdb?authSource=admin&directConnection=true";
-
     @Produces
     public MongoClient createMongo(){
-        return MongoClients.create(
-            MongoClientSettings.builder()
-                    .applyConnectionString(new ConnectionString(CONNECTION_STRING))
-                    .build());
-    } 
+        String password = PasswordUtil.passwordDecode(encodedPass);
+        
+        return MongoClients.create(MongoClientSettings.builder()
+                .applyConnectionString(
+                        new ConnectionString("mongodb://" + user +":"+ password+"@"+ hostname + ":" + port+"/" +dbName+ "?authSource=admin&directConnection=true"))
+                .build());
+    }
+
     @Produces
     public MongoDatabase createDB(MongoClient client) {
         return client.getDatabase(dbName);
