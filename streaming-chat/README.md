@@ -1,12 +1,12 @@
 # LangChain4j in Jakarta EE and MicroProfile
 
-This example demonstrates LangChain4J in a Jakarta EE / MicroProfile application on Open Liberty. The application is a chatbot built with LangChain4J and uses Jakarta CDI, Jakarta RESTful Web Services, Jakarta WebSocket, MicroProfile Config, MicroProfile Metrics, and MicroProfile OpenAPI features. The application allows to use models from either Github, Ollama, or Mistral AI.
+This example demonstrates LangChain4j streaming chat in a Jakarta EE / MicroProfile application on Open Liberty. The application is a chatbot built with LangChain4j and uses Jakarta CDI, Jakarta RESTful Web Services, Jakarta WebSocket, MicroProfile Config, MicroProfile Metrics, and MicroProfile OpenAPI features. The application uses models from either GitHub, Ollama, or Mistral AI depending on the provided API key.
 
 ## Prerequisites:
 
 -   [Java 21](https://developer.ibm.com/languages/java/semeru-runtimes/downloads)
--   Either one of the following model providers:
-    -   Github
+-   Any one of the following model providers:
+    -   GitHub
         -   Sign up and sign in to https://github.com.
         -   Go to your [Settings/Developer Settings/Personal access tokens](https://github.com/settings/personal-access-tokens).
         -   Generate a new token with the `models` account permission.
@@ -39,7 +39,7 @@ Set the `GITHUB_API_KEY` environment variable if using Github.
 ```
 unset OLLAMA_BASE_URL
 unset MISTRAL_AI_API_KEY
-export GITHUB_API_KEY=<your Github API token>
+export GITHUB_API_KEY=<your GitHub API token>
 ```
 
 Set the `OLLAMA_BASE_URL` environment variable if using Ollama. Use your Ollama URL if not using the default.
@@ -77,8 +77,9 @@ Use the Maven wrapper to start the application by using the [Liberty dev mode](h
         Which are the most used models?
         ```
     -   ```
-        show me the documentation
+        What is Open Liberty?
         ```
+-   The response is displayed on the screen as the LLM generates it.
 
 ## Running the tests
 
