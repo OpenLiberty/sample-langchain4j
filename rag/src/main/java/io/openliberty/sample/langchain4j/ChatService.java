@@ -9,25 +9,15 @@
  *******************************************************************************/
 package io.openliberty.sample.langchain4j;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.AbstractMap;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.PriorityQueue;
+
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
-import org.apache.lucene.util.VectorUtil;
-import org.bson.conversions.Bson;
 import org.eclipse.microprofile.metrics.annotation.Timed;
 
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Projections;
-
-import io.openliberty.sample.langchain4j.util.ModelBuilder;
+import io.openliberty.sample.langchain4j.mongo.AtlasMongoDB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.websocket.CloseReason;
@@ -41,25 +31,27 @@ import jakarta.websocket.server.ServerEndpoint;
 @ApplicationScoped
 @ServerEndpoint(value = "/chat", encoders = { ChatMessageEncoder.class })
 public class ChatService {
-   
     private static Logger logger = Logger.getLogger(ChatService.class.getName());
-
-    private static int MAX_RESULTS = 3;
-
-    @Inject
-    private ModelBuilder modelBuilder;
 
     @Inject
     ChatAgent agent = null;
-   
-    @Inject
-    private MongoDatabase db;
 
-    private PriorityQueue<Map.Entry<String, Float>> maxHeap = new PriorityQueue<>(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+    @Inject     
+    AtlasMongoDB mongoDB;
 
     @OnOpen
     public void onOpen(Session session) {
         logger.info("Server connected to session: " + session.getId());
+        System.out.println("In order to use the knowledge base: visit http://localhost:9081/openapi/ui/ and" +
+        "\ntry the POST request at `/api/embedding/init` to initialize the database.");
+    }
+
+    private List<Float> toFloat(float[] embedding){
+        List<Float> vector = new ArrayList<>();
+        for (float elem : embedding) {
+            vector.add(elem);
+        }
+        return vector;
     }
     
     @OnMessage
@@ -73,7 +65,12 @@ public class ChatService {
         String answer;
         try {
             String sessionId = session.getId();
-            answer = agent.chat(sessionId, getSimilarContent(message));
+            float[] userQueryEmbedding = mongoDB.convertUserQueryToEmbedding(message);
+            List<Float> result = toFloat(userQueryEmbedding);
+            List<String> output = mongoDB.retrieveContent(result,message);
+            message += "Here are some relevent information from the knowledge base:";
+            message += output;
+            answer = agent.chat(sessionId, message);
         } catch (Exception e) {
             answer = "My failure reason is:\n\n" + e.getMessage();
         }
@@ -96,43 +93,5 @@ public class ChatService {
     public void onError(Session session, Throwable throwable) {
         logger.severe("WebSocket error for " + session.getId() + " " +
             throwable.getMessage());
-    }
-
-    private byte[] toBytes(float[] vector) {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try (DataOutputStream dos = new DataOutputStream(bos)) {
-            for (float f : vector) {
-                dos.writeFloat(f);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return bos.toByteArray();
-    }
-
-    private String getSimilarContent(String userMessage) {
-
-        byte[] messageVec = toBytes(modelBuilder.getEmbeddingModel().embed(userMessage).content().vector());
-        MongoCollection<org.bson.Document> embeddingStore = db.getCollection("EmbeddingsStored");
-        Bson projection = Projections.fields(Projections.include( "Vector", "Content"));
-        FindIterable<org.bson.Document> docs = embeddingStore.find().projection(projection);
-        for (org.bson.Document d : docs) {
-            org.bson.types.Binary binaryVectorFormat = d.get("Vector", org.bson.types.Binary.class);
-            byte[] vec = binaryVectorFormat.getData();
-            Float similarity = VectorUtil.cosine(messageVec, vec);
-            maxHeap.offer(new AbstractMap.SimpleEntry<>((String) d.getString("Content"), similarity));
-        }
-
-        StringBuffer sb = new StringBuffer();
-        sb.append(userMessage);
-        sb.append("\nHere are the similar content from the knowledge base (use relevent info only):\n");
-        for (int i = 0; !maxHeap.isEmpty() && i < MAX_RESULTS; i++) {
-            Map.Entry<String,Float> emtry = maxHeap.poll();
-            sb.append(emtry.getKey());
-            sb.append("\n");
-        }
-
-        return sb.toString();
-
     }
 }

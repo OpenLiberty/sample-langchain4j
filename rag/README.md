@@ -22,27 +22,12 @@ To run MongoDB in this example application, navigate to the `sample-langchain4j`
 cd sample-langchain4j
 ```
 
-Run the following commands to use the Dockerfile to build the image:
+Run the following command to start the MongoDB Atlas:
 
 ```
-docker build -t mongo-embeddings -f rag-db/Dockerfile .
+docker compose -f rag-db/docker-compose.yml up -d
 ```
 
-Run the image in a Docker container and map port `27017` from the container to your host machine:
-
-```
-docker run --name mongo-embeddings --rm -p 27017:27017 -d mongo-embeddings
-```
-
-### Adding the truststore to the Open Liberty configuration
-
-The truststore that's created in the container needs to be added to the Open Liberty configuration so that the Liberty can trust the certificate that MongoDB presents when they connect. Run the following command to copy the `truststore.p12` file from the container to the `rag` directory:
-
-```
-docker cp \
-  mongo-embeddings:/home/mongodb/certs/truststore.p12 \
-  rag/src/main/liberty/config/resources/security
-```
 
 ## Environment Set Up
 
@@ -141,11 +126,9 @@ If the tests pass, you see a similar output to the following example:
 
 When you are done checking out the service, exit dev mode by pressing `Ctrl+C` in the command-line session where you ran Liberty, or by typing `q` and then pressing the `enter/return` key.
 
-Then, run the following commands to tear down the environment: 
+Then, run the following command to tear down the environment: 
 
 ```
-docker stop mongo-embeddings
-docker rmi mongo-embeddings
-
+docker compose -f rag-db/docker-compose.yml down
 ```
 

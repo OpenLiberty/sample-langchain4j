@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <server description="RAG Chat Server">
     <featureManager>
-        <platform>jakartaee-10.0</platform>
+       <platform>jakartaee-10.0</platform>
         <platform>microprofile-7.0</platform>
         <feature>beanValidation</feature>
         <feature>cdi</feature>
@@ -10,7 +10,6 @@
         <feature>mpOpenAPI</feature>
         <feature>passwordUtilities-1.1</feature>
         <feature>restfulWS</feature>
-        <feature>ssl-1.0</feature>
         <feature>websocket</feature>
         <feature>appSecurity</feature>
     </featureManager>
@@ -54,21 +53,5 @@
             </security-role>
         </application-bnd>
     </webApplication>
-
-    <keyStore
-        id="outboundTrustStore"
-        location="${server.output.dir}/resources/security/truststore.p12"
-        password="mongodb"
-        type="PKCS12"
-    />
-
-    <ssl
-        id="outboundSSLContext"
-        keyStoreRef="defaultKeyStore"
-        trustStoreRef="outboundTrustStore"
-        sslProtocol="TLS"
-    />
-
-    <logging consoleLogLevel="INFO" />
 
 </server>

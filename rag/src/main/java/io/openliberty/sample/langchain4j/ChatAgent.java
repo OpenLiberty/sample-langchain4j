@@ -23,7 +23,7 @@ import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class ChatAgent {
-
+    
 	@Inject
     private ModelBuilder modelBuilder;
 
