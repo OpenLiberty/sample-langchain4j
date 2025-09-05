@@ -25,7 +25,6 @@ import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class MongoProducer {
-    private final String CONNECTION_STRING = "mongodb://sampleUser:openliberty@localhost:27018/embeddingsdb?authSource=admin&directConnection=true";
 
     @Inject
     @ConfigProperty(name = "mongo.hostname", defaultValue = "localhost")
@@ -46,7 +45,9 @@ public class MongoProducer {
     @Inject
     @ConfigProperty(name = "mongo.pass.encoded")
     String encodedPass;
- 
+    
+    private final String CONNECTION_STRING = "mongodb://sampleUser:openliberty@localhost:27018/embeddingsdb?authSource=admin&directConnection=true";
+
     @Produces
     public MongoClient createMongo(){
         return MongoClients.create(

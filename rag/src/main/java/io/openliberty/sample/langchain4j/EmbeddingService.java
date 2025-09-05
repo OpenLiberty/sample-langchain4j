@@ -49,7 +49,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
 @Path("/embedding")
 @ApplicationScoped
 public class EmbeddingService {
@@ -57,14 +56,16 @@ public class EmbeddingService {
     private static final String[] MD_FILES = {
         "logs-1.md", "security-1.md"
     };
-
-    AtlasMongoDB mongodbFunction = new AtlasMongoDB();
+    private final String COLLECTION_NAME = "EmbeddingsStored";
 
     @Inject
     private ModelBuilder modelBuilder;
 
-    @Inject
-    MongoDatabase db;
+    @Inject 
+    private AtlasMongoDB mongodbFunction;
+    
+    @Inject 
+    private MongoDatabase db;
 
     private static boolean initialized = false;
 
@@ -83,7 +84,7 @@ public class EmbeddingService {
         }
         return vector;
     }
-    
+
     @POST
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -114,7 +115,7 @@ public class EmbeddingService {
         newEmbedding.put("Summary", summary);
         newEmbedding.put("Content", content);
         newEmbedding.put("Vector",
-            toFloat(modelBuilder.getEmbeddingModel().embed(summary).content().vector()));
+            toFloat(modelBuilder.getEmbeddingModel().embed(content).content().vector()));
 
         embeddingStore.insertOne(newEmbedding);
 
@@ -136,9 +137,9 @@ public class EmbeddingService {
     public Response initializeDatabase() {
         if (!getInitialized()) {
             try {
-                mongodbFunction.createIndex(db);
+                mongodbFunction.createIndex();
                 try {
-                    MongoCollection<Document> embeddingStore = db.getCollection("EmbeddingsStored");
+                    MongoCollection<Document> embeddingStore = db.getCollection(COLLECTION_NAME);
                     ClassLoader classLoader = EmbeddingService.class.getClassLoader();
                     for (String txtFile: MD_FILES) {
                         InputStream inStream = classLoader.getResourceAsStream("knowledge_base/" + txtFile);

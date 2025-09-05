@@ -7,28 +7,36 @@ import java.util.List;
 
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.SearchIndexModel;
 import com.mongodb.client.model.SearchIndexType;
 
-import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.embedding.onnx.bgesmallenq.BgeSmallEnQuantizedEmbeddingModel;
+import io.openliberty.sample.langchain4j.util.ModelBuilder;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import org.bson.Document;
 import org.json.JSONObject;
 import org.bson.conversions.Bson;
 
+@ApplicationScoped
 public class AtlasMongoDB {
 
     private final String COLLECTION_NAME = "EmbeddingsStored";
     private final String SEARCH_INDEX_NAME = "vector_index";
     private final String PATH = "Vector";
-    private final int MAX_RESULTS_TO_AI = 5;
-    private final int NUM_CANDIDATES = 5;
-    private final EmbeddingModel MODEL = new BgeSmallEnQuantizedEmbeddingModel();
+    private final int MAX_RESULTS_TO_AI = 1;
+    private final int NUM_CANDIDATES = 2;
 
-    public void getContentStored(MongoDatabase db) {
+    @Inject
+    private ModelBuilder modelBuilder;
+
+    @Inject
+    MongoDatabase db;
+    
+    public void getContentStored() {
         MongoCollection<Document> embeddingStore = db.getCollection(COLLECTION_NAME);
         
         FindIterable<Document> docs = embeddingStore.find();
@@ -44,14 +52,7 @@ public class AtlasMongoDB {
 
     }
 
-    public void deleteCollection(MongoDatabase db) {
-        
-        MongoCollection<Document> collection = db.getCollection(COLLECTION_NAME);
-        
-        collection.drop();
-
-    }
-    public void createIndex(MongoDatabase db) {
+    public void createIndex() {
 
         db.createCollection(COLLECTION_NAME);
 
@@ -62,7 +63,7 @@ public class AtlasMongoDB {
                 Collections.singletonList(
                         new Document("type", "vector")
                                 .append("path", PATH)
-                                .append("numDimensions", MODEL.dimension())
+                                .append("numDimensions", modelBuilder.getEmbeddingModel().dimension())
                                 .append("similarity", "cosine")));
 
         SearchIndexType vectorSearch = SearchIndexType.vectorSearch();
@@ -97,11 +98,11 @@ public class AtlasMongoDB {
     }
 
     public float[] convertUserQueryToEmbedding(String userQuery) {
-        return MODEL.embed(userQuery).content().vector();
+        return modelBuilder.getEmbeddingModel().embed(userQuery).content().vector();
     }
 
-    public List<String> retrieveContent(List<Float> userQuery, MongoDatabase db) {
-
+    public List<String> retrieveContent(List<Float> userQuery, String query) {
+        
         MongoCollection<Document> embeddingStore = db.getCollection(COLLECTION_NAME);
 
         List<String> similarContent = new ArrayList<>();
@@ -119,11 +120,11 @@ public class AtlasMongoDB {
         for (Document result : results) {
             similarContent.add(result.getString("Content"));
         }
-        
+
         return similarContent;
     }
 
-    public boolean contentAlreadyStored(MongoDatabase db) {
+    public boolean contentAlreadyStored() {
         
         MongoCollection<org.bson.Document> embeddingStore = db.getCollection(COLLECTION_NAME);
         return embeddingStore.countDocuments() > 0;

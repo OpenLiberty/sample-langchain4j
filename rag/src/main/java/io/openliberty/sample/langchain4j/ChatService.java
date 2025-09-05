@@ -10,10 +10,14 @@
 package io.openliberty.sample.langchain4j;
 
 
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.eclipse.microprofile.metrics.annotation.Timed;
 
+import io.openliberty.sample.langchain4j.mongo.AtlasMongoDB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.websocket.CloseReason;
@@ -27,15 +31,27 @@ import jakarta.websocket.server.ServerEndpoint;
 @ApplicationScoped
 @ServerEndpoint(value = "/chat", encoders = { ChatMessageEncoder.class })
 public class ChatService {
-   
     private static Logger logger = Logger.getLogger(ChatService.class.getName());
 
     @Inject
     ChatAgent agent = null;
-   
+
+    @Inject     
+    AtlasMongoDB mongodbFunction;
+
     @OnOpen
     public void onOpen(Session session) {
         logger.info("Server connected to session: " + session.getId());
+        System.out.println("In order to use the knowledge base: visit http://localhost:9081/openapi/ui/ and" +
+        "\ntry the POST request at `/api/embedding/init` to initialize the database.");
+    }
+
+    private List<Float> toFloat(float[] embedding){
+        List<Float> vector = new ArrayList<>();
+        for (float elem : embedding) {
+            vector.add(elem);
+        }
+        return vector;
     }
     
     @OnMessage
@@ -49,6 +65,11 @@ public class ChatService {
         String answer;
         try {
             String sessionId = session.getId();
+            float[] userQueryEmbedding = mongodbFunction.convertUserQueryToEmbedding(message);
+            List<Float> result = toFloat(userQueryEmbedding);
+            List<String> output = mongodbFunction.retrieveContent(result,message);
+            message += "Here are some relevent information from the knowledge base:";
+            message += output;
             answer = agent.chat(sessionId, message);
         } catch (Exception e) {
             answer = "My failure reason is:\n\n" + e.getMessage();
