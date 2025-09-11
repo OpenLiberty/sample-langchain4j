@@ -7,7 +7,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
-package io.openliberty.sample.langchain4j;
+package io.openliberty.sample.langchain4j.util;
 
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.Encoder;
