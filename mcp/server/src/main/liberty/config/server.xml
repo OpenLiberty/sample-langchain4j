@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="Liberty MCP Server">
+
+    <featureManager>
+        <platform>jakartaee-10.0</platform>
+        <feature>cdi</feature>
+        <feature>jsonb</feature>
+        <feature>restfulWS</feature>
+        <feature>servlet</feature>
+    </featureManager>
+
+    <httpEndpoint host="*" httpPort="9081" httpsPort="9444" id="defaultHttpEndpoint"/>
+
+    <applicationManager autoExpand="true"/>
+
+    <webApplication contextRoot="/" location="stackoverflow-mcp-server-example.war"/>
+
+    <logging consoleLogLevel="INFO"/>
+
+</server>
