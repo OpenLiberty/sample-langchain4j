@@ -1,6 +1,6 @@
-# LangChain4j in Jakarta EE and MicroProfile
+# Using RAG with LangChain4j in a Jakarta EE and MicroProfile Application
 
-This example demonstrates LangChain4J in a Jakarta EE / MicroProfile application on Open Liberty. The application is a chatbot built with LangChain4J and uses Jakarta CDI, Jakarta RESTful Web Services, Jakarta WebSocket, MicroProfile Config, MicroProfile Metrics, and MicroProfile OpenAPI features. The application allows to use models from either Github, Ollama, or Hugging Face.
+This example demonstrates LangChain4J in a Jakarta EE / MicroProfile application on Open Liberty. The application is a chatbot built with LangChain4J and uses Jakarta CDI, Jakarta RESTful Web Services, Jakarta WebSocket, MicroProfile Config, MicroProfile Metrics, and MicroProfile OpenAPI features. The application allows to use any model such as Github, Ollama, or Hugging Face.
 
 ## Prerequisites:
 
@@ -8,11 +8,11 @@ This example demonstrates LangChain4J in a Jakarta EE / MicroProfile application
 - Either one of the following model providers: - Github - Sign up and sign in to https://github.com. - Go to your [Settings](https://github.com/settings/profile)/[Developer Settings](https://github.com/settings/developers)/[Persional access tokens](https://github.com/settings/personal-access-tokens). - Generate a new token - Ollama - Download and install [Ollama](https://ollama.com/download) - see the [README.md](https://github.com/ollama/ollama/blob/main/README.md#ollama) - Pull the following model - `ollama pull llama3.2` - Mistral AI - Sign up and log in to https://console.mistral.ai/home. - Go to [Your API keys](https://console.mistral.ai/api-keys). - Create a new key. - Hugging Face - Sign up and log in to https://huggingface.co. - Go to [Access Tokens](https://huggingface.co/settings/tokens). - Create a new access token with `read` role.
 - You will use Docker to run an instance of MongoDB for a fast installation and setup. Install Docker by following the instructions in the official [Docker documentation](https://docs.docker.com/engine/installation), and start your Docker environment.
 
-## Setting up MongoDB
+## Setting up MongoDB Atlas Locally
 
-This guide uses Docker to run an instance of MongoDB. A multi-stage Dockerfile is provided for you. This Dockerfile uses the `mongo` image as the base image of the final stage and gathers the required configuration files. The resulting `mongo` image runs in a Docker container, and you must set up a new database for the microservice. Lastly, the truststore that's generated in the Docker image is copied from the container and placed into the Open Liberty configuration.
+This guide uses Docker to run an instance of MongoDB Atlas.
 
-You can find more details and configuration options on the [MongoDB website](https://docs.mongodb.com/manual/reference/configuration-options/). For more information about the `mongo` image, see [mongo](https://hub.docker.com/_/mongo) in Docker Hub.
+For more information about the `mongodb/mongodb-atlas-local` image, see [mongodb/mongodb-atlas-local](https://hub.docker.com/r/mongodb/mongodb-atlas-local) in Docker Hub.
 
 ### Running MongoDB in a Docker container
 
