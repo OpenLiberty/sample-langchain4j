@@ -29,10 +29,9 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
 import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+
 import io.openliberty.sample.langchain4j.mongo.AtlasMongoDB;
 import io.openliberty.sample.langchain4j.util.ModelBuilder;
 import jakarta.annotation.security.RolesAllowed;
@@ -49,6 +48,8 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
+
 @Path("/embedding")
 @ApplicationScoped
 public class EmbeddingService {
@@ -56,26 +57,12 @@ public class EmbeddingService {
     private static final String[] MD_FILES = {
         "logs-1.md", "security-1.md"
     };
-    private final String COLLECTION_NAME = "EmbeddingsStored";
 
     @Inject
     private ModelBuilder modelBuilder;
 
     @Inject 
-    private AtlasMongoDB mongodbFunction;
-    
-    @Inject 
-    private MongoDatabase db;
-
-    private static boolean initialized = false;
-
-    public static boolean getInitialized() {
-        return initialized;
-    }
-
-    public static void setInitialized(boolean initialized) {
-        EmbeddingService.initialized = initialized;
-    }
+    private AtlasMongoDB mongoDB;
 
     private List<Float> toFloat(float[] embedding){
         List<Float> vector = new ArrayList<>();
@@ -109,15 +96,12 @@ public class EmbeddingService {
         @QueryParam("summary") String summary,
         @QueryParam("content") String content) {
 
-        MongoCollection<Document> embeddingStore = db.getCollection("EmbeddingsStored");
-
         Document newEmbedding = new Document();
         newEmbedding.put("Summary", summary);
         newEmbedding.put("Content", content);
         newEmbedding.put("Vector",
             toFloat(modelBuilder.getEmbeddingModel().embed(content).content().vector()));
-
-        embeddingStore.insertOne(newEmbedding);
+        mongoDB.insertOne(newEmbedding);
 
         return Response
             .status(Response.Status.OK)
@@ -135,48 +119,41 @@ public class EmbeddingService {
         @APIResponse(responseCode = "400", description = "Invalid embedding configuration.")})
     @Operation(summary = "Add the knowledge base embeddings to the database.")
     public Response initializeDatabase() {
-        if (!getInitialized()) {
+        if (mongoDB.isEmpty()) {
+            mongoDB.createIndex();
             try {
-                mongodbFunction.createIndex();
-                try {
-                    MongoCollection<Document> embeddingStore = db.getCollection(COLLECTION_NAME);
-                    ClassLoader classLoader = EmbeddingService.class.getClassLoader();
-                    for (String txtFile: MD_FILES) {
-                        InputStream inStream = classLoader.getResourceAsStream("knowledge_base/" + txtFile);
-                        if (inStream != null) {
-                            InputStreamReader reader = new InputStreamReader(inStream,StandardCharsets.UTF_8);
-                            BufferedReader br = new BufferedReader(reader);
-                            String summary = br.readLine();
-                            StringBuffer content = new StringBuffer();
-                            String line;
-                            while ((line = br.readLine()) != null) {
-                                content.append(line).append("\n");
-                            }
-                            br.close();
-                            reader.close();
-                            inStream.close();
-                            Document newEmbedding = new Document();
-                            newEmbedding.put("Summary", summary);
-                            newEmbedding.put("Content", content.toString());
-                            newEmbedding.put("Vector",
-                                toFloat(modelBuilder.getEmbeddingModel().embed(summary).content().vector()));
-                            embeddingStore.insertOne(newEmbedding);
+                ClassLoader classLoader = EmbeddingService.class.getClassLoader();
+                for (String txtFile : MD_FILES) {
+                    InputStream inStream = classLoader.getResourceAsStream("knowledge_base/" + txtFile);
+                    if (inStream != null) {
+                        InputStreamReader reader = new InputStreamReader(inStream, StandardCharsets.UTF_8);
+                        BufferedReader br = new BufferedReader(reader);
+                        String summary = br.readLine();
+                        StringBuffer content = new StringBuffer();
+                        String line;
+                        while ((line = br.readLine()) != null) {
+                            content.append(line).append("\n");
                         }
+                        br.close();
+                        reader.close();
+                        inStream.close();
+                        Document newEmbedding = new Document();
+                        newEmbedding.put("Summary", summary);
+                        newEmbedding.put("Content", content.toString());
+                        newEmbedding.put("Vector",
+                                toFloat(modelBuilder.getEmbeddingModel().embed(summary).content().vector()));
+                        mongoDB.insertOne(newEmbedding);
                     }
-                    setInitialized(true);
-                    return Response
-                        .status(Response.Status.OK)
-                        .entity("Successfully loaded knowledge base into MongoDB.")
-                        .build();
-                } catch(Exception exception) {
-                    return Response
-                    .status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("Could not load knowledge base into MongoDB.")
-                    .build();
                 }
-            }catch(Exception exception){
-                System.out.println("ERROR in search index: Please retry again." + exception.getMessage());
+                return Response.status(Status.OK)
+                               .entity("Successfully loaded knowledge base into MongoDB.")
+                               .build();
+            } catch (Exception exception) {
+                return Response.status(Status.INTERNAL_SERVER_ERROR)
+                               .entity("Could not load knowledge base into MongoDB.")
+                               .build();
             }
+
         }
 
         return Response
@@ -197,13 +174,10 @@ public class EmbeddingService {
     public Response retrieve() {
         
         StringWriter sb = new StringWriter();
-        
         try {
-            MongoCollection<Document> embeddingStore = db.getCollection("EmbeddingsStored");
             sb.append("[");
             boolean first = true;
-            FindIterable<Document> docs = embeddingStore.find();
-
+            FindIterable<Document> docs = mongoDB.getCollection().find();
             for (Document d : docs) {
                 if (!first) {
                     sb.append(",");
@@ -214,16 +188,13 @@ public class EmbeddingService {
             }
             sb.append("]");
         } catch (Exception e) {
-            e.printStackTrace(System.out);
-            return Response
-                .status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity("[\"Unable to list embeddings!\"]")
-                .build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                           .entity("[\"Unable to list embeddings: " + e.getMessage() + "\"]")
+                           .build();
         }
-        return Response
-            .status(Response.Status.OK)
-            .entity(sb.toString())
-            .build();
+        return Response.status(Response.Status.OK)
+                       .entity(sb.toString())
+                       .build();
     }
 
     @PUT
@@ -261,34 +232,28 @@ public class EmbeddingService {
         try {
             oid = new ObjectId(id);
         } catch (Exception e) {
-            return Response
-                .status(Response.Status.BAD_REQUEST)
-                .entity("[\"Invalid object id!\"]")
-                .build();
+            return Response.status(Response.Status.BAD_REQUEST)
+                           .entity("[\"Invalid object id!\"]")
+                           .build();
         }
 
-        MongoCollection<Document> embeddingStore = db.getCollection("EmbeddingsStored");
         Document query = new Document("_id", oid);
         Document newEmbedding = new Document();
         newEmbedding.put("Summary", summary);
         newEmbedding.put("Content", content);
         newEmbedding.put("Vector", toFloat(
             modelBuilder.getEmbeddingModel().embed(summary).content().vector()));
-
-        UpdateResult updateResult = embeddingStore.replaceOne(query, newEmbedding);
+        UpdateResult updateResult = mongoDB.replaceOne(query, newEmbedding);
         if (updateResult.getMatchedCount() == 0) {
-            return Response
-                .status(Response.Status.NOT_FOUND)
-                .entity("[\"_id was not found!\"]")
-                .build();
+            return Response.status(Response.Status.BAD_REQUEST)
+                           .entity("[\"_id was not found!\"]")
+                           .build();
         }
 
         newEmbedding.put("_id", oid);
-
-        return Response
-            .status(Response.Status.OK)
-            .entity(newEmbedding.toJson())
-            .build();
+        return Response.status(Response.Status.OK)
+                       .entity(newEmbedding.toJson())
+                       .build();
     }
 
     @DELETE
@@ -313,20 +278,17 @@ public class EmbeddingService {
                 .build();
         }
 
-        MongoCollection<Document> embeddingStore = db.getCollection("EmbeddingsStored");
         Document query = new Document("_id", oid);
-        DeleteResult deleteResult = embeddingStore.deleteOne(query);
+        DeleteResult deleteResult = mongoDB.deleteOne(query);
         if (deleteResult.getDeletedCount() == 0) {
-            return Response
-                .status(Response.Status.NOT_FOUND)
-                .entity("[\"_id was not found!\"]")
-                .build();
+            return Response.status(Response.Status.BAD_REQUEST)
+                           .entity("[\"_id was not found!\"]")
+                           .build();
         }
 
-        return Response
-            .status(Response.Status.OK)
-            .entity(query.toJson())
-            .build();
+        return Response.status(Response.Status.OK)
+                       .entity(query.toJson())
+                       .build();
     }
 
 }

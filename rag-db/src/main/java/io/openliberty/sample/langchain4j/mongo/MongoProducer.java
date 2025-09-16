@@ -50,18 +50,19 @@ public class MongoProducer {
     @Produces
     public MongoClient createMongo(){
         String password = PasswordUtil.passwordDecode(encodedPass);
-        
         return MongoClients.create(MongoClientSettings.builder()
-                .applyConnectionString(
-                        new ConnectionString("mongodb://" + user +":"+ password+"@"+ hostname + ":" + port+"/" +dbName+ "?authSource=admin&directConnection=true"))
-                .build());
+                           .applyConnectionString(
+                               new ConnectionString("mongodb://" +
+                                   user + ":" + password + "@"+ hostname + ":" + port +
+                                   "/" +dbName+ "?authSource=admin&directConnection=true"))
+                           .build());
     }
 
     @Produces
     public MongoDatabase createDB(MongoClient client) {
         return client.getDatabase(dbName);
     }
-    
+
     public void close(@Disposes MongoClient toClose) {
         toClose.close();
     }

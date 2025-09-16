@@ -17,13 +17,14 @@ import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
+import dev.langchain4j.service.memory.ChatMemoryAccess;
 import io.openliberty.sample.langchain4j.util.ModelBuilder;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class ChatAgent {
-    
+
 	@Inject
     private ModelBuilder modelBuilder;
 
@@ -31,7 +32,7 @@ public class ChatAgent {
     @ConfigProperty(name = "chat.memory.max.messages")
     private Integer MAX_MESSAGES;
 
-    interface Assistant {
+    interface Assistant extends ChatMemoryAccess {
         @SystemMessage("You are a Java, Jakarta EE and MicroProfile coding helper, " +
             "people will go to you for questions around coding. " +
             "You have ONLY four tools. " +
@@ -60,6 +61,13 @@ public class ChatAgent {
     public String chat(String sessionId, String message) throws Exception {
         String reply = getAssistant().chat(sessionId, message).trim();
         return reply;
+    }
+
+    public void clearChatMemory(String sessionId) {
+        if (assistant == null) {
+            throw new IllegalStateException("assistant not yet initialized");
+        }
+        assistant.evictChatMemory(sessionId);
     }
 
 }

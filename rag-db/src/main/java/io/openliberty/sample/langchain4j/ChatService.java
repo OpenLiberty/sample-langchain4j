@@ -9,8 +9,6 @@
  *******************************************************************************/
 package io.openliberty.sample.langchain4j;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -53,7 +51,7 @@ public class ChatService {
         }
         return vector;
     }
-    
+
     @OnMessage
     @Timed(name = "chatProcessingTime", absolute = true,
            description = "Time needed chatting to the agent.")
@@ -67,7 +65,7 @@ public class ChatService {
             String sessionId = session.getId();
             float[] userQueryEmbedding = mongoDB.convertUserQueryToEmbedding(message);
             List<Float> result = toFloat(userQueryEmbedding);
-            List<String> output = mongoDB.retrieveContent(result,message);
+            List<String> output = mongoDB.retrieveContent(result, message);
             message += "Here are some relevent information from the knowledge base:";
             message += output;
             answer = agent.chat(sessionId, message);
@@ -85,6 +83,7 @@ public class ChatService {
 
     @OnClose
     public void onClose(Session session, CloseReason closeReason) {
+        agent.clearChatMemory(session.getId());
         logger.info("Session " + session.getId() +
             " was closed with reason " + closeReason.getCloseCode());
     }

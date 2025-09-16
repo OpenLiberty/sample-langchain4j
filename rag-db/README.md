@@ -5,7 +5,20 @@ This example demonstrates LangChain4J in a Jakarta EE / MicroProfile application
 ## Prerequisites:
 
 - [Java 21](https://developer.ibm.com/languages/java/semeru-runtimes/downloads)
-- Either one of the following model providers: - Github - Sign up and sign in to https://github.com. - Go to your [Settings](https://github.com/settings/profile)/[Developer Settings](https://github.com/settings/developers)/[Persional access tokens](https://github.com/settings/personal-access-tokens). - Generate a new token - Ollama - Download and install [Ollama](https://ollama.com/download) - see the [README.md](https://github.com/ollama/ollama/blob/main/README.md#ollama) - Pull the following model - `ollama pull llama3.2` - Mistral AI - Sign up and log in to https://console.mistral.ai/home. - Go to [Your API keys](https://console.mistral.ai/api-keys). - Create a new key. - Hugging Face - Sign up and log in to https://huggingface.co. - Go to [Access Tokens](https://huggingface.co/settings/tokens). - Create a new access token with `read` role.
+-   Any one of the following model providers:
+    -   GitHub
+        -   Sign up and sign in to https://github.com.
+        -   Go to your [Settings/Developer Settings/Personal access tokens](https://github.com/settings/personal-access-tokens).
+        -   Generate a new token.
+    -   Ollama
+        -   Download and install [Ollama](https://ollama.com/download).
+            -   see the [README.md](https://github.com/ollama/ollama/blob/main/README.md#ollama).
+        -   Pull the following model.
+            -   `ollama pull llama3.2`
+    -   Mistral AI
+        -   Sign up and log in to https://console.mistral.ai/home.
+        -   Go to [Your API keys](https://console.mistral.ai/api-keys).
+        -   Create a new key.
 - You will use Docker to run an instance of MongoDB for a fast installation and setup. Install Docker by following the instructions in the official [Docker documentation](https://docs.docker.com/engine/installation), and start your Docker environment.
 
 ## Setting up MongoDB Atlas Locally
@@ -16,26 +29,20 @@ For more information about the `mongodb/mongodb-atlas-local` image, see [mongodb
 
 ### Running MongoDB in a Docker container
 
-To run MongoDB in this example application, navigate to the `sample-langchain4j` directory:
+To run MongoDB in this example application, navigate to the `sample-langchain4j/rag-db` directory:
 
 ```
-cd sample-langchain4j
+cd sample-langchain4j/rag-db
 ```
 
 Run the following command to start the MongoDB Atlas:
 
 ```
-docker compose -f rag-db/docker-compose.yml up -d
+docker compose -f docker-compose.yml up -d
 ```
 
 
 ## Environment Set Up
-
-To run this example application, navigate to the `sample-langchain4j/rag` directory:
-
-```
-cd sample-langchain4j/rag
-```
 
 Set the `JAVA_HOME` environment variable:
 
@@ -82,14 +89,12 @@ If you are currently using one of the following model providers: GitHub, Ollama 
 - Navigate to http://localhost:9081/openapi/ui/ to see the OpenAPI user interface (UI) that provides API documentation and a client to test the API endpoints for mongoDB.
   - To try a particular api, authentication is required.
   - The admin (read/write full access) and user (read only access) security roles are created. 
-  - For full admin access: username = bob , password = bobpwd 
-  - For read only access: username = alice , password = alicepwd
-  - Example: Bob is a member of group admin and Alice is a member of group user.
+  - For admin access, use `bob` and his password is `bobpwd`.
+  - For read only access, use `alice` and her password is`alicepwd`.
 
-
-  - Try the GET request at `/api/embedding`. Initially the database is empty.
-  - Try the POST request at `/api/embedding/init`. This adds the knowledge base embeddings to MongoDB.
-  - Try the GET request at `/api/embedding` again. The content from the `sample-langchain4j/rag/src/main/resources/knowledge_base` should be displayed.
+- Try the GET request at `/api/embedding`. Initially the database is empty.
+- Try the POST request at `/api/embedding/init`. This adds the knowledge base embeddings to MongoDB.
+- Try the GET request at `/api/embedding` again. The content from the `sample-langchain4j/rag/src/main/resources/knowledge_base` should be displayed.
 
 - Navigate to http://localhost:9081/ to use the chat application
 
@@ -129,6 +134,6 @@ When you are done checking out the service, exit dev mode by pressing `Ctrl+C` i
 Then, run the following command to tear down the environment: 
 
 ```
-docker compose -f rag-db/docker-compose.yml down
+docker compose -f docker-compose.yml down
 ```
 
