@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.microprofile.metrics.annotation.Timed;
 
+import io.openliberty.sample.langchain4j.util.ChatMessageEncoder;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.websocket.CloseReason;
