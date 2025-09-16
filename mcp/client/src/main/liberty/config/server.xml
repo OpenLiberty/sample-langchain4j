@@ -17,7 +17,7 @@
 
     <applicationManager autoExpand="true"/>
 
-    <webApplication contextRoot="/" location="jakartaee-microprofile-mcp-example.war"/>
+    <webApplication contextRoot="/" location="jakartaee-microprofile-mcp-client-example.war"/>
 
     <mpMetrics authentication="false"/>
 

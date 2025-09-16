@@ -37,7 +37,7 @@ public class ChatAgent {
     private ModelBuilder modelBuilder;
 
     @Inject
-    private McpClient mcpClient; // injected from McpClientProducer
+    private McpClient mcpClient;
 
     @Inject
     @ConfigProperty(name = "chat.memory.max.messages")
@@ -92,7 +92,6 @@ public class ChatAgent {
     public synchronized Assistant getAssistant() throws Exception {
         if (assistant == null) {
             ChatModel model = modelBuilder.getChatModel();
-
             assistant = AiServices.builder(Assistant.class)
                 .chatModel(model)
                 .toolProvider(toolProvider)

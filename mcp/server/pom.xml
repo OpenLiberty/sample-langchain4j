@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.openliberty.sample</groupId>
+    <groupId>io.openliberty.sample.langchain4j</groupId>
     <artifactId>stackoverflow-mcp-server-example</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
@@ -89,7 +89,7 @@
                 <plugin>
                     <groupId>io.openliberty.tools</groupId>
                     <artifactId>liberty-maven-plugin</artifactId>
-                    <version>3.11.4</version>
+                    <version>3.11.5</version>
                 </plugin>
             </plugins>
         </pluginManagement>

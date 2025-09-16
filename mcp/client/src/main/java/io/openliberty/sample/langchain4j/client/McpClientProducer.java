@@ -9,29 +9,26 @@
  *******************************************************************************/
 package io.openliberty.sample.langchain4j.client;
 
-import dev.langchain4j.mcp.client.DefaultMcpClient;
-import dev.langchain4j.mcp.client.McpClient;
-import dev.langchain4j.mcp.client.transport.McpTransport;
-import dev.langchain4j.mcp.client.transport.http.HttpMcpTransport;
-
-import io.openliberty.sample.langchain4j.client.util.ModelBuilder;
-
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Produces;
-import jakarta.inject.Inject;
-
 import java.time.Duration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import dev.langchain4j.mcp.client.DefaultMcpClient;
+import dev.langchain4j.mcp.client.McpClient;
+import dev.langchain4j.mcp.client.transport.McpTransport;
+import dev.langchain4j.mcp.client.transport.http.HttpMcpTransport;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
+
 @ApplicationScoped
 public class McpClientProducer {
 
-    private static Logger logger = Logger.getLogger(ModelBuilder.class.getName());
+    private static Logger logger = Logger.getLogger(McpClientProducer.class.getName());
 
     @Inject
     @ConfigProperty(name = "mcp.base.url")
@@ -69,7 +66,7 @@ public class McpClientProducer {
             try {
                 client.close();
             } catch (Exception e) {
-                logger.log(Level.WARNING, "Error while closing MCP client", e);
+                logger.log(Level.WARNING, "Failed to close MCP client: " + e.getMessage());
             }
         }
     }

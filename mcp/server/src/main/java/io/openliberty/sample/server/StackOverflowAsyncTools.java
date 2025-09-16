@@ -115,11 +115,11 @@ public class StackOverflowAsyncTools {
     // Helper to build a no-args async tool using Tool.builder() + AsyncToolSpecification.builder()
     // ─────────────────────────────────────────────────────────────────────────────
     private McpServerFeatures.AsyncToolSpecification noArgsTool(
-            String name,
-            String title,
-            String description,
-            Supplier<List<String>> impl
-    ) {
+        String name,
+        String title,
+        String description,
+        Supplier<List<String>> impl) {
+
         var emptySchemaJson = """
         {
           "type": "object",
