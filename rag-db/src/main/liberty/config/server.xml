@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="RAG Chat Server">
+    <featureManager>
+       <platform>jakartaee-10.0</platform>
+        <platform>microprofile-7.0</platform>
+        <feature>beanValidation</feature>
+        <feature>cdi</feature>
+        <feature>jsonb</feature>
+        <feature>mpConfig</feature>
+        <feature>mpOpenAPI</feature>
+        <feature>passwordUtilities-1.1</feature>
+        <feature>restfulWS</feature>
+        <feature>websocket</feature>
+        <feature>appSecurity</feature>
+    </featureManager>
+
+    <variable name="http.port" defaultValue="9081" />
+    <variable name="https.port" defaultValue="9444" />
+    <variable name="app.context.root" defaultValue="/" />
+
+    <httpEndpoint
+        host="*"
+        httpPort="${http.port}"
+        httpsPort="${https.port}"
+        id="defaultHttpEndpoint"
+    />
+
+    <applicationManager autoExpand="true" />
+
+    <basicRegistry id="basic" realm="WebRealm">
+        <user name="bob" password="{xor}PTA9Lyg7" />
+        <user name="alice" password="{xor}PjM2PDovKDs=" />
+
+        <group name="admin">
+            <member name="bob" />
+        </group>
+
+        <group name="user">
+            <member name="bob" />
+            <member name="alice" />
+        </group>
+    </basicRegistry>
+
+    <webApplication
+        contextRoot="${app.context.root}"
+        location="jakartaee-microprofile-rag-example.war">
+        <application-bnd>
+            <security-role name="admin">
+                <group name="admin" />
+            </security-role>
+            <security-role name="user">
+                <group name="user" />
+            </security-role>
+        </application-bnd>
+    </webApplication>
+
+</server>
