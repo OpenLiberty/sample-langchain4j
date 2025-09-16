@@ -18,7 +18,6 @@
         <liberty.var.https.port>9444</liberty.var.https.port>
     </properties>
     <dependencies>
-
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
