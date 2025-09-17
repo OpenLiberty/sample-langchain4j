@@ -111,9 +111,7 @@ public class StackOverflowAsyncTools {
             .build();
     }
 
-    // ─────────────────────────────────────────────────────────────────────────────
-    // Helper to build a no-args async tool using Tool.builder() + AsyncToolSpecification.builder()
-    // ─────────────────────────────────────────────────────────────────────────────
+    /** Helper to build a no-args async tool **/
     private McpServerFeatures.AsyncToolSpecification noArgsTool(
         String name,
         String title,

@@ -119,11 +119,8 @@ public class StackOverflowService {
 
     private static String stripHtml(String s) {
         if (s == null) return "";
-        // preserve code blocks a bit
         s = s.replaceAll("(?is)<pre><code>(.*?)</code></pre>", "\n```\n$1\n```\n");
-        // strip tags
         s = s.replaceAll("(?is)<[^>]+>", "");
-        // collapse whitespace
         return s.replaceAll("[ \\t\\x0B\\f\\r]+", " ").replaceAll("\\n{3,}", "\n\n").trim();
     }
 
