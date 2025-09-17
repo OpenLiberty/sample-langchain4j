@@ -17,13 +17,7 @@ import io.modelcontextprotocol.server.transport.HttpServletSseServerTransportPro
 import io.modelcontextprotocol.spec.McpSchema;
 
 import jakarta.servlet.ServletException;
-// import jakarta.servlet.annotation.WebServlet;
 
-// @WebServlet(
-//     urlPatterns = { "/mcp/message", "/mcp/sse/*" },
-//     loadOnStartup = 1,
-//     asyncSupported = true
-// )
 public class McpSseServlet extends HttpServletSseServerTransportProvider {
 
     private McpAsyncServer server;

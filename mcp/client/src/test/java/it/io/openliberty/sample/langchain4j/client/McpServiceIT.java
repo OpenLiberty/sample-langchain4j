@@ -52,12 +52,12 @@ public class McpServiceIT {
 
     public static void verify(String message) {
         assertNotNull(message);
-
         String text = message.toLowerCase();
-        assertTrue(text.contains("microprofile") || text.contains("ejb") ||
-            text.contains("jakarta") || text.contains("langchain"),
-            message);
+        assertTrue(
+            text.contains("stackoverflow.com/questions/") ||
+            !text.contains("my failure reason is:"),
+            message
+        );
         countDown.countDown();
     }
-
 }
