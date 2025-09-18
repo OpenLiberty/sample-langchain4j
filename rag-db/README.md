@@ -109,7 +109,7 @@ If you are currently using one of the following model providers: GitHub, Ollama 
 
 Use the `sample-langchain4j/rag/src/main/resources/knowledge_base` files to compare the AI responses to the provided files.
 
-- In the `rag` directory, running the `./mvnw liberty:dev` again and submitting the GET request gives the embeddings that are stored in MongoDB previously. Similarly, the POST request to `/api/embedding/init` indicates that the knowledge base has already been initialized. 
+- In the `rag-db` directory, running the `./mvnw liberty:dev` again and submitting the GET request gives the embeddings that are stored in MongoDB previously. Similarly, the POST request to `/api/embedding/init` indicates that the knowledge base has already been initialized. 
 
 ## Running the tests
 
