@@ -10,16 +10,13 @@
 
 package io.openliberty.sample.langchain4j;
 
-import java.util.concurrent.CompletableFuture;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.StreamingChatModel;
-import dev.langchain4j.model.chat.response.ChatResponse;
-import dev.langchain4j.model.output.FinishReason;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.MemoryId;
+import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.TokenStream;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.memory.ChatMemoryAccess;
@@ -44,7 +41,8 @@ public class StreamingChatAgent {
     }
 
     interface StreamingAssistant extends ChatMemoryAccess {
-       TokenStream streamingChat(@MemoryId String sessionId, @UserMessage String userMessage);
+        @SystemMessage("You are a helpful chat bot knowledgeable about the Open Liberty application server runtime.")
+        TokenStream streamingChat(@MemoryId String sessionId, @UserMessage String userMessage);
     }
 
     private StreamingAssistant assistant = null;
@@ -59,29 +57,6 @@ public class StreamingChatAgent {
                 .build();
         }
         return assistant;
-    }
-
-    public FinishReason streamingChat(String sessionId, String message, PartialResponseHandler handler) throws Exception {
-        CompletableFuture<ChatResponse> future = new CompletableFuture<>();
-        getStreamingAssistant().streamingChat(sessionId, message)
-            .onPartialResponse(token -> {
-                try {
-                    handler.onPartialResponse(token);
-                } catch (Throwable t) {
-                    future.completeExceptionally(t);
-                }
-            })
-            .onCompleteResponse(future::complete)
-            .onError(future::completeExceptionally)
-            .start();
-        return future.get().finishReason();
-    }
-
-    public void clearChatMemory(String sessionId) {
-        if (assistant == null) {
-            throw new IllegalStateException("assistant not initialized");
-        }
-        assistant.evictChatMemory(sessionId);
     }
 
 }

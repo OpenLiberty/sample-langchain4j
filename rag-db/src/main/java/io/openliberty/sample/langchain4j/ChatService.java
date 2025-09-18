@@ -9,11 +9,13 @@
  *******************************************************************************/
 package io.openliberty.sample.langchain4j;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.eclipse.microprofile.metrics.annotation.Timed;
 
-import io.openliberty.sample.langchain4j.util.ChatMessageEncoder;
+import io.openliberty.sample.langchain4j.mongo.AtlasMongoDB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.websocket.CloseReason;
@@ -25,17 +27,29 @@ import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpoint;
 
 @ApplicationScoped
-@ServerEndpoint(value = "/toolchat", encoders = { ChatMessageEncoder.class })
+@ServerEndpoint(value = "/chat", encoders = { ChatMessageEncoder.class })
 public class ChatService {
-
     private static Logger logger = Logger.getLogger(ChatService.class.getName());
 
     @Inject
     ChatAgent agent = null;
 
+    @Inject     
+    AtlasMongoDB mongoDB;
+
     @OnOpen
     public void onOpen(Session session) {
         logger.info("Server connected to session: " + session.getId());
+        System.out.println("In order to use the knowledge base: visit http://localhost:9081/openapi/ui/ and" +
+        "\ntry the POST request at `/api/embedding/init` to initialize the database.");
+    }
+
+    private List<Float> toFloat(float[] embedding){
+        List<Float> vector = new ArrayList<>();
+        for (float elem : embedding) {
+            vector.add(elem);
+        }
+        return vector;
     }
 
     @OnMessage
@@ -49,6 +63,11 @@ public class ChatService {
         String answer;
         try {
             String sessionId = session.getId();
+            float[] userQueryEmbedding = mongoDB.convertUserQueryToEmbedding(message);
+            List<Float> result = toFloat(userQueryEmbedding);
+            List<String> output = mongoDB.retrieveContent(result, message);
+            message += "Here are some relevent information from the knowledge base:";
+            message += output;
             answer = agent.chat(sessionId, message);
         } catch (Exception e) {
             answer = "My failure reason is:\n\n" + e.getMessage();
@@ -65,14 +84,13 @@ public class ChatService {
     @OnClose
     public void onClose(Session session, CloseReason closeReason) {
         agent.clearChatMemory(session.getId());
-        logger.info("Session " + session.getId()
-                    + " was closed with reason " + closeReason.getCloseCode());
+        logger.info("Session " + session.getId() +
+            " was closed with reason " + closeReason.getCloseCode());
     }
 
     @OnError
     public void onError(Session session, Throwable throwable) {
-        logger.info("WebSocket error for " + session.getId() + " "
-                    + throwable.getMessage());
+        logger.severe("WebSocket error for " + session.getId() + " " +
+            throwable.getMessage());
     }
-
 }

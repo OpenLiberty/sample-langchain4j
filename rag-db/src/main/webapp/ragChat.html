@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Chat Room - streaming chat example</title>
+        <title>Chat Room - RAG example</title>
         <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet">
         <link rel="stylesheet" href="css/styles.css">
         <link href="favicon.ico" rel="icon" />
@@ -11,7 +11,7 @@
     <body>
         <section id="appIntro">
             <div id="titleSection">
-                <h1 id="appTitle">Chat Room - streaming chat example</h1>
+                <h1 id="appTitle">Chat Room - RAG example</h1>
                 <div class="line"></div>
                 <div class="headerImage"></div>
             </div>
@@ -37,10 +37,10 @@
                 </div>
             </div>
         </section>
-        <form class="my_message_container" onsubmit="sendMessage()" action="javascript:void 0">
+        <div class="my_message_container">
             <label id="myMsgLabel">My message:</label>
             <input type="text" size="50" id="myMessage"/>
-            <button id="sendButton" type="submit">Send</button>
+            <button id="sendButton" type="button" onclick="sendMessage()">Send</button>
         </div>
         <footer class="bodyFooter">
             <div class="bodyFooterLink">
@@ -71,6 +71,6 @@
             <a class="footer_ol_io_others" href="https://openliberty.io/docs" target="_blank">Docs</a>
             <a class="footer_ol_io_others" href="https://openliberty.io/guides" target="_blank">Guides</a>
         </footer>
-        <script src="/streamingChat.js"></script>
+        <script src="/ragChat.js"></script>
     </body>
 </html>
