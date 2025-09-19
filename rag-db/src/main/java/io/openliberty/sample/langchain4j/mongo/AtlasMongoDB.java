@@ -38,7 +38,7 @@ public class AtlasMongoDB {
     private final String PATH = "Vector";
     private final int MAX_RESULTS_TO_AI = 1;
     private final int NUM_CANDIDATES = 2;
-
+    private final int TIMEOUT = 5000;
     @Inject
     private ModelBuilder modelBuilder;
 
@@ -75,21 +75,18 @@ public class AtlasMongoDB {
         List<SearchIndexModel> searchIndexModels = Collections.singletonList(
                 new SearchIndexModel(SEARCH_INDEX_NAME, documentDefinition, vectorSearch));
 
-        sleep(5000);
+        sleep(TIMEOUT);
 		embeddingStore.createSearchIndexes(searchIndexModels);
         boolean indexReady = false;
-        while (!indexReady) {
-            for (Document index : embeddingStore.listSearchIndexes()) {
-                JSONObject json = new JSONObject(index.toJson());
-                boolean queryable = json.getBoolean("queryable");
-                if (queryable && json.getString("name").equals(SEARCH_INDEX_NAME)) {
-                    indexReady = true;
-                    break;
-                } else {
-                    sleep(200);
-                }
+        do{
+            Document index = embeddingStore.listSearchIndexes().first();
+            JSONObject json = new JSONObject(index.toJson());
+            boolean queryable = json.getBoolean("queryable");
+            if (queryable && json.getString("name").equals(SEARCH_INDEX_NAME)) {
+                indexReady = true;
+                break;
             }
-        }
+        }while (!indexReady);
     }
 
     public float[] convertUserQueryToEmbedding(String userQuery) {
