@@ -101,10 +101,10 @@ If you are currently using one of the following model providers: GitHub, Ollama 
 - At the prompt, try the following message examples:
 
   - ```
-      what A, E, I, O, R, W character stands for in the log entries finding in the messages.log file?
+      How to test connections with the Server Config tool?
     ```
   - ```
-      I got an java.lang.InternalError exception when tried to log in via SAML.
+      Which OpenTelemetry property enabled by MicroProfile Telemetry do I need in order to set the exporter that is used to collect traces?
     ```
 
 Use the `sample-langchain4j/rag/src/main/resources/knowledge_base` files to compare the AI responses to the provided files.

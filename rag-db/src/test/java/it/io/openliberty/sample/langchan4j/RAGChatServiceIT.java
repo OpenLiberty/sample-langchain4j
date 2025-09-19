@@ -79,22 +79,22 @@ public class RAGChatServiceIT {
 
     @Test
     public void testLogs() throws Exception {
-        client.sendMessage("what A, E, I, O, R, W character stands for in the log entries finding in the messages.log file?\n");
+        client.sendMessage("How to test connections with the Server Config tool?\n");
         countDown.await(120, TimeUnit.SECONDS);
     }
 
     @Test
     public void testSecurity() throws Exception {
-        client.sendMessage("I got an java.lang.InternalError exception when tried to log in via SAML.\n");
+        client.sendMessage("What OpenTelemetry properties enabled by MicroProfile Telemetry do I need to set the exporter that is used to collect traces?");
         countDown.await(120, TimeUnit.SECONDS);
     }
 
-    public static void verify(String message) {
+    public static void verify(String message) throws Exception {
         assertNotNull(message);
-        assertTrue((message.toLowerCase().contains("audit") || message.toLowerCase().contains("error") || 
-        message.toLowerCase().contains("information") || message.toLowerCase().contains("system.out") || 
-        message.toLowerCase().contains("system.err") || message.toLowerCase().contains("warning")) || 
-        (message.toLowerCase().contains("securerandom.source") || message.toLowerCase().contains("file:/dev/urandom") || message.contains("java.security")), message);
+        assertTrue((message.toLowerCase().contains("adminCenter") || message.toLowerCase().contains("restConnector") || message.toLowerCase().contains("server") 
+        || message.toLowerCase().contains("config") || message.toLowerCase().contains("mpOpenAPI") || message.toLowerCase().contains("serverConfig") || message.toLowerCase().contains("server.xml") || 
+        (message.toLowerCase().contains("otel.traces.exporter") || message.toLowerCase().contains("zipkin")) || 
+        message.toLowerCase().contains("jaeger") || message.toLowerCase().contains("logging")), message);
         countDown.countDown();
     }
 
