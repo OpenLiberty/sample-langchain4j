@@ -9,6 +9,9 @@
  *******************************************************************************/
 package io.openliberty.sample.server;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import jakarta.ws.rs.client.Client;
@@ -18,34 +21,29 @@ import jakarta.ws.rs.core.Response;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 public class StackOverflowService {
-    private static String stackOverflowSite = "https://api.stackexchange.com/2.3/search/excerpts?site=stackoverflow";
-    private static String size = "&pagesize=3";
-    private static String filter = "&filter=N9UNq*RI0tsSN35uJKC0nk_HM";
-    
-    private static String stackOverflowJakartaEE = stackOverflowSite + filter + size + "&order=desc&sort=relevance&tagged=jakarta-ee";
-    private static String stackOverflowMicroProfile = stackOverflowSite + filter + size + "&order=desc&sort=relevance&tagged=microprofile";
-    private static String stackOverflowLangChain4j = stackOverflowSite + filter + size + "&order=desc&sort=relevance&tagged=langchain4j";
 
-    private static String stackOverflowMethod = stackOverflowSite + filter + size + "&order=desc&sort=relevance&answers=1";
+    private static final Logger LOGGER = Logger.getLogger(StackOverflowService.class.getName());
 
-    private static String findAnswer = "https://api.stackexchange.com"
-                                       + "/2.3/questions/%s/answers?order=desc&sort=votes&site=stackoverflow&"
-                                       + "filter=CKAkJFla(8TLNtkfr1ytJZj94MlNVo6Ee";
+    private static final String STACK_EXCERPTS = "https://api.stackexchange.com/2.3/search/excerpts?site=stackoverflow";
+    private static final String SIZE = "&pagesize=3";
+    private static final String FILTER = "&filter=N9UNq*RI0tsSN35uJKC0nk_HM";
 
-    private static Logger logger = Logger.getLogger(StackOverflowService.class.getName());
+    private static final String JAKARTA_EE_URL    = STACK_EXCERPTS + FILTER + SIZE + "&order=desc&sort=relevance&tagged=jakarta-ee";
+    private static final String MICROPROFILE_URL  = STACK_EXCERPTS + FILTER + SIZE + "&order=desc&sort=relevance&tagged=microprofile";
+    private static final String LANGCHAIN4J_URL   = STACK_EXCERPTS + FILTER + SIZE + "&order=desc&sort=relevance&tagged=langchain4j";
+    private static final String SEARCH_BASE       = STACK_EXCERPTS + FILTER + SIZE + "&order=desc&sort=relevance&answers=1";
 
-    private Map<String, Object> stringToMap(String jsonString) {
+    private static final String FIND_ANSWER_FMT = "https://api.stackexchange.com"
+        + "/2.3/questions/%s/answers?order=desc&sort=votes&site=stackoverflow&"
+        + "filter=CKAkJFla(8TLNtkfr1ytJZj94MlNVo6Ee";
+
+    private Map<String, Object> stringToMap(String json) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(jsonString, new TypeReference<Map<String, Object>>() {});
+            return new ObjectMapper().readValue(json, new TypeReference<Map<String, Object>>() {});
         } catch (Exception e) {
-            logger.severe("Error parsing JSON: " + e.getMessage());
-            return Map.of(); // return empty map
+            LOGGER.severe("Error parsing JSON: " + e.getMessage());
+            return Map.of();
         }
     }
 
@@ -63,57 +61,60 @@ public class StackOverflowService {
                 arrayData = items;
             }
         } catch (Exception e) {
-            logger.severe("Error fetching data from StackOverflow API: " + e.getMessage());
+            LOGGER.severe("Error fetching data from StackOverflow API: " + e.getMessage());
         }
         return arrayData;
     }
 
     private ArrayList<String> questionAndAnswer(String url) {
-        ArrayList<String> questionAnswer = new ArrayList<>();
+        ArrayList<String> out = new ArrayList<>();
         try {
             for (Map<String, Object> data : clientSearch(url)) {
                 try {
-                    String topAnswer = clientSearch(String.format(findAnswer, data.get("question_id")))
-                                            .get(0).get("body").toString();
                     String qId   = String.valueOf(data.get("question_id"));
-                    String qUrl   = "https://stackoverflow.com/questions/" + qId;
+                    if (qId == null || qId.isBlank() || "null".equals(qId)) continue;
+
                     String title = String.valueOf(data.getOrDefault("title", ""));
                     String body  = String.valueOf(data.get("body"));
+                    String qUrl  = "https://stackoverflow.com/questions/" + qId;
+
+                    var answers = clientSearch(String.format(FIND_ANSWER_FMT, qId));
+                    String topAnswer = answers.isEmpty() ? "No answers." : String.valueOf(answers.get(0).get("body"));
 
                     String line =
-                    "- [" + escapeMd(title) + "](" + qUrl + ")\n" +
-                    "  Problem: " + stripHtml(body) + "\n" +
-                    "  Top answer: " + stripHtml(topAnswer);
+                        "- [" + escapeMd(title) + "](" + qUrl + ")\n" +
+                        "  Problem: " + stripHtml(body) + "\n" +
+                        "  Top answer: " + stripHtml(topAnswer);
 
-                    questionAnswer.add(line);
+                    out.add(line);
                 } catch (Exception e) {
-                    logger.warning("Error fetching answer for question " + data.get("question_id") + ": " + e.getMessage());
+                    LOGGER.warning("Error fetching answer for question " + data.get("question_id") + ": " + e.getMessage());
                 }
             }
         } catch (Exception e) {
-            logger.severe("Error processing questions: " + e.getMessage());
+            LOGGER.severe("Error processing questions: " + e.getMessage());
         }
-        return questionAnswer;
+        return out;
     }
 
     public ArrayList<String> searchJakartaEEQuestions() {
-        logger.info("AI is searching stackoverflow for JakartaEE");
-        return questionAndAnswer(stackOverflowJakartaEE);
+        LOGGER.info("AI is searching stackoverflow for JakartaEE");
+        return questionAndAnswer(JAKARTA_EE_URL);
     }
 
     public ArrayList<String> searchMicroProfileQuestions() {
-        logger.info("AI is searching stackoverflow for MicroProfile");
-        return questionAndAnswer(stackOverflowMicroProfile);
+        LOGGER.info("AI is searching stackoverflow for MicroProfile");
+        return questionAndAnswer(MICROPROFILE_URL);
     }
 
     public ArrayList<String> searchLangChain4jQuestions() {
-        logger.info("AI is searching stackoverflow for langchain4j");
-        return questionAndAnswer(stackOverflowLangChain4j);
+        LOGGER.info("AI is searching stackoverflow for langchain4j");
+        return questionAndAnswer(LANGCHAIN4J_URL);
     }
 
     public ArrayList<String> searchStackOverflow(String question) {
-        logger.info("AI called the searchStackOverflow Tool with question: " + question);
-        String targetUrl = stackOverflowMethod + "&q=" + question;
+        LOGGER.info("AI called the searchStackOverflow tool with question: " + question);
+        String targetUrl = SEARCH_BASE + "&q=" + question;
         return questionAndAnswer(targetUrl);
     }
 

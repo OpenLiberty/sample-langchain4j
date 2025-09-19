@@ -52,7 +52,19 @@ public class McpSseServlet extends HttpServletSseServerTransportProvider {
 
     @Override
     public void destroy() {
-        if (server != null) server.close();
-        super.destroy();
+        try {
+            if (server != null) {
+                try {
+                    server.closeGracefully();
+                } catch (Throwable t) {
+                    server.close();
+                }
+            }
+            try {
+                super.closeGracefully();
+            } catch (Throwable ignore) {}
+        } finally {
+            super.destroy();
+        }
     }
 }
