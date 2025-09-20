@@ -16,9 +16,13 @@ import io.modelcontextprotocol.server.McpServer;
 import io.modelcontextprotocol.server.transport.HttpServletSseServerTransportProvider;
 import io.modelcontextprotocol.spec.McpSchema;
 
+import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
 
 public class McpSseServlet extends HttpServletSseServerTransportProvider {
+
+    @Inject
+    private StackOverflowAsyncTools tools;
 
     private McpAsyncServer server;
 
@@ -29,10 +33,6 @@ public class McpSseServlet extends HttpServletSseServerTransportProvider {
     @Override
     public void init() throws ServletException {
         super.init();
-
-        var stackOverflowService = new StackOverflowService();
-        var tools = new StackOverflowAsyncTools(stackOverflowService);
-
         server = McpServer.async(this)
             .serverInfo("mcp-stackoverflow-server", "1.0.0")
             .capabilities(

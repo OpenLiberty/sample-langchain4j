@@ -13,19 +13,19 @@ import io.modelcontextprotocol.server.McpAsyncServerExchange;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.spec.McpSchema;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Supplier;
 
+@ApplicationScoped
 public class StackOverflowAsyncTools {
 
-    private final StackOverflowService stackOverflowService;
-
-    public StackOverflowAsyncTools(StackOverflowService stackOverflowService) {
-        this.stackOverflowService = Objects.requireNonNull(stackOverflowService);
-    }
+    @Inject
+    private StackOverflowService stackOverflowService;
 
     /** Tool: top Jakarta EE Q&A (no args) */
     public McpServerFeatures.AsyncToolSpecification jakartaEETop() {
@@ -96,7 +96,7 @@ public class StackOverflowAsyncTools {
                     if (results == null || results.isEmpty()) {
                         b.addTextContent("No results.");
                     } else {
-                        b.textContent(results); // each String -> TextContent
+                        b.textContent(results);
                     }
                     return b.build();
                 }).onErrorResume(e ->

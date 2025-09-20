@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.Response;
@@ -21,6 +22,7 @@ import jakarta.ws.rs.core.Response;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@ApplicationScoped
 public class StackOverflowService {
 
     private static final Logger LOGGER = Logger.getLogger(StackOverflowService.class.getName());
