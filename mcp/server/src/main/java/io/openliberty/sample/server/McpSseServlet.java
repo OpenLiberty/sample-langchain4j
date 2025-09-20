@@ -22,7 +22,7 @@ import jakarta.servlet.ServletException;
 public class McpSseServlet extends HttpServletSseServerTransportProvider {
 
     @Inject
-    private StackOverflowAsyncTools tools;
+    private StackOverflowAsyncTools stackOverflowAsyncTools;
 
     private McpAsyncServer server;
 
@@ -42,10 +42,10 @@ public class McpSseServlet extends HttpServletSseServerTransportProvider {
                     .build()
             )
             .tools(
-                tools.jakartaEETop(),
-                tools.microProfileTop(),
-                tools.langChain4jTop(),
-                tools.search()
+                stackOverflowAsyncTools.jakartaEETop(),
+                stackOverflowAsyncTools.microProfileTop(),
+                stackOverflowAsyncTools.langChain4jTop(),
+                stackOverflowAsyncTools.search()
             )
             .build();
     }
