@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.server.McpAsyncServer;
 import io.modelcontextprotocol.server.McpServer;
 import io.modelcontextprotocol.server.transport.HttpServletSseServerTransportProvider;
-import io.modelcontextprotocol.spec.McpSchema;
+import io.modelcontextprotocol.spec.McpSchema.ServerCapabilities;
 
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
@@ -36,7 +36,7 @@ public class McpSseServlet extends HttpServletSseServerTransportProvider {
         server = McpServer.async(this)
             .serverInfo("mcp-stackoverflow-server", "1.0.0")
             .capabilities(
-                McpSchema.ServerCapabilities.builder()
+                ServerCapabilities.builder()
                     .tools(true)
                     .logging()
                     .build()

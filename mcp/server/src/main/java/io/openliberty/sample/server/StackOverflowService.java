@@ -80,7 +80,7 @@ public class StackOverflowService {
                     String body  = String.valueOf(data.get("body"));
                     String qUrl  = "https://stackoverflow.com/questions/" + qId;
 
-                    var answers = clientSearch(String.format(FIND_ANSWER_FMT, qId));
+                    List<Map<String, Object>> answers = clientSearch(String.format(FIND_ANSWER_FMT, qId));
                     String topAnswer = answers.isEmpty() ? "No answers." : String.valueOf(answers.get(0).get("body"));
 
                     String line =

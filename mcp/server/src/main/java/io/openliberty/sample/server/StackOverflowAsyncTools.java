@@ -10,8 +10,11 @@
 package io.openliberty.sample.server;
 
 import io.modelcontextprotocol.server.McpAsyncServerExchange;
-import io.modelcontextprotocol.server.McpServerFeatures;
-import io.modelcontextprotocol.spec.McpSchema;
+import io.modelcontextprotocol.server.McpServerFeatures.AsyncToolSpecification;
+import io.modelcontextprotocol.spec.McpSchema.CallToolRequest;
+import io.modelcontextprotocol.spec.McpSchema.CallToolResult;
+import io.modelcontextprotocol.spec.McpSchema.CallToolResult.Builder;
+import io.modelcontextprotocol.spec.McpSchema.Tool;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -28,7 +31,7 @@ public class StackOverflowAsyncTools {
     private StackOverflowService stackOverflowService;
 
     /** Tool: top Jakarta EE Q&A (no args) */
-    public McpServerFeatures.AsyncToolSpecification jakartaEETop() {
+    public AsyncToolSpecification jakartaEETop() {
         return noArgsTool(
             "stackoverflow-jakarta-ee-top",
             "Stack Overflow: Jakarta EE (top)",
@@ -38,7 +41,7 @@ public class StackOverflowAsyncTools {
     }
 
     /** Tool: top MicroProfile Q&A (no args) */
-    public McpServerFeatures.AsyncToolSpecification microProfileTop() {
+    public AsyncToolSpecification microProfileTop() {
         return noArgsTool(
             "stackoverflow-microprofile-top",
             "Stack Overflow: MicroProfile (top)",
@@ -48,7 +51,7 @@ public class StackOverflowAsyncTools {
     }
 
     /** Tool: top LangChain4j Q&A (no args) */
-    public McpServerFeatures.AsyncToolSpecification langChain4jTop() {
+    public AsyncToolSpecification langChain4jTop() {
         return noArgsTool(
             "stackoverflow-langchain4j-top",
             "Stack Overflow: LangChain4j (top)",
@@ -58,51 +61,50 @@ public class StackOverflowAsyncTools {
     }
 
     /** Tool: free-text Stack Overflow search (query: string) */
-    public McpServerFeatures.AsyncToolSpecification search() {
-        var inputSchemaJson = """
-        {
-          "type": "object",
-          "id": "urn:jsonschema:StackOverflowSearch",
-          "properties": {
-            "query": { "type": "string", "description": "Free-text search query" }
-          },
-          "required": ["query"],
-          "additionalProperties": false
-        }
-        """;
+    public AsyncToolSpecification search() {
+        String inputSchemaJson = """
+            {
+            "type": "object",
+            "id": "urn:jsonschema:StackOverflowSearch",
+            "properties": {
+                "query": { "type": "string", "description": "Free-text search query" }
+            },
+            "required": ["query"],
+            "additionalProperties": false
+            }
+            """;
 
-        var tool = McpSchema.Tool.builder()
+        Tool tool = Tool.builder()
             .name("stackoverflow-search")
             .title("Stack Overflow: Search")
             .description("Searches Stack Overflow and returns the highest-voted answers for relevant questions.")
             .inputSchema(inputSchemaJson)
             .build();
 
-        return McpServerFeatures.AsyncToolSpecification.builder()
+        return AsyncToolSpecification.builder()
             .tool(tool)
-            .callHandler((McpAsyncServerExchange exchange, McpSchema.CallToolRequest req) ->
+            .callHandler((McpAsyncServerExchange exchange, CallToolRequest request) ->
                 Mono.fromCallable(() -> {
-                    String q = (String) req.arguments().get("query");
-                    if (q == null || q.isBlank()) {
-                        return McpSchema.CallToolResult.builder()
+                    String query = (String) request.arguments().get("query");
+                    if (query == null || query.isBlank()) {
+                        return CallToolResult.builder()
                             .addTextContent("Missing required parameter: 'query'")
                             .isError(true)
                             .build();
                     }
 
-                    List<String> results = stackOverflowService.searchStackOverflow(q);
-
-                    var b = McpSchema.CallToolResult.builder().isError(false);
-                    if (results == null || results.isEmpty()) {
-                        b.addTextContent("No results.");
+                    List<String> output = stackOverflowService.searchStackOverflow(query);
+                    Builder resultBuilder = CallToolResult.builder().isError(false);
+                    if (output == null || output.isEmpty()) {
+                        resultBuilder.addTextContent("No results.");
                     } else {
-                        b.textContent(results);
+                        resultBuilder.textContent(output);
                     }
-                    return b.build();
-                }).onErrorResume(e ->
+                    return resultBuilder.build();
+                }).onErrorResume(error ->
                     Mono.just(
-                        McpSchema.CallToolResult.builder()
-                            .addTextContent("StackOverflow search failed: " + e.getMessage())
+                        CallToolResult.builder()
+                            .addTextContent("StackOverflow search failed: " + error.getMessage())
                             .isError(true)
                             .build()
                     )
@@ -112,44 +114,44 @@ public class StackOverflowAsyncTools {
     }
 
     /** Helper to build a no-args async tool **/
-    private McpServerFeatures.AsyncToolSpecification noArgsTool(
-        String name,
-        String title,
-        String description,
-        Supplier<List<String>> impl) {
+    private AsyncToolSpecification noArgsTool(
+        String toolName,
+        String toolTitle,
+        String toolDescription,
+        Supplier<List<String>> toolLogic) {
 
-        var emptySchemaJson = """
-        {
-          "type": "object",
-          "properties": {},
-          "required": [],
-          "additionalProperties": false
-        }
-        """;
+        String emptyInputSchemaJson = """
+            {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+            }
+            """;
 
-        var tool = McpSchema.Tool.builder()
-            .name(name)
-            .title(title)
-            .description(description)
-            .inputSchema(emptySchemaJson)
+        Tool toolDefinition = Tool.builder()
+            .name(toolName)
+            .title(toolTitle)
+            .description(toolDescription)
+            .inputSchema(emptyInputSchemaJson)
             .build();
 
-        return McpServerFeatures.AsyncToolSpecification.builder()
-            .tool(tool)
-            .callHandler((McpAsyncServerExchange exchange, McpSchema.CallToolRequest req) ->
+        return AsyncToolSpecification.builder()
+            .tool(toolDefinition)
+            .callHandler((McpAsyncServerExchange exchange, CallToolRequest request) ->
                 Mono.fromCallable(() -> {
-                    List<String> results = impl.get();
-                    var b = McpSchema.CallToolResult.builder().isError(false);
-                    if (results == null || results.isEmpty()) {
-                        b.addTextContent("No results.");
+                    List<String> output = toolLogic.get();
+                    Builder resultBuilder = CallToolResult.builder().isError(false);
+                    if (output == null || output.isEmpty()) {
+                        resultBuilder.addTextContent("No results.");
                     } else {
-                        b.textContent(results);
+                        resultBuilder.textContent(output);
                     }
-                    return b.build();
-                }).onErrorResume(e ->
+                    return resultBuilder.build();
+                }).onErrorResume(error ->
                     Mono.just(
-                        McpSchema.CallToolResult.builder()
-                            .addTextContent("Operation failed: " + e.getMessage())
+                        CallToolResult.builder()
+                            .addTextContent("Operation failed: " + error.getMessage())
                             .isError(true)
                             .build()
                     )

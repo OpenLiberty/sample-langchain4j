@@ -36,6 +36,7 @@ class McpServerIT {
     private static final String PORT = System.getProperty("http.port", "9081");
     private static final String BASE_URL = "http://localhost:" + PORT;
     private static final String SSE_ENDPOINT = "/mcp/sse";
+
     private static McpSyncClient client;
     private static HttpClientSseClientTransport transport;
 
