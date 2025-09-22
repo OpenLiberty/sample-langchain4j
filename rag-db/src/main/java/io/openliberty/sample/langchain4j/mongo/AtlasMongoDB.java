@@ -39,6 +39,7 @@ public class AtlasMongoDB {
     private final int MAX_RESULTS_TO_AI = 1;
     private final int NUM_CANDIDATES = 2;
     private final int TIMEOUT = 5000;
+
     @Inject
     private ModelBuilder modelBuilder;
 
@@ -78,7 +79,7 @@ public class AtlasMongoDB {
         sleep(TIMEOUT);
 		embeddingStore.createSearchIndexes(searchIndexModels);
         boolean indexReady = false;
-        do{
+        do {
             Document index = embeddingStore.listSearchIndexes().first();
             JSONObject json = new JSONObject(index.toJson());
             boolean queryable = json.getBoolean("queryable");
@@ -86,7 +87,7 @@ public class AtlasMongoDB {
                 indexReady = true;
                 break;
             }
-        }while (!indexReady);
+        } while (!indexReady);
     }
 
     public float[] convertUserQueryToEmbedding(String userQuery) {

@@ -91,10 +91,17 @@ public class RAGChatServiceIT {
 
     public static void verify(String message) throws Exception {
         assertNotNull(message);
-        assertTrue((message.toLowerCase().contains("adminCenter") || message.toLowerCase().contains("restConnector") || message.toLowerCase().contains("server") 
-        || message.toLowerCase().contains("config") || message.toLowerCase().contains("mpOpenAPI") || message.toLowerCase().contains("serverConfig") || message.toLowerCase().contains("server.xml") || 
-        (message.toLowerCase().contains("otel.traces.exporter") || message.toLowerCase().contains("zipkin")) || 
-        message.toLowerCase().contains("jaeger") || message.toLowerCase().contains("logging")), message);
+        assertTrue((message.toLowerCase().contains("adminCenter") ||
+                    message.toLowerCase().contains("restConnector") ||
+                    message.toLowerCase().contains("server") ||
+                    message.toLowerCase().contains("config") ||
+                    message.toLowerCase().contains("mpOpenAPI") ||
+                    message.toLowerCase().contains("serverConfig") ||
+                    message.toLowerCase().contains("server.xml") ||
+                    message.toLowerCase().contains("jaeger") ||
+                    message.toLowerCase().contains("logging")) ||
+                   (message.toLowerCase().contains("otel.traces.exporter") ||
+                    message.toLowerCase().contains("zipkin")), message);
         countDown.countDown();
     }
 
