@@ -49,38 +49,8 @@ public class EmbeddingServiceIT {
     public static void setup() {
 
         client = ClientBuilder.newClient();
-        testData.put("= Differences between MicroProfile 7.1 and 7.0\n" +
-                        "MicroProfile 7.1 is a minor release. It includes minor changes for the MicroProfile OpenAPI 4.1 and Telemetry 2.1 features.\n" + 
-                        "If you are updating your application from using MicroProfile 7.0 features to using link:https: github.com/eclipse/microprofile/releases/tag/7.1[MicroProfile 7.1] features, changes in API behavior might require you to update your application code. The following sections provide details about migrating your applications from MicroProfile 7.0 to 7.1:\n" + 
-                        "- <<#openapi, Differences between MicroProfile OpenAPI 4.1 and 4.0>>\n" +  
-                        "- <<#telemetry, Differences between MicroProfile Telemetry 2.1 and 1.1>>\n", "  Copyright (c) 2024 IBM Corporation and others.\n" +
-                        " // Licensed under Creative Commons Attribution-NoDerivatives\n" +
-                        " // 4.0 International (CC BY-ND 4.0)\n" + 
-                        " // https://creativecommons.org/licenses/by-nd/4.0/\n" + 
-                        " // Contributors:\n" +  
-                        " // IBM Corporation\n" +  
-                        ":page-description: MicroProfile 7.1 is a minor release. If you are updating your application from using MicroProfile 7.0 features to using MicroProfile 7.1 features, changes in API behavior might require you to update your application code.\n" +  
-                        ":projectName: Open Liberty\n" +  
-                        ":page-layout: general-reference\n" +  
-                        ":page-type: general\n" +  
-                        "= Differences between MicroProfile 7.1 and 7.0\n" +  
-                        "MicroProfile 7.1 is a minor release. It includes minor changes for the MicroProfile OpenAPI 4.1 and Telemetry 2.1 features.\n" +  
-                        "If you are updating your application from using MicroProfile 7.0 features to using link:https: github.com/eclipse/microprofile/releases/tag/7.1[MicroProfile 7.1] features, changes in API behavior might require you to update your application code. The following sections provide details about migrating your applications from MicroProfile 7.0 to 7.1:\n" +  
-                        "- <<#openapi, Differences between MicroProfile OpenAPI 4.1 and 4.0>>\n" +  
-                        "- <<#telemetry, Differences between MicroProfile Telemetry 2.1 and 1.1>>\n" +  
-                        "[#openapi]\n" +  
-                        "== Differences between MicroProfile OpenAPI 4.1 and 4.0\n" +  
-                        "feature:mpOpenAPI-4.1[display=MicroProfile OpenAPI 4.1] adds the `getJsonSchemaDialect()` method and the `setJsonSchemaDialect()` method to set the default `jsonSchemaDialect` field by using the model API. \n" +  
-                        "MicroProfile OpenAPI 4.1 also adds the `getExtension()` method and the `hasExtension()` method to the `Extensible` model class. \n" +  
-                        "[#telemetry]\n" +  
-                        "== Differences between MicroProfile Telemetry 2.1 and 1.1\n" +  
-                        "feature:mpTelemetry-2.1[display=MicroProfile Telemetry 2.1] equips you with the most recent Open Telemetry technology. This feature now uses OpenTelemetry-1.48.0, upgraded from 1.39.0. \n" +  
-                        "You no longer have to add the following configuration to the `server.xml` to use the OpenTelemetry API:\n" +  
-                        "----\n" +  
-                        "<webApplication id=\"app-name\" location=\"app-name.war\">\n" +  
-                        "    <classloader apiTypeVisibility=\"+third-party\"/>\n" +  
-                        "</webApplication>\n" +  
-                        "----");
+        testData.put("Open Liberty docs, blogs, and guides"+
+                    " will help in developing cloud-native applications.", "See https://openliberty.io/");
         testData.put( "Sample content summary","Test content");
     }
 
