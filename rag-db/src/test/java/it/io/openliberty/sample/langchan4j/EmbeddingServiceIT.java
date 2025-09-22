@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2025 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *******************************************************************************/
 package it.io.openliberty.sample.langchan4j;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,18 +38,17 @@ import jakarta.ws.rs.core.Response;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class EmbeddingServiceIT {
 
+    private static final String EMBEDDING_API_URL = "http://localhost:9081/api/embedding";
+    private static final String AUTHORIZATION = "Basic " + Base64.getEncoder().encodeToString("bob:bobpwd".getBytes(StandardCharsets.UTF_8));
+
     private static Client client;
-
     private static HashMap<String, String> testData = new HashMap<>();
-
-    private static String rootURL;
     private static ArrayList<String> testIDs = new ArrayList<>(2);
 
     @BeforeAll
     public static void setup() {
 
         client = ClientBuilder.newClient();
-        rootURL = "http://localhost:9081/api/embedding";
         testData.put("= Differences between MicroProfile 7.1 and 7.0\n" +
                         "MicroProfile 7.1 is a minor release. It includes minor changes for the MicroProfile OpenAPI 4.1 and Telemetry 2.1 features.\n" + 
                         "If you are updating your application from using MicroProfile 7.0 features to using link:https: github.com/eclipse/microprofile/releases/tag/7.1[MicroProfile 7.1] features, changes in API behavior might require you to update your application code. The following sections provide details about migrating your applications from MicroProfile 7.0 to 7.1:\n" + 
@@ -85,68 +93,68 @@ public class EmbeddingServiceIT {
     @Order(1)
     public void testAddEmbeddings() {
 
-        System.out.println("   === Testing: Adding " + testData.size()
-                + " embeddings to the database. ===");
+        System.out.println("=== Testing: Adding " + testData.size() +
+                           " embeddings to the database");
 
         for (Map.Entry<String, String> testDataElem : testData.entrySet()) {
-
-            String url = rootURL;
-
-            Response response = client.target(url).queryParam("summary",testDataElem.getKey()).queryParam("content",testDataElem.getValue()).request().header("Authorization","Basic " 
-            + Base64.getEncoder().encodeToString("bob:bobpwd".getBytes(StandardCharsets.UTF_8))).post(null);
+            Response response = client.target(EMBEDDING_API_URL)
+                                      .queryParam("summary",testDataElem.getKey())
+                                      .queryParam("content",testDataElem.getValue())
+                                      .request()
+                                      .header("Authorization", AUTHORIZATION)
+                                      .post(null);
             String id = "";
             String responseRes = response.readEntity(String.class);
-
             try (JsonReader reader = Json.createReader(new StringReader(responseRes))) {
                 JsonObject responseObj = reader.readObject();
                 JsonObject idObject = responseObj.getJsonObject("_id");
                 id = idObject.getString("$oid");
             }
-
-            this.assertResponse(url, response);
-
+            assertResponse(EMBEDDING_API_URL, response);
             testIDs.add(id);
-
             response.close();
         }
-        System.out.println("      === Done. ===");
+
+        System.out.println("    Done");
+
     }
 
     @Test
     @Order(2)
     public void testUpdateEmbeddings() {
 
-        System.out.println("   === Testing: Updating embedding with id " + testIDs.get(0)
-                + ". ===");
+        System.out.println("=== Testing: Updating embedding with id " + testIDs.get(0));
 
-        String url = rootURL + "/";
-
-        Response response = client.target(url).path(testIDs.get(0)).queryParam("summary","Summary Update Version 2").queryParam("content","Content Update Version 2").request()
-                .header("Authorization","Basic " + Base64.getEncoder().encodeToString("bob:bobpwd".getBytes(StandardCharsets.UTF_8))).put(null);
+        Response response = client.target(EMBEDDING_API_URL + "/")
+                                  .path(testIDs.get(0))
+                                  .queryParam("summary","Summary Update Version 2")
+                                  .queryParam("content","Content Update Version 2")
+                                  .request()
+                                  .header("Authorization", AUTHORIZATION)
+                                  .put(null);
                 
-        this.assertResponse(rootURL + "/" + testIDs.get(0), response);
+        assertResponse(EMBEDDING_API_URL + "/" + testIDs.get(0), response);
 
-        System.out.println("      === Done. ===");
+        System.out.println("    Done");
     }
 
     @Test
     @Order(3)
     public void testGetEmbeddings() {
 
-        System.out.println("   === Testing: Get embeddings from the database. ===");
+        System.out.println("=== Testing: Get embeddings from the database");
 
-        String url = rootURL;
+        Response response = client.target(EMBEDDING_API_URL)
+                                  .request().header("Authorization", AUTHORIZATION)
+                                  .get();
 
-        Response response = client.target(url).request().header("Authorization","Basic " + Base64.getEncoder().encodeToString("bob:bobpwd".getBytes(StandardCharsets.UTF_8))).get();
-
-        this.assertResponse(url, response);
+        this.assertResponse(EMBEDDING_API_URL, response);
         String responseText = response.readEntity(String.class);
         JsonReader reader = Json.createReader(new StringReader(responseText));
         JsonArray embeddings = reader.readArray();
         reader.close();
 
         int testDataCount = 0;
-
         for (JsonValue value : embeddings) {
             JsonObject embedding = (JsonObject) value;
             String id = embedding.getJsonObject("_id").getString("$oid");
@@ -155,32 +163,34 @@ public class EmbeddingServiceIT {
             }
         }
 
-        assertEquals(testIDs.size(), testDataCount,
-                "Incorrect number of embeddings.");
+        assertEquals(testIDs.size(), testDataCount, "Incorrect number of embeddings.");
 
-        System.out.println("      === Done. There are " + testDataCount
-                + " embeddings. ===");
+        System.out.println("    There are " + testDataCount + " embeddings.");
+        System.out.println("    Done");
 
         response.close();
+
     }
 
     @Test
     @Order(4)
     public void testDeleteEmbeddings() {
-        System.out.println("   === Testing: Removing " + testIDs.size()
-                + " embeddings from the database. ===");
-
+        System.out.println("=== Testing: Removing " + testIDs.size() + 
+                           " embeddings from the database");
         for (String id : testIDs) {
-            String url = rootURL + "/" + id;
-            Response response = client.target(url).request().header("Authorization","Basic " + Base64.getEncoder().encodeToString("bob:bobpwd".getBytes(StandardCharsets.UTF_8))).delete();
-            this.assertResponse(url, response);
+            String url = EMBEDDING_API_URL + "/" + id;
+            Response response = client.target(url)
+                                      .request()
+                                      .header("Authorization", AUTHORIZATION)
+                                      .delete();
+            assertResponse(url, response);
             response.close();
         }
-
-        System.out.println("      === Done. ===");
+        System.out.println("    Done");
     }
 
     private void assertResponse(String url, Response response) {
         assertEquals(200, response.getStatus(), "Incorrect response code from " + url);
     }
+
 }
