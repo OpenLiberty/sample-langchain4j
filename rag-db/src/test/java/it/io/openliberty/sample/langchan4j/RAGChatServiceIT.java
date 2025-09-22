@@ -79,7 +79,7 @@ public class RAGChatServiceIT {
 
     @Test
     public void testLogs() throws Exception {
-        client.sendMessage("How to test connections with the Server Config tool?\n");
+        client.sendMessage("How do I isolate applications on the same server?\n");
         countDown.await(120, TimeUnit.SECONDS);
     }
 
@@ -91,12 +91,12 @@ public class RAGChatServiceIT {
 
     public static void verify(String message) throws Exception {
         assertNotNull(message);
-        assertTrue((message.toLowerCase().contains("adminCenter") ||
-                    message.toLowerCase().contains("restConnector") ||
-                    message.toLowerCase().contains("server") ||
-                    message.toLowerCase().contains("config") ||
-                    message.toLowerCase().contains("mpOpenAPI") ||
-                    message.toLowerCase().contains("serverConfig") ||
+        assertTrue((message.toLowerCase().contains("virtualHost") ||
+                    message.toLowerCase().contains("hostAlias") ||
+                    message.contains("<hostAlias>localhost:9081</hostAlias>") ||
+                    message.toLowerCase().contains("myApp.ear") ||
+                    message.toLowerCase().contains("myApp2.war") ||
+                    message.toLowerCase().contains("webApplication") ||
                     message.toLowerCase().contains("server.xml") ||
                     message.toLowerCase().contains("jaeger") ||
                     message.toLowerCase().contains("logging")) ||

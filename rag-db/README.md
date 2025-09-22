@@ -15,6 +15,7 @@ This example demonstrates LangChain4J in a Jakarta EE / MicroProfile application
             -   see the [README.md](https://github.com/ollama/ollama/blob/main/README.md#ollama).
         -   Pull the following model.
             -   `ollama pull llama3.2`
+            -   `ollama pull nomic-embed-text`
     -   Mistral AI
         -   Sign up and log in to https://console.mistral.ai/home.
         -   Go to [Your API keys](https://console.mistral.ai/api-keys).
@@ -101,7 +102,7 @@ If you are currently using one of the following model providers: GitHub, Ollama 
 - At the prompt, try the following message examples:
 
   - ```
-      How to test connections with the Server Config tool?
+      How do I isolate applications on the same server?
     ```
   - ```
       Which OpenTelemetry property enabled by MicroProfile Telemetry do I need in order to set the exporter that is used to collect traces?

@@ -55,7 +55,7 @@ import jakarta.ws.rs.core.Response.Status;
 public class EmbeddingService {
 
     private static final String[] MD_FILES = {
-        "admin-center.md", "microprofile-config-properties-OpenTelemetry.md"
+        "virtual-host-configuration.md", "microprofile-config-properties-OpenTelemetry.md"
     };
 
     @Inject
