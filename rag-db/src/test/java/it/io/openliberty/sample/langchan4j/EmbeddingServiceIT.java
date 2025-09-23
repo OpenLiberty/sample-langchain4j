@@ -47,10 +47,9 @@ public class EmbeddingServiceIT {
 
     @BeforeAll
     public static void setup() {
-
         client = ClientBuilder.newClient();
-        testData.put("Open Liberty docs, blogs, and guides"+
-                    " will help in developing cloud-native applications.", "See https://openliberty.io/");
+        testData.put("Open Liberty docs, blogs, and guides " +
+                     "will help in developing cloud-native applications.", "See https://openliberty.io/");
         testData.put( "Sample content summary","Test content");
     }
 
@@ -68,8 +67,8 @@ public class EmbeddingServiceIT {
 
         for (Map.Entry<String, String> testDataElem : testData.entrySet()) {
             Response response = client.target(EMBEDDING_API_URL)
-                                      .queryParam("summary",testDataElem.getKey())
-                                      .queryParam("content",testDataElem.getValue())
+                                      .queryParam("summary", testDataElem.getKey())
+                                      .queryParam("content", testDataElem.getValue())
                                       .request()
                                       .header("Authorization", AUTHORIZATION)
                                       .post(null);
@@ -97,8 +96,8 @@ public class EmbeddingServiceIT {
 
         Response response = client.target(EMBEDDING_API_URL + "/")
                                   .path(testIDs.get(0))
-                                  .queryParam("summary","Summary Update Version 2")
-                                  .queryParam("content","Content Update Version 2")
+                                  .queryParam("summary", "Summary Update Version 2")
+                                  .queryParam("content", "Content Update Version 2")
                                   .request()
                                   .header("Authorization", AUTHORIZATION)
                                   .put(null);
