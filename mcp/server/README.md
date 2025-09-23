@@ -16,7 +16,7 @@ The sample showcases:
 
 ## Prerequisites and setup
 
-To run this sample, you'll need [**JDK 21**](https://developer.ibm.com/languages/java/semeru-runtimes/downloads) or later.
+To run this sample, you'll need [JDK 21](https://developer.ibm.com/languages/java/semeru-runtimes/downloads) or later.
 
 Run the following command to set the `JAVA_HOME` environment variable:
 
