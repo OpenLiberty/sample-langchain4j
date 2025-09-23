@@ -37,7 +37,7 @@ Use the Maven wrapper to start the application by using the [Liberty dev mode](h
 ./mvnw liberty:dev
 ```
 
-When dev mode is ready, the server listens at http://localhost:9081/mcp, a single MCP endpoint that supports both POST and GET methods.
+When the application is ready, the server listens at http://localhost:9081/mcp, a single MCP endpoint that supports both POST and GET methods.
 
 ## Available Tools
 

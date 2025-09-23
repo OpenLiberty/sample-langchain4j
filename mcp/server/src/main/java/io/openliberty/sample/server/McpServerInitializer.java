@@ -35,6 +35,7 @@ public class McpServerInitializer implements ServletContextListener {
 
         transport = HttpServletStreamableServerTransportProvider.builder()
             .jsonMapper(McpJsonMapper.getDefault())
+            .mcpEndpoint("/mcp")
             .build();
 
         Dynamic registration = ctx.addServlet("mcp-streamable", transport);

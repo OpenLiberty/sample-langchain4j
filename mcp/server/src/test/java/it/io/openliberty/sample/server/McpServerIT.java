@@ -42,6 +42,7 @@ class McpServerIT {
     static void startClientAndInitialize() {
         transport = HttpClientStreamableHttpTransport
                 .builder(BASE_URL)
+                .endpoint("/mcp")
                 .build();
 
         client = McpClient.sync(transport).build();

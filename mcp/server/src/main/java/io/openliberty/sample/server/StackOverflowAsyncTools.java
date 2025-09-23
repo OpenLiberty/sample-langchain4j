@@ -70,11 +70,7 @@ public class StackOverflowAsyncTools {
             new JsonSchema(
                 "object",
                 Map.of(
-                    "query",
-                    Map.of(
-                        "type", "string",
-                        "description", "Free-text search query"
-                    )
+                    "query", Map.of("type", "string")
                 ),
                 List.of("query"),
                 null,
