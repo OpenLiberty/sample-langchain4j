@@ -11,7 +11,8 @@ package it.io.openliberty.sample.server;
 
 import io.modelcontextprotocol.client.McpClient;
 import io.modelcontextprotocol.client.McpSyncClient;
-import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport;
+import io.modelcontextprotocol.client.transport.HttpClientStreamableHttpTransport;
+import io.modelcontextprotocol.spec.McpClientTransport;
 import io.modelcontextprotocol.spec.McpSchema.CallToolRequest;
 import io.modelcontextprotocol.spec.McpSchema.CallToolResult;
 import io.modelcontextprotocol.spec.McpSchema.ListToolsResult;
@@ -26,31 +27,26 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class McpServerIT {
 
     private static final String PORT = System.getProperty("http.port", "9081");
     private static final String BASE_URL = "http://localhost:" + PORT;
-    private static final String SSE_ENDPOINT = "/mcp/sse";
 
     private static McpSyncClient client;
-    private static HttpClientSseClientTransport transport;
+    private static McpClientTransport transport;
 
     @BeforeAll
     static void startClientAndInitialize() {
-        transport = HttpClientSseClientTransport
+        transport = HttpClientStreamableHttpTransport
                 .builder(BASE_URL)
-                .sseEndpoint(SSE_ENDPOINT)
                 .build();
 
         client = McpClient.sync(transport).build();
 
         client.initialize();
-
         client.ping();
     }
 
@@ -64,7 +60,10 @@ class McpServerIT {
             }
         }
         if (transport != null) {
-            try { transport.close(); } catch (Throwable ignore) {}
+            try {
+                transport.close();
+            } catch (Throwable ignore) {
+            }
         }
     }
 
@@ -107,11 +106,11 @@ class McpServerIT {
 
     @Test
     @Order(3)
-    void testSearchToolWithQuery() {
+    void testParameterizedTool() {
         CallToolResult res = client.callTool(
                 new CallToolRequest("stackoverflow-search", Map.of("query", "Ollama"))
         );
-        assertNotNull(res);
+        assertNotNull(res, "Null tool result");
         assertFalse(Boolean.TRUE.equals(res.isError()), "Tool returned isError=true");
 
         boolean hasText = res.content().stream()

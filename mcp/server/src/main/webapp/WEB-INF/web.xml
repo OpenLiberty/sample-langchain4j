@@ -5,22 +5,7 @@
          version="6.0"
          metadata-complete="true">
 
-  <servlet>
-    <servlet-name>mcp-sse</servlet-name>
-    <servlet-class>io.openliberty.sample.server.McpSseServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
-    <async-supported>true</async-supported>
-  </servlet>
-
-  <!-- Client -> Server JSON-RPC over HTTP -->
-  <servlet-mapping>
-    <servlet-name>mcp-sse</servlet-name>
-    <url-pattern>/mcp/message</url-pattern>
-  </servlet-mapping>
-
-  <!-- Server -> Client Server-Sent Events stream -->
-  <servlet-mapping>
-    <servlet-name>mcp-sse</servlet-name>
-    <url-pattern>/mcp/sse/*</url-pattern>
-  </servlet-mapping>
+  <listener>
+    <listener-class>io.openliberty.sample.server.McpServerInitializer</listener-class>
+  </listener>
 </web-app>

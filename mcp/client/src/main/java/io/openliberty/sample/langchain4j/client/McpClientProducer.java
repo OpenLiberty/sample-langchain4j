@@ -18,7 +18,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import dev.langchain4j.mcp.client.DefaultMcpClient;
 import dev.langchain4j.mcp.client.McpClient;
 import dev.langchain4j.mcp.client.transport.McpTransport;
-import dev.langchain4j.mcp.client.transport.http.HttpMcpTransport;
+import dev.langchain4j.mcp.client.transport.http.StreamableHttpMcpTransport;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -28,26 +28,22 @@ import jakarta.inject.Inject;
 @ApplicationScoped
 public class McpClientProducer {
 
-    private static Logger logger = Logger.getLogger(McpClientProducer.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(McpClientProducer.class.getName());
 
     @Inject
-    @ConfigProperty(name = "mcp.base.url")
-    String baseUrl;
-
-    @Inject
-    @ConfigProperty(name = "mcp.sse.path")
-    String ssePath;
+    @ConfigProperty(name = "mcp.server.url")
+    String url;
 
     private McpClient client;
 
     @PostConstruct
     void init() {
-        McpTransport transport = new HttpMcpTransport.Builder()
-                .sseUrl(baseUrl + ssePath)
-                .timeout(Duration.ofSeconds(60))
-                .logRequests(true)
-                .logResponses(true)
-                .build();
+        McpTransport transport = new StreamableHttpMcpTransport.Builder()
+            .url(url)
+            .timeout(Duration.ofSeconds(60))
+            .logRequests(true)
+            .logResponses(true)
+            .build();
 
         client = new DefaultMcpClient.Builder()
                 .transport(transport)
@@ -66,7 +62,7 @@ public class McpClientProducer {
             try {
                 client.close();
             } catch (Exception e) {
-                logger.log(Level.WARNING, "Failed to close MCP client: " + e.getMessage());
+                LOGGER.log(Level.WARNING, "Failed to close MCP client: " + e.getMessage());
             }
         }
     }

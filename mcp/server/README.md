@@ -1,13 +1,12 @@
 # Open Liberty MCP StackOverflow Server Sample
 
-This sample project demonstrates how to build a Model Context Protocol (MCP) server on Open Liberty using Jakarta Servlet and the [MCP Java SDK](https://github.com/modelcontextprotocol/java-sdk). It implements a StackOverflow service that exposes tools for retrieving and searching questions and answers.
-
+This sample demonstrates how to build a Model Context Protocol (MCP) server on Open Liberty using Jakarta Servlet and the [MCP Java SDK](https://github.com/modelcontextprotocol/java-sdk). It implements a Stack Overflow service and exposes MCP tools for listing top questions and running free-text searches.
 ## Overview
 
 The sample showcases:
 
 * A Jakarta Servlet–based MCP server running on Open Liberty
-* Server-Sent Events (SSE) transport via the MCP Java SDK’s Servlet provider
+* MCP [Streamable HTTP transport](https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#streamable-http)
 * Four Stack Overflow tools:
   * Top Jakarta EE questions and answers
   * Top MicroProfile questions and answers
@@ -38,9 +37,7 @@ Use the Maven wrapper to start the application by using the [Liberty dev mode](h
 ./mvnw liberty:dev
 ```
 
-Once the server is running, it listens on `http://localhost:9081` and exposes two endpoints that use SSE:
-- `GET /mcp/sse` opens the server-to-client SSE stream
-- `POST /mcp/message?sessionId=...` receives client-to-server JSON-RPC requests
+When dev mode is ready, the server listens at http://localhost:9081/mcp, a single MCP endpoint that supports both POST and GET methods.
 
 ## Available Tools
 

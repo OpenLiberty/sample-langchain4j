@@ -14,6 +14,7 @@ import io.modelcontextprotocol.server.McpServerFeatures.AsyncToolSpecification;
 import io.modelcontextprotocol.spec.McpSchema.CallToolRequest;
 import io.modelcontextprotocol.spec.McpSchema.CallToolResult;
 import io.modelcontextprotocol.spec.McpSchema.CallToolResult.Builder;
+import io.modelcontextprotocol.spec.McpSchema.JsonSchema;
 import io.modelcontextprotocol.spec.McpSchema.Tool;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -21,7 +22,9 @@ import jakarta.inject.Inject;
 
 import reactor.core.publisher.Mono;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 @ApplicationScoped
@@ -62,23 +65,28 @@ public class StackOverflowAsyncTools {
 
     /** Tool: free-text Stack Overflow search (query: string) */
     public AsyncToolSpecification search() {
-        String inputSchemaJson = """
-            {
-            "type": "object",
-            "id": "urn:jsonschema:StackOverflowSearch",
-            "properties": {
-                "query": { "type": "string", "description": "Free-text search query" }
-            },
-            "required": ["query"],
-            "additionalProperties": false
-            }
-            """;
+
+        JsonSchema inputJsonSchema =
+            new JsonSchema(
+                "object",
+                Map.of(
+                    "query",
+                    Map.of(
+                        "type", "string",
+                        "description", "Free-text search query"
+                    )
+                ),
+                List.of("query"),
+                null,
+                null,
+                null
+            );
 
         Tool tool = Tool.builder()
             .name("stackoverflow-search")
             .title("Stack Overflow: Search")
             .description("Searches Stack Overflow and returns the highest-voted answers for relevant questions.")
-            .inputSchema(inputSchemaJson)
+            .inputSchema(inputJsonSchema)
             .build();
 
         return AsyncToolSpecification.builder()
@@ -120,20 +128,14 @@ public class StackOverflowAsyncTools {
         String toolDescription,
         Supplier<List<String>> toolLogic) {
 
-        String emptyInputSchemaJson = """
-            {
-            "type": "object",
-            "properties": {},
-            "required": [],
-            "additionalProperties": false
-            }
-            """;
+        JsonSchema emptyJsonSchema = new JsonSchema(
+            "object", Collections.emptyMap(), null, null, null, null);
 
         Tool toolDefinition = Tool.builder()
             .name(toolName)
             .title(toolTitle)
             .description(toolDescription)
-            .inputSchema(emptyInputSchemaJson)
+            .inputSchema(emptyJsonSchema)
             .build();
 
         return AsyncToolSpecification.builder()

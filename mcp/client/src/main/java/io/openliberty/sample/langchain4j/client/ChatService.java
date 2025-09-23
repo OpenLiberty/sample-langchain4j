@@ -27,14 +27,14 @@ import org.eclipse.microprofile.metrics.annotation.Timed;
 @ServerEndpoint(value = "/mcpchat", encoders = { ChatMessageEncoder.class })
 public class ChatService {
 
-    private static Logger logger = Logger.getLogger(ChatService.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ChatService.class.getName());
 
     @Inject
     ChatAgent agent = null;
 
     @OnOpen
     public void onOpen(Session session) {
-        logger.info("Server connected to session: " + session.getId());
+        LOGGER.info("Server connected to session: " + session.getId());
     }
 
     @OnMessage
@@ -42,7 +42,7 @@ public class ChatService {
            description = "Time needed chatting to the agent.")
     public void onMessage(String message, Session session) {
 
-        logger.info("Server received message \"" + message + "\" "
+        LOGGER.info("Server received message \"" + message + "\" "
                     + "from session: " + session.getId());
 
         String answer;
@@ -64,14 +64,13 @@ public class ChatService {
     @OnClose
     public void onClose(Session session, CloseReason closeReason) {
         agent.clearChatMemory(session.getId());
-        logger.info("Session " + session.getId()
+        LOGGER.info("Session " + session.getId()
                     + " was closed with reason " + closeReason.getCloseCode());
     }
 
     @OnError
     public void onError(Session session, Throwable throwable) {
-        logger.info("WebSocket error for " + session.getId() + " "
+        LOGGER.info("WebSocket error for " + session.getId() + " "
                     + throwable.getMessage());
     }
-
 }

@@ -9,38 +9,45 @@
  *******************************************************************************/
 package io.openliberty.sample.server;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.modelcontextprotocol.server.McpAsyncServer;
 import io.modelcontextprotocol.server.McpServer;
-import io.modelcontextprotocol.server.transport.HttpServletSseServerTransportProvider;
+import io.modelcontextprotocol.server.transport.HttpServletStreamableServerTransportProvider;
 import io.modelcontextprotocol.spec.McpSchema.ServerCapabilities;
+import io.modelcontextprotocol.json.McpJsonMapper;
 
 import jakarta.inject.Inject;
-import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.ServletRegistration.Dynamic;
 
-public class McpSseServlet extends HttpServletSseServerTransportProvider {
+public class McpServerInitializer implements ServletContextListener {
 
     @Inject
     private StackOverflowAsyncTools stackOverflowAsyncTools;
 
     private McpAsyncServer server;
-
-    public McpSseServlet() {
-        super(new ObjectMapper(), "/mcp/message");
-    }
+    private HttpServletStreamableServerTransportProvider transport;
 
     @Override
-    public void init() throws ServletException {
-        super.init();
-        server = McpServer.async(this)
+    public void contextInitialized(ServletContextEvent sce) {
+        ServletContext ctx = sce.getServletContext();
+
+        transport = HttpServletStreamableServerTransportProvider.builder()
+            .jsonMapper(McpJsonMapper.getDefault())
+            .build();
+
+        Dynamic registration = ctx.addServlet("mcp-streamable", transport);
+        registration.addMapping("/mcp");
+        registration.setAsyncSupported(true);
+        registration.setLoadOnStartup(1);
+
+        server = McpServer.async(transport)
             .serverInfo("mcp-stackoverflow-server", "1.0.0")
-            .capabilities(
-                ServerCapabilities.builder()
-                    .tools(true)
-                    .logging()
-                    .build()
-            )
+            .capabilities(ServerCapabilities.builder()
+                .tools(true)
+                .logging()
+                .build())
             .tools(
                 stackOverflowAsyncTools.jakartaEETop(),
                 stackOverflowAsyncTools.microProfileTop(),
@@ -51,7 +58,7 @@ public class McpSseServlet extends HttpServletSseServerTransportProvider {
     }
 
     @Override
-    public void destroy() {
+    public void contextDestroyed(ServletContextEvent sce) {
         try {
             if (server != null) {
                 try {
@@ -60,11 +67,13 @@ public class McpSseServlet extends HttpServletSseServerTransportProvider {
                     server.close();
                 }
             }
-            try {
-                super.closeGracefully();
-            } catch (Throwable ignore) {}
-        } finally {
-            super.destroy();
+            if (transport != null) {
+                try {
+                    transport.closeGracefully().block();
+                } catch (Throwable ignore) {
+                }
+            }
+        } catch (Throwable ignore) {
         }
     }
 }
