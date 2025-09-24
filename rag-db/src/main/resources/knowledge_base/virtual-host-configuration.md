@@ -6,7 +6,7 @@ In Open Liberty, you can define virtual hosts or adjust the configuration of the
 
 Isolate applications on the same server
 The following example illustrates a common use case for virtual hosting: configuring two applications to run on different ports on the same server. The configuration defines two HTTP endpoints and two virtual hosts. The alias configurations associate the application-1 virtual host with the defaultHttpEndpoint endpoint and the application-2 virtual host with the alternateEndpoint endpoint:
-
+```
 <httpEndpoint id="defaultHttpEndpoint" host="*" httpPort="9080" />
 <httpEndpoint id="alternateEndpoint" host="*" httpPort="9081" />
 
@@ -20,7 +20,7 @@ The following example illustrates a common use case for virtual hosting: configu
 
 <enterpriseApplication location="myApp.ear" name="App1"/>
 <webApplication location="myApp2.war" name="App2" />
-
+```
 Furthermore, the virtual host configuration for the application-2 virtual host specifies that an application on this host is available only on the localhost interface. This configuration is useful if you want an application to accept traffic only from the computer where it is running, for development or testing purposes.
 
 The defaultHttpEndpoint HTTP endpoint is configured to expose all interfaces on port 9080. The alternateEndpoint HTTP endpoint is configured to expose all interfaces on port 9081. If the App1 application has a WAR file with an ibm-web-bnd.xml file that specifies virtual-host name="application-1", then this application can be accessed only at the your_host_name:9080/app1_context_root endpoint. If the App2 application that is configured in the webApplication element has an ibm-web-bnd.xml file that specifies virtual-host name="application-2", then this application can be accessed only at the localhost:9081/app2_context_root endpoint.

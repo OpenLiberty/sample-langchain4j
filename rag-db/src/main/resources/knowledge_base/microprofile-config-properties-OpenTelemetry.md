@@ -1,5 +1,5 @@
 :summary: MicroProfile Telemetry: OpenTelemetry properties
-:answer: == MicroProfile Telemetry: OpenTelemetry properties
+:answer: MicroProfile Telemetry: OpenTelemetry properties
 
 The following OpenTelemetry properties can be specified when MicroProfile Telemetry is enabled. This table lists the most important properties. For the full list, see the link:https://opentelemetry.io/docs/languages/java/configuration/#environment-variables-and-system-properties[OpenTelemtry Java configuration properties].
 
