@@ -1,6 +1,6 @@
 # Using RAG with LangChain4j in a Jakarta EE and MicroProfile Application
 
-This example demonstrates LangChain4J in a Jakarta EE / MicroProfile application on Open Liberty. The application is a chatbot built with LangChain4J and uses Jakarta CDI, Jakarta RESTful Web Services, Jakarta WebSocket, MicroProfile Config, MicroProfile Metrics, and MicroProfile OpenAPI features. The application allows to use any model such as Github, Ollama, or Hugging Face.
+This example demonstrates RAG with LangChain4J in a Jakarta EE / MicroProfile application on Open Liberty. The application is a chatbot built with LangChain4J and uses MongoDB Atlas locally; it also uses Jakarta CDI, Jakarta RESTful Web Services, Jakarta WebSocket, MicroProfile Config, MicroProfile Metrics, and MicroProfile OpenAPI features. The application allows to use any model such as Github, Ollama or Mistral AI.
 
 ## Prerequisites:
 
@@ -19,6 +19,7 @@ This example demonstrates LangChain4J in a Jakarta EE / MicroProfile application
         -   Sign up and log in to https://console.mistral.ai/home.
         -   Go to [Your API keys](https://console.mistral.ai/api-keys).
         -   Create a new key.
+
 - You will use Docker to run an instance of MongoDB for a fast installation and setup. Install Docker by following the instructions in the official [Docker documentation](https://docs.docker.com/engine/installation), and start your Docker environment.
 
 ## Setting up MongoDB Atlas Locally
@@ -115,23 +116,30 @@ Use the `sample-langchain4j/rag/src/main/resources/knowledge_base` files to comp
 
 Because you started Liberty in dev mode, you can run the provided tests by pressing the `enter/return` key from the command-line session where you started dev mode.
 
-If the tests pass, you see a similar output to the following example:
+If the tests pass, you may see a similar output to the following example:
 
 ```
+----
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running it.io.openliberty.sample.langchan4j.RAGChatServiceIT
 [INFO] ...
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.804 s
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.329 s -- in it.io.openliberty.sample.langchan4j.RAGChatServiceIT
+[INFO] ...
+[INFO] Running it.io.openliberty.sample.langchan4j.EmbeddingServiceIT
+[INFO] ...
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.668 s -- in it.io.openliberty.sample.langchan4j.EmbeddingServiceIT
+[INFO]
 [INFO] Results:
-[INFO] 
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+----
 ```
 
 When you are done checking out the service, exit dev mode by pressing `Ctrl+C` in the command-line session where you ran Liberty, or by typing `q` and then pressing the `enter/return` key.
 
-Then, run the following command to tear down the environment: 
+Then, run the following command to stop and remove the container: 
 
 ```
 docker compose -f docker-compose.yml down
