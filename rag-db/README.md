@@ -120,7 +120,6 @@ Because you started Liberty in dev mode, you can run the provided tests by press
 If the tests pass, you may see a similar output to the following example:
 
 ```
-----
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
@@ -135,7 +134,6 @@ If the tests pass, you may see a similar output to the following example:
 [INFO] Results:
 [INFO]
 [INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
-----
 ```
 
 When you are done checking out the service, exit dev mode by pressing `Ctrl+C` in the command-line session where you ran Liberty, or by typing `q` and then pressing the `enter/return` key.
