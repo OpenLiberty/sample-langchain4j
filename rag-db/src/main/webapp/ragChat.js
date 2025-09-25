@@ -49,17 +49,7 @@ webSocket.onmessage = function (event) {
     messagesTableBody.removeChild(thinkingRow);
     var agentMessageRow = document.createElement('tr');
 
-    const htmlParser = new DOMParser();
-    let content = "";
-    const agentMessageDoc = htmlParser.parseFromString(data, 'text/html');
-
-    var levels = agentMessageDoc.body.children;
-    for (var indexOfLevel = 0; indexOfLevel < levels.length; indexOfLevel++){        
-        var level = levels[indexOfLevel];
-        content += "\n" + level.innerHTML;
-    }
-        
-    agentMessageRow.innerHTML = '<td><div class=\"agent-msg\">' + content + '</section></td>' +
+    agentMessageRow.innerHTML = '<td><div class=\"agent-msg\">' + data + '</section></td>' +
                                 '<td>' + getTime() + '</td>';
     messagesTableBody.appendChild(agentMessageRow);
 };
