@@ -87,7 +87,8 @@ Use the Maven wrapper to start the application by using the [Liberty dev mode](h
 
 If you are currently using one of the following model providers: GitHub, Ollama or MistralAI, you may proceed.
 
-- Navigate to http://localhost:9081/openapi/ui/ to see the OpenAPI user interface (UI) that provides API documentation and a client to test the API endpoints for mongoDB.
+Navigate to http://localhost:9081/openapi/ui/ to see the OpenAPI user interface (UI) that provides API documentation and a client to test the API endpoints for MongoDB.
+
   - To try a particular api, authentication is required.
   - The admin (read/write full access) and user (read only access) security roles are created. 
   - For admin access, use `bob` and his password is `bobpwd`.
@@ -97,7 +98,7 @@ If you are currently using one of the following model providers: GitHub, Ollama 
 - Try the POST request at `/api/embedding/init`. This adds the knowledge base embeddings to MongoDB.
 - Try the GET request at `/api/embedding` again. The content from the `sample-langchain4j/rag/src/main/resources/knowledge_base` should be displayed.
 
-- Navigate to http://localhost:9081/ to use the chat application
+Navigate to http://localhost:9081/ to use the chat application
 
 - At the prompt, try the following message examples:
 
@@ -110,7 +111,7 @@ If you are currently using one of the following model providers: GitHub, Ollama 
 
 Use the `sample-langchain4j/rag/src/main/resources/knowledge_base` files to compare the AI responses to the knowledge base files.
 
-- In the `rag-db` directory, running the `./mvnw liberty:dev` again and submitting the GET request gives the embeddings that are stored in MongoDB previously. Similarly, the POST request to `/api/embedding/init` indicates that the knowledge base has already been initialized. 
+- The embeddings and content that are stored in MongoDB previously are preserved even after restarting the application by stopping and running `./mvnw liberty:dev` again.
 
 ## Running the tests
 
