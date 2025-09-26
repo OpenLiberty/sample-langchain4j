@@ -32,6 +32,7 @@ import jakarta.inject.Inject;
 public class ModelBuilder {
 
     private static Logger logger = Logger.getLogger(ModelBuilder.class.getName());
+    public static final String OLLAMA_EMBED ="nomic-embed-text";
 
     @Inject
     @ConfigProperty(name = "github.api.key")
@@ -131,7 +132,7 @@ public class ModelBuilder {
             } else if (usingOllama()) {
                 embeddingModel = OllamaEmbeddingModel.builder()
                     .baseUrl(OLLAMA_BASE_URL)
-                    .modelName("all-minilm")
+                    .modelName(OLLAMA_EMBED)
                     .timeout(ofSeconds(TIMEOUT))
                     .build();
             } else if (usingMistralAi()) {

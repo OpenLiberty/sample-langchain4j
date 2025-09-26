@@ -32,7 +32,7 @@ public class MongoProducer {
     String hostname;
 
     @Inject
-    @ConfigProperty(name = "mongo.port", defaultValue = "27018")
+    @ConfigProperty(name = "mongo.port", defaultValue = "27017")
     int port;
 
     @Inject

@@ -79,22 +79,29 @@ public class RAGChatServiceIT {
 
     @Test
     public void testLogs() throws Exception {
-        client.sendMessage("what A, E, I, O, R, W character stands for in the log entries finding in the messages.log file?\n");
+        client.sendMessage("How do I isolate applications on the same server?\n");
         countDown.await(120, TimeUnit.SECONDS);
     }
 
     @Test
     public void testSecurity() throws Exception {
-        client.sendMessage("I got an java.lang.InternalError exception when tried to log in via SAML.\n");
+        client.sendMessage("What OpenTelemetry properties enabled by MicroProfile Telemetry do I need to set the exporter that is used to collect traces?");
         countDown.await(120, TimeUnit.SECONDS);
     }
 
-    public static void verify(String message) {
+    public static void verify(String message) throws Exception {
         assertNotNull(message);
-        assertTrue((message.toLowerCase().contains("audit") || message.toLowerCase().contains("error") || 
-        message.toLowerCase().contains("information") || message.toLowerCase().contains("system.out") || 
-        message.toLowerCase().contains("system.err") || message.toLowerCase().contains("warning")) || 
-        (message.toLowerCase().contains("securerandom.source") || message.toLowerCase().contains("file:/dev/urandom") || message.contains("java.security")), message);
+        assertTrue((message.toLowerCase().contains("virtualHost") ||
+                    message.toLowerCase().contains("hostAlias") ||
+                    message.contains("<hostAlias>localhost:9081</hostAlias>") ||
+                    message.toLowerCase().contains("myApp.ear") ||
+                    message.toLowerCase().contains("myApp2.war") ||
+                    message.toLowerCase().contains("webApplication") ||
+                    message.toLowerCase().contains("server.xml") ||
+                    message.toLowerCase().contains("jaeger") ||
+                    message.toLowerCase().contains("logging")) ||
+                   (message.toLowerCase().contains("otel.traces.exporter") ||
+                    message.toLowerCase().contains("zipkin")), message);
         countDown.countDown();
     }
 

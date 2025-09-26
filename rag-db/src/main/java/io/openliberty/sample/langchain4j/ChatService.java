@@ -66,7 +66,7 @@ public class ChatService {
             float[] userQueryEmbedding = mongoDB.convertUserQueryToEmbedding(message);
             List<Float> result = toFloat(userQueryEmbedding);
             List<String> output = mongoDB.retrieveContent(result, message);
-            message += "Here are some relevent information from the knowledge base:";
+            message += "Here are some relevent information from the knowledge base: ";
             message += output;
             answer = agent.chat(sessionId, message);
         } catch (Exception e) {
