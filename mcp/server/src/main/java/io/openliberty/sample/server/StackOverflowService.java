@@ -10,6 +10,7 @@
 package io.openliberty.sample.server;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -21,6 +22,8 @@ import jakarta.ws.rs.core.Response;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.modelcontextprotocol.spec.McpSchema.CallToolResult;
 
 @ApplicationScoped
 public class StackOverflowService {
@@ -68,29 +71,25 @@ public class StackOverflowService {
         return arrayData;
     }
 
-    private ArrayList<String> questionAndAnswer(String url) {
-        ArrayList<String> out = new ArrayList<>();
+    private List<Map<String,Object>> questionAndAnswer(String url) {
+        List<Map<String,Object>> out = new ArrayList<>();
         try {
             for (Map<String, Object> data : clientSearch(url)) {
+                String qId   = String.valueOf(data.get("question_id"));
+                String title = escapeMd(String.valueOf(data.getOrDefault("title", "")));
+                String body  = String.valueOf(data.get("body"));
+
+                Map<String,Object> item = new LinkedHashMap<>();
+                item.put("Title", title);
+                item.put("URL", "https://stackoverflow.com/questions/" + qId);
+                item.put("Problem description", stripHtml(body));
                 try {
-                    String qId   = String.valueOf(data.get("question_id"));
-                    if (qId == null || qId.isBlank() || "null".equals(qId)) continue;
-
-                    String title = String.valueOf(data.getOrDefault("title", ""));
-                    String body  = String.valueOf(data.get("body"));
-                    String qUrl  = "https://stackoverflow.com/questions/" + qId;
-
                     List<Map<String, Object>> answers = clientSearch(String.format(FIND_ANSWER_FMT, qId));
                     String topAnswer = answers.isEmpty() ? "No answers." : String.valueOf(answers.get(0).get("body"));
-
-                    String line =
-                        "- [" + escapeMd(title) + "](" + qUrl + ")\n" +
-                        "  Problem: " + stripHtml(body) + "\n" +
-                        "  Top answer: " + stripHtml(topAnswer);
-
-                    out.add(line);
+                    item.put("Top answer", stripHtml(topAnswer));
+                    out.add(item);
                 } catch (Exception e) {
-                    LOGGER.warning("Error fetching answer for question " + data.get("question_id") + ": " + e.getMessage());
+                    LOGGER.warning("Error fetching answer for question " + qId + ": " + e.getMessage());
                 }
             }
         } catch (Exception e) {
@@ -99,22 +98,22 @@ public class StackOverflowService {
         return out;
     }
 
-    public ArrayList<String> searchJakartaEEQuestions() {
+    public List<Map<String,Object>> searchJakartaEEQuestions() {
         LOGGER.info("AI is searching stackoverflow for JakartaEE");
         return questionAndAnswer(JAKARTA_EE_URL);
     }
 
-    public ArrayList<String> searchMicroProfileQuestions() {
+    public List<Map<String,Object>> searchMicroProfileQuestions() {
         LOGGER.info("AI is searching stackoverflow for MicroProfile");
         return questionAndAnswer(MICROPROFILE_URL);
     }
 
-    public ArrayList<String> searchLangChain4jQuestions() {
+    public List<Map<String,Object>> searchLangChain4jQuestions() {
         LOGGER.info("AI is searching stackoverflow for langchain4j");
         return questionAndAnswer(LANGCHAIN4J_URL);
     }
 
-    public ArrayList<String> searchStackOverflow(String question) {
+    public List<Map<String,Object>> searchStackOverflow(String question) {
         LOGGER.info("AI called the searchStackOverflow tool with question: " + question);
         String targetUrl = SEARCH_BASE + "&q=" + question;
         return questionAndAnswer(targetUrl);

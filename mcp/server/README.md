@@ -15,19 +15,20 @@ The sample showcases:
 
 ## Prerequisites and setup
 
-To run this sample, you'll need [JDK 21](https://developer.ibm.com/languages/java/semeru-runtimes/downloads) or later.
+- To run this sample, you'll need [JDK 21](https://developer.ibm.com/languages/java/semeru-runtimes/downloads) or later.
 
-Run the following command to set the `JAVA_HOME` environment variable:
+  Run the following command to set the `JAVA_HOME` environment variable:
 
-```bash
-export JAVA_HOME=<your Java 21 home path>
-```
+  ```bash
+  export JAVA_HOME=<your Java 21 home path>
+  ```
 
-Navigate to the `sample-langchain4j/mcp/server` directory:
+- Clone the repository and navigate to the MCP server module:
 
-```bash
-cd sample-langchain4j/mcp/server
-```
+  ```bash
+  git clone https://github.com/OpenLiberty/sample-langchain4j.git
+  cd sample-langchain4j/mcp/server
+  ```
 
 ## Start the application
 

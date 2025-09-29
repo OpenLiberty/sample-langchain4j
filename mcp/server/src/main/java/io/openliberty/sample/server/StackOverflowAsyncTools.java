@@ -97,12 +97,13 @@ public class StackOverflowAsyncTools {
                             .build();
                     }
 
-                    List<String> output = stackOverflowService.searchStackOverflow(query);
+                    List<Map<String,Object>> output = stackOverflowService.searchStackOverflow(query);
                     Builder resultBuilder = CallToolResult.builder().isError(false);
                     if (output == null || output.isEmpty()) {
                         resultBuilder.addTextContent("No results.");
                     } else {
-                        resultBuilder.textContent(output);
+                        resultBuilder.addTextContent("Found " + output.size() + " results.");
+                        resultBuilder.structuredContent(Map.of("results", output));
                     }
                     return resultBuilder.build();
                 }).onErrorResume(error ->
@@ -122,7 +123,7 @@ public class StackOverflowAsyncTools {
         String toolName,
         String toolTitle,
         String toolDescription,
-        Supplier<List<String>> toolLogic) {
+        Supplier<List<Map<String,Object>>> toolLogic) {
 
         JsonSchema emptyJsonSchema = new JsonSchema(
             "object", Collections.emptyMap(), null, null, null, null);
@@ -138,12 +139,13 @@ public class StackOverflowAsyncTools {
             .tool(toolDefinition)
             .callHandler((McpAsyncServerExchange exchange, CallToolRequest request) ->
                 Mono.fromCallable(() -> {
-                    List<String> output = toolLogic.get();
+                    List<Map<String,Object>> output = toolLogic.get();
                     Builder resultBuilder = CallToolResult.builder().isError(false);
                     if (output == null || output.isEmpty()) {
                         resultBuilder.addTextContent("No results.");
                     } else {
-                        resultBuilder.textContent(output);
+                        resultBuilder.addTextContent("Found " + output.size() + " results.");
+                        resultBuilder.structuredContent(Map.of("results", output));
                     }
                     return resultBuilder.build();
                 }).onErrorResume(error ->
