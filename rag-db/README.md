@@ -103,10 +103,10 @@ Navigate to http://localhost:9081/ to use the chat application
 - At the prompt, try the following message examples:
 
   - ```
-      How do I isolate applications on the same server?
+      Explain the Core Profile and Jakarta EE JSON Binding?
     ```
   - ```
-      Which OpenTelemetry property enabled by MicroProfile Telemetry do I need in order to set the exporter that is used to collect traces?
+    What are the default ConfigSources and the values? List in the order of default precedence.
     ```
 
 Use the `sample-langchain4j/rag/src/main/resources/knowledge_base` files to compare the AI responses to the knowledge base files.
