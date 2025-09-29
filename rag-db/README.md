@@ -138,7 +138,7 @@ If the tests pass, you may see a similar output to the following example:
 
 When you are done checking out the service, exit dev mode by pressing `Ctrl+C` in the command-line session where you ran Liberty, or by typing `q` and then pressing the `enter/return` key.
 
-Then, run the following command to stop the MongoDB Atlas: 
+Then, run the following command to stop and remove the container: 
 
 ```
 docker compose -f docker-compose.yml down

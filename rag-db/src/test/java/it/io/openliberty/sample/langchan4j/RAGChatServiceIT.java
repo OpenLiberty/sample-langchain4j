@@ -79,29 +79,27 @@ public class RAGChatServiceIT {
 
     @Test
     public void testLogs() throws Exception {
-        client.sendMessage("How do I isolate applications on the same server?\n");
+        client.sendMessage("Explain the Core Profile and Jakarta EE JSON Binding?\n");
         countDown.await(120, TimeUnit.SECONDS);
     }
 
     @Test
     public void testSecurity() throws Exception {
-        client.sendMessage("What OpenTelemetry properties enabled by MicroProfile Telemetry do I need to set the exporter that is used to collect traces?");
+        client.sendMessage("What are the default ConfigSources and the values? List in the order of default precedence.");
         countDown.await(120, TimeUnit.SECONDS);
     }
 
     public static void verify(String message) throws Exception {
         assertNotNull(message);
-        assertTrue((message.toLowerCase().contains("virtualHost") ||
-                    message.toLowerCase().contains("hostAlias") ||
-                    message.contains("<hostAlias>localhost:9081</hostAlias>") ||
-                    message.toLowerCase().contains("myApp.ear") ||
-                    message.toLowerCase().contains("myApp2.war") ||
-                    message.toLowerCase().contains("webApplication") ||
-                    message.toLowerCase().contains("server.xml") ||
-                    message.toLowerCase().contains("jaeger") ||
-                    message.toLowerCase().contains("logging")) ||
-                   (message.toLowerCase().contains("otel.traces.exporter") ||
-                    message.toLowerCase().contains("zipkin")), message);
+        assertTrue((message.toLowerCase().contains("jakarta.json.bind") ||
+                    message.contains("Jsonb") ||
+                    message.contains("JsonBuilder") ||
+                    message.contains("JsonbConfig") ||
+                    message.contains("JsonbException") ||
+                    message.contains("MicroProfile-based")) ||
+                   (message.contains("System.getProperties()") ||
+                    message.contains("System.getenv()") || 
+                    message.contains("META-INF/microprofile-config.properties")), message);
         countDown.countDown();
     }
 
