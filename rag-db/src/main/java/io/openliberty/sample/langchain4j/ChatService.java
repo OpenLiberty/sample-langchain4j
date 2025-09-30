@@ -12,7 +12,6 @@ package io.openliberty.sample.langchain4j;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-
 import org.eclipse.microprofile.metrics.annotation.Timed;
 
 import io.openliberty.sample.langchain4j.mongo.AtlasMongoDB;
