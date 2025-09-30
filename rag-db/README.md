@@ -103,7 +103,7 @@ Navigate to http://localhost:9081/ to use the chat application
 - At the prompt, try the following message examples:
 
   - ```
-      Explain the Core Profile and Jakarta EE JSON Binding?
+    Explain the Core Profile and Jakarta EE JSON Binding?
     ```
   - ```
     What are the default ConfigSources and the values? List in the order of default precedence.

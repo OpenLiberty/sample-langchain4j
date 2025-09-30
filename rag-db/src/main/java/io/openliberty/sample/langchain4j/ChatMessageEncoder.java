@@ -19,11 +19,11 @@ public class ChatMessageEncoder implements Encoder.Text<String> {
 
     @Override
     public String encode(String message) throws EncodeException {
-       
+
         if (!message.endsWith(".")) {
             message += " ...";
         }
-        
+
         Parser parser = Parser.builder().build();
         Node document = parser.parse(message);
         HtmlRenderer renderer = HtmlRenderer.builder().build();
