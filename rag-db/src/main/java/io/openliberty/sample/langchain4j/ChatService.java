@@ -11,6 +11,8 @@ package io.openliberty.sample.langchain4j;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.eclipse.microprofile.metrics.annotation.Timed;
 
@@ -38,6 +40,12 @@ public class ChatService {
 
     @OnOpen
     public void onOpen(Session session) {
+
+        ConsoleHandler consoleHandlerLogging = new ConsoleHandler();
+        consoleHandlerLogging.setLevel(Level.INFO);
+        logger.addHandler(consoleHandlerLogging);
+        logger.setLevel(Level.INFO);
+        
         logger.info("Server connected to session: " + session.getId());
         System.out.println("In order to use the knowledge base: visit http://localhost:9081/openapi/ui/ and" +
         "\ntry the POST request at `/api/embedding/init` to initialize the database.");
