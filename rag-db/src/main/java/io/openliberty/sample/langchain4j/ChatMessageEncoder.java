@@ -11,6 +11,9 @@ package io.openliberty.sample.langchain4j;
 
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.Encoder;
+import org.commonmark.node.*;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 
 public class ChatMessageEncoder implements Encoder.Text<String> {
 
@@ -20,7 +23,11 @@ public class ChatMessageEncoder implements Encoder.Text<String> {
         if (!message.endsWith(".")) {
             message += " ...";
         }
-        message = message.replaceAll("\n", "<br/>");
+
+        Parser parser = Parser.builder().build();
+        Node document = parser.parse(message);
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
+        message = renderer.render(document);
         return message;
 
     }

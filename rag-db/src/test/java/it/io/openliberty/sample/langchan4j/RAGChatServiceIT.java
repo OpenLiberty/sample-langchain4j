@@ -79,22 +79,27 @@ public class RAGChatServiceIT {
 
     @Test
     public void testLogs() throws Exception {
-        client.sendMessage("what A, E, I, O, R, W character stands for in the log entries finding in the messages.log file?\n");
+        client.sendMessage("Explain the Core Profile and Jakarta EE JSON Binding?\n");
         countDown.await(120, TimeUnit.SECONDS);
     }
 
     @Test
     public void testSecurity() throws Exception {
-        client.sendMessage("I got an java.lang.InternalError exception when tried to log in via SAML.\n");
+        client.sendMessage("What are the default ConfigSources and the values? List in the order of default precedence.");
         countDown.await(120, TimeUnit.SECONDS);
     }
 
-    public static void verify(String message) {
+    public static void verify(String message) throws Exception {
         assertNotNull(message);
-        assertTrue((message.toLowerCase().contains("audit") || message.toLowerCase().contains("error") || 
-        message.toLowerCase().contains("information") || message.toLowerCase().contains("system.out") || 
-        message.toLowerCase().contains("system.err") || message.toLowerCase().contains("warning")) || 
-        (message.toLowerCase().contains("securerandom.source") || message.toLowerCase().contains("file:/dev/urandom") || message.contains("java.security")), message);
+        assertTrue((message.toLowerCase().contains("jakarta.json.bind") ||
+                    message.contains("Jsonb") ||
+                    message.contains("JsonBuilder") ||
+                    message.contains("JsonbConfig") ||
+                    message.contains("JsonbException") ||
+                    message.contains("MicroProfile-based")) ||
+                   (message.contains("System.getProperties()") ||
+                    message.contains("System.getenv()") || 
+                    message.contains("META-INF/microprofile-config.properties")), message);
         countDown.countDown();
     }
 
