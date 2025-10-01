@@ -33,6 +33,14 @@ public class McpClientProducer {
     @Inject
     @ConfigProperty(name = "mcp.server.url")
     String url;
+    
+    @Inject
+    @ConfigProperty(name = "mcp.client.log.requests", defaultValue = "false")
+    boolean logRequests;
+    
+    @Inject
+    @ConfigProperty(name = "mcp.client.log.responses", defaultValue = "false")
+    boolean logResponses;
 
     private McpClient client;
 
@@ -41,8 +49,8 @@ public class McpClientProducer {
         McpTransport transport = new StreamableHttpMcpTransport.Builder()
             .url(url)
             .timeout(Duration.ofSeconds(60))
-            .logRequests(true)
-            .logResponses(true)
+            .logRequests(logRequests)
+            .logResponses(logResponses)
             .build();
 
         client = new DefaultMcpClient.Builder()
