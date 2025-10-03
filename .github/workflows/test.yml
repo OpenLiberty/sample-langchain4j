@@ -92,7 +92,7 @@ jobs:
           GITHUB_API_KEY: ${{ secrets.ADMIN_BACKLOG }}
         run: |
           cd "${{ matrix.project }}"
-          if [ "${{ matrix.project }}" -eq "mcp" ]; then
+          if [ '${{ matrix.project }}' == 'mcp' ]; then
               ../scripts/testMcpApp.sh
           else
               ../scripts/testApp.sh
@@ -108,7 +108,7 @@ jobs:
           OLLAMA_BASE_URL: http://127.0.0.1:11434
         run: |
           cd "${{ matrix.project }}"
-          if [ "${{ matrix.project }}" -eq "mcp" ]; then
+          if [ '${{ matrix.project }}' == 'mcp' ]; then
               ../scripts/testMcpApp.sh
           else
               ../scripts/testApp.sh
