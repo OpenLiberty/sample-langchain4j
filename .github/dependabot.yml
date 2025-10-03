@@ -10,4 +10,18 @@ updates:
   schedule:
     interval: monthly
   open-pull-requests-limit: 50
-
+- package-ecosystem: maven
+  directory: "/rag-db"
+  schedule:
+    interval: monthly
+  open-pull-requests-limit: 50
+- package-ecosystem: maven
+  directory: "/mcp/server"
+  schedule:
+    interval: monthly
+  open-pull-requests-limit: 50
+- package-ecosystem: maven
+  directory: "/mcp/client"
+  schedule:
+    interval: monthly
+  open-pull-requests-limit: 50
