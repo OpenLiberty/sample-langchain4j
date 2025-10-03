@@ -87,10 +87,6 @@ jobs:
               break
             fi
           done
-      - name: Start Mongo Altas DB
-        run: |
-          docker compose -f rag-db/docker-compose.yml up -d
-          docker ps
       - name: Run tests with GITHUB_API_KEY
         env:
           GITHUB_API_KEY: ${{ secrets.ADMIN_BACKLOG }}
