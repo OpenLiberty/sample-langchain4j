@@ -5,3 +5,5 @@ This repository contains examples that demonstrate LangChain4J in a Jakarta EE /
 * [streaming-chat](streaming-chat/README.md)
 * [tools](tools/README.md)
 * [rag-db](rag-db/README.md)
+* [mcp server](mcp/server/README.md)
+* [mcp client](mcp/client/README.md)
