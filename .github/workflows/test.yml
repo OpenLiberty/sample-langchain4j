@@ -6,6 +6,8 @@ on:
     paths:
       - 'streaming-chat/**'
       - 'tools/**'
+      - 'rag-db/**'
+      - 'mcp/**'
       - 'scripts/**'
       - '.github/workflows/**'
 
@@ -28,13 +30,20 @@ jobs:
             tools:
               - 'tools/**'
               - 'scripts/**'
-
+            rag_db:
+              - 'rag-db/**'
+              - 'scripts/**'
+            mcp:
+              - 'mcp/**'
+              - 'scripts/**'
       - name: Build test matrix
         id: set-matrix
         run: |
           projects=()
           [ "${{ steps.changes.outputs.streaming_chat }}" = "true" ] && projects+=("streaming-chat")
           [ "${{ steps.changes.outputs.tools }}" = "true" ] && projects+=("tools")
+          [ "${{ steps.changes.outputs.rag_db }}" = "true" ] && projects+=("rag-db")
+          [ "${{ steps.changes.outputs.mcp }}" = "true" ] && projects+=("mcp")
 
           if [ "${#projects[@]}" -eq 0 ]; then
             echo 'matrix={"include":[]}' >> "$GITHUB_OUTPUT"
@@ -73,6 +82,7 @@ jobs:
       - name: Setup Ollama
         run: |
           ollama pull llama3.2
+          ollama pull nomic-embed-text
           for i in {1..40}; do
             if curl -sf http://127.0.0.1:11434/api/tags >/dev/null; then
               break
@@ -83,7 +93,11 @@ jobs:
           GITHUB_API_KEY: ${{ secrets.ADMIN_BACKLOG }}
         run: |
           cd "${{ matrix.project }}"
-          ../scripts/testApp.sh
+          if [ '${{ matrix.project }}' == 'mcp' ]; then
+              ../scripts/testMcpApp.sh
+          else
+              ../scripts/testApp.sh
+          fi
           logs_dir="$(find . -type d -path '*/liberty/wlp/usr/servers/*/logs' -print -quit || true)"
           if [ -n "$logs_dir" ]; then
             dest="../_run-logs/${{ matrix.project }}/github/defaultServer"
@@ -95,7 +109,11 @@ jobs:
           OLLAMA_BASE_URL: http://127.0.0.1:11434
         run: |
           cd "${{ matrix.project }}"
-          ../scripts/testApp.sh
+          if [ '${{ matrix.project }}' == 'mcp' ]; then
+              ../scripts/testMcpApp.sh
+          else
+              ../scripts/testApp.sh
+          fi
           logs_dir="$(find . -type d -path '*/liberty/wlp/usr/servers/*/logs' -print -quit || true)"
           if [ -n "$logs_dir" ]; then
             dest="../_run-logs/${{ matrix.project }}/ollama/defaultServer"
