@@ -82,6 +82,7 @@ jobs:
       - name: Setup Ollama
         run: |
           ollama pull llama3.2
+          ollama pull nomic-embed-text
           for i in {1..40}; do
             if curl -sf http://127.0.0.1:11434/api/tags >/dev/null; then
               break
