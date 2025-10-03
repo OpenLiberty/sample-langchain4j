@@ -33,7 +33,7 @@ public class StackOverflowAsyncTools {
     @Inject
     private StackOverflowService stackOverflowService;
 
-    /** Tool: top Jakarta EE Q&A (no args) */
+    /** Tool: top Jakarta EE Q&A (no args) **/
     public AsyncToolSpecification jakartaEETop() {
         return noArgsTool(
             "stackoverflow-jakarta-ee-top",
@@ -43,7 +43,7 @@ public class StackOverflowAsyncTools {
         );
     }
 
-    /** Tool: top MicroProfile Q&A (no args) */
+    /** Tool: top MicroProfile Q&A (no args) **/
     public AsyncToolSpecification microProfileTop() {
         return noArgsTool(
             "stackoverflow-microprofile-top",
@@ -53,7 +53,7 @@ public class StackOverflowAsyncTools {
         );
     }
 
-    /** Tool: top LangChain4j Q&A (no args) */
+    /** Tool: top LangChain4j Q&A (no args) **/
     public AsyncToolSpecification langChain4jTop() {
         return noArgsTool(
             "stackoverflow-langchain4j-top",
@@ -63,7 +63,7 @@ public class StackOverflowAsyncTools {
         );
     }
 
-    /** Tool: free-text Stack Overflow search (query: string) */
+    /** Tool: free-text Stack Overflow search (query: string) **/
     public AsyncToolSpecification search() {
 
         JsonSchema inputJsonSchema =

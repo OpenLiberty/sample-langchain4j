@@ -41,29 +41,27 @@ class McpServerIT {
     @BeforeAll
     static void startClientAndInitialize() {
         transport = HttpClientStreamableHttpTransport
-                .builder(BASE_URL)
-                .endpoint("/mcp")
-                .build();
-
+            .builder(BASE_URL)
+            .endpoint("/mcp")
+            .build();
         client = McpClient.sync(transport).build();
-
         client.initialize();
         client.ping();
     }
 
     @AfterAll
     static void shutdown() {
+        if (transport != null) {
+            try {
+                transport.close();
+            } catch (Throwable ignore) {
+            }
+        }
         if (client != null) {
             try {
                 client.closeGracefully();
             } catch (Throwable t) {
                 client.close();
-            }
-        }
-        if (transport != null) {
-            try {
-                transport.close();
-            } catch (Throwable ignore) {
             }
         }
     }
@@ -93,15 +91,15 @@ class McpServerIT {
     @Order(2)
     void testNoArgTool() {
         CallToolResult res = client.callTool(
-                new CallToolRequest("stackoverflow-jakarta-ee-top", Map.of())
+            new CallToolRequest("stackoverflow-jakarta-ee-top", Map.of())
         );
         assertNotNull(res, "Null tool result");
         assertFalse(Boolean.TRUE.equals(res.isError()), "Tool returned isError=true");
 
         boolean hasText = res.content().stream()
-                .filter(TextContent.class::isInstance)
-                .map(TextContent.class::cast)
-                .anyMatch(t -> t.text() != null && !t.text().isBlank());
+            .filter(TextContent.class::isInstance)
+            .map(TextContent.class::cast)
+            .anyMatch(t -> t.text() != null && !t.text().isBlank());
         assertTrue(hasText, "Expected non-blank TextContent in result");
     }
 
@@ -109,15 +107,16 @@ class McpServerIT {
     @Order(3)
     void testParameterizedTool() {
         CallToolResult res = client.callTool(
-                new CallToolRequest("stackoverflow-search", Map.of("query", "Ollama"))
+            new CallToolRequest("stackoverflow-search", Map.of("query", "Ollama"))
         );
         assertNotNull(res, "Null tool result");
         assertFalse(Boolean.TRUE.equals(res.isError()), "Tool returned isError=true");
 
         boolean hasText = res.content().stream()
-                .filter(TextContent.class::isInstance)
-                .map(TextContent.class::cast)
-                .anyMatch(t -> t.text() != null && !t.text().isBlank());
+            .filter(TextContent.class::isInstance)
+            .map(TextContent.class::cast)
+            .anyMatch(t -> t.text() != null && !t.text().isBlank());
         assertTrue(hasText, "Expected non-blank TextContent in result");
     }
+
 }

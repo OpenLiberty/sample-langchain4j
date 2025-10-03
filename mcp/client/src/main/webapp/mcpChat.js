@@ -36,7 +36,8 @@ if (loc.protocol === "https:") {
 }
 uri += "//" + loc.host;
 uri += "/" + "mcpchat";
-// buildign websocket
+
+// building websocket
 const webSocket = new WebSocket(uri);
 
 webSocket.onopen = function (event) {

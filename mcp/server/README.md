@@ -27,7 +27,7 @@ The sample showcases:
 
   ```bash
   git clone https://github.com/OpenLiberty/sample-langchain4j.git
-  cd sample-langchain4j/mcp/server
+  cd sample-langchain4j/mcp
   ```
 
 ## Start the application
@@ -35,7 +35,7 @@ The sample showcases:
 Use the Maven wrapper to start the application by using the [Liberty dev mode](https://openliberty.io/docs/latest/development-mode.html):
 
 ```bash
-./mvnw liberty:dev
+./mvnw -pl server liberty:dev
 ```
 
 When the application is ready, the server listens at http://localhost:9081/mcp, a single MCP endpoint that supports both POST and GET methods.

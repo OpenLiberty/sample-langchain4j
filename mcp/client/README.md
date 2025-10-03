@@ -38,7 +38,7 @@ This application demonstrates how to implement a Model Context Protocol (MCP) cl
 To run this example application, navigate to the `sample-langchain4j/mcp/client` directory:
 
 ```bash
-cd sample-langchain4j/mcp/client
+cd sample-langchain4j/mcp
 ```
 
 Set the `GITHUB_API_KEY` environment variable if using GitHub.
@@ -70,7 +70,7 @@ export MISTRAL_AI_API_KEY=<your Mistral AI API key>
 Use the Maven wrapper to start the application by using the [Liberty dev mode](https://openliberty.io/docs/latest/development-mode.html):
 
 ```bash
-./mvnw liberty:dev
+./mvnw -pl client liberty:dev
 ```
 
 ## Try out the application

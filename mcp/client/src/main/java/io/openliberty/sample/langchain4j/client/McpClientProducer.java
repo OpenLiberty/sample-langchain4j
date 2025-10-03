@@ -52,10 +52,9 @@ public class McpClientProducer {
             .logRequests(logRequests)
             .logResponses(logResponses)
             .build();
-
         client = new DefaultMcpClient.Builder()
-                .transport(transport)
-                .build();
+                     .transport(transport)
+                     .build();
     }
 
     @Produces
@@ -74,4 +73,5 @@ public class McpClientProducer {
             }
         }
     }
+
 }

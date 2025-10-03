@@ -110,4 +110,5 @@ public class ChatAgent {
         }
         assistant.evictChatMemory(sessionId);
     }
+
 }

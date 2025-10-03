@@ -31,6 +31,7 @@ public class McpServerInitializer implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+
         ServletContext ctx = sce.getServletContext();
 
         transport = HttpServletStreamableServerTransportProvider.builder()
@@ -56,6 +57,7 @@ public class McpServerInitializer implements ServletContextListener {
                 stackOverflowAsyncTools.search()
             )
             .build();
+
     }
 
     @Override
@@ -77,4 +79,5 @@ public class McpServerInitializer implements ServletContextListener {
         } catch (Throwable ignore) {
         }
     }
+
 }

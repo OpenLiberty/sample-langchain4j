@@ -16,7 +16,10 @@ public class Util {
 	private static String mistralAiApiKey = System.getenv("MISTRAL_AI_API_KEY");
 
 	public static boolean usingGithub() {
-		return githubApiKey != null && (githubApiKey.startsWith("ghp_") || githubApiKey.startsWith("github_pat_"));
+		return githubApiKey != null && (
+		       githubApiKey.startsWith("ghp_") ||
+		       githubApiKey.startsWith("github_pat_")
+		);
 	}
 
 	public static boolean usingOllama() {
