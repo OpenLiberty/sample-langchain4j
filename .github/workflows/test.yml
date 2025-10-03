@@ -6,6 +6,8 @@ on:
     paths:
       - 'streaming-chat/**'
       - 'tools/**'
+      - 'rag-db/**'
+      - 'mcp/**'
       - 'scripts/**'
       - '.github/workflows/**'
 
@@ -28,13 +30,20 @@ jobs:
             tools:
               - 'tools/**'
               - 'scripts/**'
-
+            rag_db:
+              - 'rag-db/**'
+              - 'scripts/**'
+            mcp:
+              - 'mcp/**'
+              - 'scripts/**'
       - name: Build test matrix
         id: set-matrix
         run: |
           projects=()
           [ "${{ steps.changes.outputs.streaming_chat }}" = "true" ] && projects+=("streaming-chat")
           [ "${{ steps.changes.outputs.tools }}" = "true" ] && projects+=("tools")
+          [ "${{ steps.changes.outputs.rag_db }}" = "true" ] && projects+=("rag-db")
+          [ "${{ steps.changes.outputs.mcp }}" = "true" ] && projects+=("mcp")
 
           if [ "${#projects[@]}" -eq 0 ]; then
             echo 'matrix={"include":[]}' >> "$GITHUB_OUTPUT"
