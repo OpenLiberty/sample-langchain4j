@@ -87,6 +87,11 @@ jobs:
               break
             fi
           done
+      - name: Start Mongo Altas DB
+        run: |
+          if [ "${{ matrix.project }}" -eq "rag-db" ]; then
+              docker compose -f rag-db/docker-compose.yml up -d 
+          fi
       - name: Run tests with GITHUB_API_KEY
         env:
           GITHUB_API_KEY: ${{ secrets.ADMIN_BACKLOG }}
@@ -108,7 +113,11 @@ jobs:
           OLLAMA_BASE_URL: http://127.0.0.1:11434
         run: |
           cd "${{ matrix.project }}"
-          ../scripts/testApp.sh
+          if [ "${{ matrix.project }}" -eq "mcp" ]; then
+              ../scripts/testMcpApp.sh
+          else
+              ../scripts/testApp.sh
+          fi
           logs_dir="$(find . -type d -path '*/liberty/wlp/usr/servers/*/logs' -print -quit || true)"
           if [ -n "$logs_dir" ]; then
             dest="../_run-logs/${{ matrix.project }}/ollama/defaultServer"
@@ -118,6 +127,9 @@ jobs:
       - name: Post tests
         if: always()
         run: |
+          if [ "${{ matrix.project }}" -eq "rag-db" ]; then
+              docker compose -f rag-db/docker-compose.yml down 
+          fi
           shopt -s nullglob
           for dir in _run-logs/${{ matrix.project }}/*/*/logs; do
             echo "==> Logs under $dir"
