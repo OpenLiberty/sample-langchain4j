@@ -89,9 +89,8 @@ jobs:
           done
       - name: Start Mongo Altas DB
         run: |
-          if [ "${{ matrix.project }}" -eq "rag-db" ]; then
-              docker compose -f rag-db/docker-compose.yml up -d 
-          fi
+          docker compose -f rag-db/docker-compose.yml up -d
+          docker ps
       - name: Run tests with GITHUB_API_KEY
         env:
           GITHUB_API_KEY: ${{ secrets.ADMIN_BACKLOG }}
@@ -127,9 +126,6 @@ jobs:
       - name: Post tests
         if: always()
         run: |
-          if [ "${{ matrix.project }}" -eq "rag-db" ]; then
-              docker compose -f rag-db/docker-compose.yml down 
-          fi
           shopt -s nullglob
           for dir in _run-logs/${{ matrix.project }}/*/*/logs; do
             echo "==> Logs under $dir"
