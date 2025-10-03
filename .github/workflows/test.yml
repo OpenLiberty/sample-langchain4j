@@ -92,7 +92,11 @@ jobs:
           GITHUB_API_KEY: ${{ secrets.ADMIN_BACKLOG }}
         run: |
           cd "${{ matrix.project }}"
-          ../scripts/testApp.sh
+          if [ "${{ matrix.project }}" -eq "mcp" ]; then
+              ../scripts/testMcpApp.sh
+          else
+              ../scripts/testApp.sh
+          fi
           logs_dir="$(find . -type d -path '*/liberty/wlp/usr/servers/*/logs' -print -quit || true)"
           if [ -n "$logs_dir" ]; then
             dest="../_run-logs/${{ matrix.project }}/github/defaultServer"
