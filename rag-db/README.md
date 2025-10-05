@@ -87,18 +87,40 @@ Use the Maven wrapper to start the application by using the [Liberty dev mode](h
 
 If you are currently using one of the following model providers: GitHub, Ollama or MistralAI, you may proceed.
 
-Navigate to http://localhost:9081/openapi/ui/ to see the OpenAPI user interface (UI) that provides API documentation and a client to test the API endpoints for MongoDB.
+1. Visit and try out the chat application at http://localhost:9081/.
+
+At the prompt, try the following message examples:
+
+  - ```
+    Explain the Core Profile and Jakarta EE JSON Binding?
+    ```
+  - ```
+    What are the default ConfigSources and the values? List in the order of default precedence.
+    ```
+Currently, the chat application does not use the knowledge base.
+
+2. Navigate to http://localhost:9081/openapi/ui/ to see the OpenAPI user interface (UI) that provides API documentation and a client to test the API endpoints for MongoDB.
 
   - To try a particular api, authentication is required.
   - The admin (read/write full access) and user (read only access) security roles are created. 
   - For admin access, use `bob` and his password is `bobpwd`.
   - For read only access, use `alice` and her password is`alicepwd`.
 
-- Try the GET request at `/api/embedding`. Initially the database is empty.
-- Try the POST request at `/api/embedding/init`. This adds the knowledge base embeddings to MongoDB.
-- Try the GET request at `/api/embedding` again. The content from the `sample-langchain4j/rag/src/main/resources/knowledge_base` should be displayed.
+Information about the REST APIs: 
 
-Navigate to http://localhost:9081/ to use the chat application
+- The GET request at `/api/embedding` retrieves the content stored in the database.
+
+- The POST request at `/api/embedding` adds content to the database.
+
+- The POST request at `/api/embedding/init` processes and adds the knowledge base from `sample-langchain4j/rag/src/main/resources/knowledge_base`.
+
+- The PUT request at `/api/embedding/{id}` updates the content and summary given the id.
+
+- The DELETE request at `/api/embedding/{id}` removes the content from the database given the id.
+
+Try the POST request at `/api/embedding/init`. This adds the knowledge base embeddings to MongoDB.
+
+3. Navigate to http://localhost:9081/ to use the chat application that now uses RAG.
 
 - At the prompt, try the following message examples:
 
@@ -109,9 +131,12 @@ Navigate to http://localhost:9081/ to use the chat application
     What are the default ConfigSources and the values? List in the order of default precedence.
     ```
 
-Use the `sample-langchain4j/rag/src/main/resources/knowledge_base` files to compare the AI responses to the knowledge base files.
+Use the `sample-langchain4j/rag/src/main/resources/knowledge_base` files to compare the AI responses to the knowledge base files. The response should be more specific and relevant compared to the responses before.
 
-- The embeddings and content that are stored in MongoDB previously are preserved even after restarting the application by stopping and running `./mvnw liberty:dev` again.
+Try out adding own data into the database directly by using POST `/api/embedding` API request
+and then try out messages in RAG chat application.
+
+Note that the embeddings and content that are stored in MongoDB previously are preserved even after restarting the application by stopping and running `./mvnw liberty:dev` again.
 
 ## Running the tests
 
