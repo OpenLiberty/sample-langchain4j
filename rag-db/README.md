@@ -89,7 +89,7 @@ If you are currently using one of the following model providers: GitHub, Ollama 
 
 1. Visit and try out the chat application at http://localhost:9081/.
 
-At the prompt, try the following message examples:
+- At the prompt, try the following message examples:
 
   - ```
     Explain the Core Profile and Jakarta EE JSON Binding?
@@ -122,7 +122,7 @@ Try the POST request at `/api/embedding/init`. This adds the knowledge base embe
 
 3. Navigate to http://localhost:9081/ to use the chat application that now uses RAG.
 
-At the prompt, try the following message examples:
+- At the prompt, try the following message examples:
 
   - ```
     Explain the Core Profile and Jakarta EE JSON Binding?
