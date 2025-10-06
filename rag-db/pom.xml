@@ -80,7 +80,7 @@
         <dependency>
             <groupId>com.ibm.websphere.appserver.api</groupId>
             <artifactId>com.ibm.websphere.appserver.api.passwordUtil</artifactId>
-            <version>1.0.102</version>
+            <version>1.0.105</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
