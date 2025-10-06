@@ -35,10 +35,6 @@ public class ChatAgent {
     interface Assistant extends ChatMemoryAccess {
         @SystemMessage("You are a Java, Jakarta EE and MicroProfile coding helper, " +
             "people will go to you for questions around coding. " +
-            "You have ONLY four tools. " +
-            "ONLY use the tools if NECESSARY. " +
-            "ALWAYS follow the tool call parameters exactly and make sure to provide ALL necessary parameters. " +
-            "Do NOT add more parameters than needed" + 
             "NEVER give the user unnecessary information. " + 
             "NEVER lie or make information up, if you are unsure say so.")
         String chat(@MemoryId String sessionId, @UserMessage String userMessage);
