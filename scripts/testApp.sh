@@ -2,6 +2,10 @@
 set -euxo pipefail
 ./mvnw -version
 
+if [[ -f docker-compose.yml ]]; then
+    docker compose -f docker-compose.yml up -d
+fi
+
 ./mvnw -ntp -Dhttp.keepAlive=false \
     -Dmaven.wagon.http.pool=false \
     -Dmaven.wagon.httpconnectionManager.ttlSeconds=120 \
@@ -11,3 +15,7 @@ set -euxo pipefail
 sleep 10
 ./mvnw -ntp failsafe:integration-test liberty:stop
 ./mvnw -ntp failsafe:verify
+
+if [[ -f docker-compose.yml ]]; then
+    docker compose -f docker-compose.yml down
+fi
