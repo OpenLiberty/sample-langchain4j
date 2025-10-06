@@ -86,7 +86,7 @@
         <dependency>
             <groupId>com.ibm.websphere.appserver.api</groupId>
             <artifactId>com.ibm.websphere.appserver.api.ssl</artifactId>
-            <version>1.8.102</version>
+            <version>1.8.105</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
