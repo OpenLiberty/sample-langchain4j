@@ -11,9 +11,8 @@ package io.openliberty.sample.langchain4j;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Logger;
 import org.eclipse.microprofile.metrics.annotation.Timed;
 
 import io.openliberty.sample.langchain4j.mongo.AtlasMongoDB;
@@ -30,7 +29,7 @@ import jakarta.websocket.server.ServerEndpoint;
 @ApplicationScoped
 @ServerEndpoint(value = "/chat", encoders = { ChatMessageEncoder.class })
 public class ChatService {
-    private static Logger logger = Logger.getLogger(ChatService.class.getName());
+    private static Logger logger = Logger.getLogger(ChatService.class);
 
     @Inject
     ChatAgent agent = null;
@@ -40,15 +39,7 @@ public class ChatService {
 
     @OnOpen
     public void onOpen(Session session) {
-
-        ConsoleHandler consoleHandlerLogging = new ConsoleHandler();
-        consoleHandlerLogging.setLevel(Level.INFO);
-        logger.addHandler(consoleHandlerLogging);
-        logger.setLevel(Level.INFO);
-        
         logger.info("Server connected to session: " + session.getId());
-        System.out.println("In order to use the knowledge base: visit http://localhost:9081/openapi/ui/ and" +
-        "\ntry the POST request at `/api/embedding/init` to initialize the database.");
     }
 
     private List<Float> toFloat(float[] embedding){
@@ -63,7 +54,7 @@ public class ChatService {
     @Timed(name = "chatProcessingTime", absolute = true,
            description = "Time needed chatting to the agent.")
     public void onMessage(String message, Session session) {
-
+       
         logger.info("Server received message \"" + message + "\" "
                     + "from session: " + session.getId());
 
@@ -97,7 +88,7 @@ public class ChatService {
 
     @OnError
     public void onError(Session session, Throwable throwable) {
-        logger.severe("WebSocket error for " + session.getId() + " " +
+        logger.error("WebSocket error for " + session.getId() + " " +
             throwable.getMessage());
     }
 }

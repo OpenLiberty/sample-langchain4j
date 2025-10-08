@@ -35,6 +35,7 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.Response;
 
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class EmbeddingServiceIT {
 
