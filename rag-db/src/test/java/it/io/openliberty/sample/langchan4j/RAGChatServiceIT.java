@@ -26,8 +26,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.MediaType;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class RAGChatServiceIT {
@@ -41,6 +47,10 @@ public class RAGChatServiceIT {
 
     @BeforeAll
     public static void initializeDatabase() throws Exception {
+
+        Client client = ClientBuilder.newClient();
+        WebTarget target = client.target("http://localhost:9081/shared/properties");
+        target.request(MediaType.TEXT_PLAIN).post(Entity.entity("", MediaType.TEXT_PLAIN));
 
         URL url = new URI(INIT_DB_URL).toURL();
         HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();

@@ -11,11 +11,13 @@ package io.openliberty.sample.langchain4j;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.eclipse.microprofile.metrics.annotation.Timed;
 
 import io.openliberty.sample.langchain4j.mongo.AtlasMongoDB;
+import io.openliberty.sample.langchain4j.util.Globals;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.websocket.CloseReason;
@@ -29,7 +31,7 @@ import jakarta.websocket.server.ServerEndpoint;
 @ApplicationScoped
 @ServerEndpoint(value = "/chat", encoders = { ChatMessageEncoder.class })
 public class ChatService {
-    private static Logger logger = Logger.getLogger(ChatService.class.getName());
+    private static Logger logger = Logger.getLogger(ChatService.class);
 
     @Inject
     ChatAgent agent = null;
@@ -39,9 +41,13 @@ public class ChatService {
 
     @OnOpen
     public void onOpen(Session session) {
+
+        if (Globals.getEnableLog() == false){
+            Logger.getRootLogger().setLevel(Level.OFF);
+            logger.setLevel(Level.OFF);
+        }
+
         logger.info("Server connected to session: " + session.getId());
-        System.out.println("In order to use the knowledge base: visit http://localhost:9081/openapi/ui/ and" +
-        "\ntry the POST request at `/api/embedding/init` to initialize the database.");
     }
 
     private List<Float> toFloat(float[] embedding){
@@ -90,7 +96,7 @@ public class ChatService {
 
     @OnError
     public void onError(Session session, Throwable throwable) {
-        logger.severe("WebSocket error for " + session.getId() + " " +
+        logger.error("WebSocket error for " + session.getId() + " " +
             throwable.getMessage());
     }
 }
