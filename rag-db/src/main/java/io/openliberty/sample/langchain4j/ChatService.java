@@ -12,10 +12,12 @@ package io.openliberty.sample.langchain4j;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.microprofile.metrics.annotation.Timed;
 
 import io.openliberty.sample.langchain4j.mongo.AtlasMongoDB;
+import io.openliberty.sample.langchain4j.util.Globals;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.websocket.CloseReason;
@@ -39,6 +41,12 @@ public class ChatService {
 
     @OnOpen
     public void onOpen(Session session) {
+
+        if (Globals.getEnableLog() == false){
+            Logger.getRootLogger().setLevel(Level.OFF);
+            logger.setLevel(Level.OFF);
+        }
+
         logger.info("Server connected to session: " + session.getId());
     }
 
@@ -54,7 +62,7 @@ public class ChatService {
     @Timed(name = "chatProcessingTime", absolute = true,
            description = "Time needed chatting to the agent.")
     public void onMessage(String message, Session session) {
-       
+
         logger.info("Server received message \"" + message + "\" "
                     + "from session: " + session.getId());
 
