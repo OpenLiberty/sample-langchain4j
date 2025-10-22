@@ -124,7 +124,7 @@ jobs:
         if: always()
         run: |
           shopt -s nullglob
-          for dir in _run-logs/${{ matrix.project }}/*/*/logs; do
+          for dir in ${{ matrix.project }}/*/*/logs; do
             echo "==> Logs under $dir"
             if [ -f "$dir/console.log" ]; then
               grep -F "Launching" "$dir/console.log" || true
@@ -136,4 +136,4 @@ jobs:
         with:
           name: server-logs-${{ matrix.project }}
           path: |
-            _run-logs/${{ matrix.project }}/**/logs/
+            ${{ matrix.project }}/**/logs/
