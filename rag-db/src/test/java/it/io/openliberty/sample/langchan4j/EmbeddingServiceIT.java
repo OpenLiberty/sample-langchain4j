@@ -78,6 +78,9 @@ public class EmbeddingServiceIT {
                 JsonObject responseObj = reader.readObject();
                 JsonObject idObject = responseObj.getJsonObject("_id");
                 id = idObject.getString("$oid");
+            } catch (Exception e) {
+                System.out.println(responseRes);
+                throw e;
             }
             assertResponse(EMBEDDING_API_URL, response);
             testIDs.add(id);
