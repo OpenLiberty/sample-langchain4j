@@ -96,7 +96,7 @@ jobs:
           if [ '${{ matrix.project }}' == 'mcp' ]; then
               ../scripts/testMcpApp.sh
           else
-              ../scripts/testApp.sh
+              ../scripts/testApp.sh ${{ matrix.project }}
           fi
           logs_dir="$(find . -type d -path '*/liberty/wlp/usr/servers/*/logs' -print -quit || true)"
           if [ -n "$logs_dir" ]; then
@@ -112,7 +112,7 @@ jobs:
           if [ '${{ matrix.project }}' == 'mcp' ]; then
               ../scripts/testMcpApp.sh
           else
-              ../scripts/testApp.sh
+              ../scripts/testApp.sh ${{ matrix.project }}
           fi
           logs_dir="$(find . -type d -path '*/liberty/wlp/usr/servers/*/logs' -print -quit || true)"
           if [ -n "$logs_dir" ]; then
