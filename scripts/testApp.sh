@@ -14,7 +14,7 @@ fi
 ./mvnw -ntp liberty:start
 
 if [[ "$1" == "rag-db" ]]; then
-    sleep 5
+    sleep 10
     time_out=0
     while :
     do
@@ -24,8 +24,8 @@ if [[ "$1" == "rag-db" ]]; then
         fi
         time_out=$((time_out + 1))
         echo waiting $time_out ...
-        sleep 5
-        if [ "$time_out" = "24" ]; then
+        sleep 10
+        if [ "$time_out" = "12" ]; then
             echo Unable to run test
             exit 1
         fi
