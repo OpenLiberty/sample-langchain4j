@@ -15,6 +15,7 @@ This example demonstrates RAG with LangChain4J in a Jakarta EE / MicroProfile ap
             -   see the [README.md](https://github.com/ollama/ollama/blob/main/README.md#ollama).
         -   Pull the following model.
             -   `ollama pull nomic-embed-text`
+            -   `ollama pull llama3.2`
     -   Mistral AI
         -   Sign up and log in to https://console.mistral.ai/home.
         -   Go to [Your API keys](https://console.mistral.ai/api-keys).
