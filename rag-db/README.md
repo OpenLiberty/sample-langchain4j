@@ -15,6 +15,7 @@ This example demonstrates RAG with LangChain4J in a Jakarta EE / MicroProfile ap
             -   see the [README.md](https://github.com/ollama/ollama/blob/main/README.md#ollama).
         -   Pull the following model.
             -   `ollama pull nomic-embed-text`
+            -   `ollama pull llama3.2`
     -   Mistral AI
         -   Sign up and log in to https://console.mistral.ai/home.
         -   Go to [Your API keys](https://console.mistral.ai/api-keys).
@@ -119,7 +120,7 @@ Navigate to http://localhost:9081/ to try out the chat application again. Now, t
       What are the default ConfigSources and the values? List in the order of default precedence.
       ```
 
-You can compare the AI responses to the knowledge base files at the `sample-langchain4j/rag/src/main/resources/knowledge_base` directory. The response should be more specific and relevant compared to the responses before.
+You can compare the AI responses to the knowledge base files at the `sample-langchain4j/rag-db/src/main/resources/knowledge_base` directory. The response should be more specific and relevant compared to the responses before.
 
 You can try out adding your own data into the database directly by using POST `/api/embedding` API and then try out messages in RAG chat application.
 
