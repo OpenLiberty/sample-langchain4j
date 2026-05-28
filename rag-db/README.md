@@ -8,10 +8,11 @@ This example demonstrates RAG with LangChain4J in a Jakarta EE / MicroProfile ap
 - Pull the Embedding Model from Ollama:
   - Download and install [Ollama](https://ollama.com/download).
   -   Pull the following embedding model: `ollama pull nomic-embed-text`
+  -   Ensure that Ollama is running successfully: curl http://localhost:11434
 -   Any one of the following chat model providers:
     -   GitHub
         -   Sign up and sign in to https://github.com.
-        -   Go to your [Settings/Developer Settings/Personal access tokens](https://github.com/settings/personal-access-tokens).
+        -   Go to your [Settings/Developer Settings/Personal access tokens](https://github.com/settings/tokens).
         -   Generate a new token.
     -   Ollama
         -   Pull the following model: `ollama pull llama3.2`
