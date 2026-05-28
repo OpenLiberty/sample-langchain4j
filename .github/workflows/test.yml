@@ -81,7 +81,8 @@ jobs:
           ollama --version
       - name: Setup Ollama
         run: |
-          ollama serve
+          ollama serve &
+          sleep 10
           ollama pull llama3.2
           ollama pull nomic-embed-text
           for i in {1..40}; do
