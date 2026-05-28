@@ -2,6 +2,7 @@
 set -euxo pipefail
 ./mvnw -version
 
+export ENCRYPTION_KEY=customEncryptionKey1
 if [[ -f docker-compose.yml ]]; then
     docker compose -f docker-compose.yml up -d
 fi
