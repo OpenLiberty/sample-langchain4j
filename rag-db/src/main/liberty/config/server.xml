@@ -26,6 +26,7 @@
     />
 
     <applicationManager autoExpand="true" />
+    <variable name="wlp.password.encryption.key" value="${env.ENCRYPTION_KEY}" />
 
     <basicRegistry id="basic" realm="WebRealm">
         <user name="bob" password="{xor}PTA9Lyg7" />

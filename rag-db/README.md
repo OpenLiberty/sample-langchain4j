@@ -45,6 +45,17 @@ docker compose -f docker-compose.yml up -d
 
 ## Environment Set Up
 
+Set the `ENCRYPTION_KEY` environment variable for password encryption. In production environments, you may manage and rotate encryption keys using enterprise key management solutions such as:
+
+- **IBM Security Guardium Key Lifecycle Manager (GKLM)** 
+- **IBM Cloud Secrets Manager** 
+- **IBM Cloud Key Protect**
+- **HashiCorp Vault**
+
+```
+export ENCRYPTION_KEY=customEncryptionKey1
+```
+
 Set the `JAVA_HOME` environment variable:
 
 ```
