@@ -6,20 +6,20 @@ This example demonstrates RAG with LangChain4J in a Jakarta EE / MicroProfile ap
 
 1. [Java 21](https://developer.ibm.com/languages/java/semeru-runtimes/downloads)
 2. Pull the Embedding Model from Ollama:
-  - Download and install [Ollama](https://ollama.com/download).
-  -   Pull the following embedding model: `ollama pull nomic-embed-text`
-  -   Ensure that Ollama is running successfully: curl http://localhost:11434
+    1.&nbsp; Download and install [Ollama](https://ollama.com/download).
+    2.&nbsp; Pull the following embedding model: `ollama pull nomic-embed-text`
+    3.&nbsp; Ensure that Ollama is running successfully: curl http://localhost:11434
 3. Any one of the following chat model providers:
-    -   GitHub
-        1. Sign up and sign in to https://github.com.
-        2. Go to your [Settings/Developer Settings/Personal access tokens](https://github.com/settings/tokens).
-        3. Generate a new token.
-    -   Ollama
-        1. Pull the following model: `ollama pull llama3.2`
-    -   Mistral AI
-        1. Sign up and log in to https://console.mistral.ai/home.
-        2. Go to [Your API keys](https://console.mistral.ai/api-keys).
-        3. Create a new key.
+   - GitHub
+        1.&nbsp; Sign up and sign in to https://github.com.
+        2.&nbsp; Go to your [Settings/Developer Settings/Personal access tokens](https://github.com/settings/tokens).
+        3.&nbsp; Generate a new token.
+   - Ollama
+        1.&nbsp; Pull the following model: `ollama pull llama3.2`
+   - Mistral AI
+        1.&nbsp; Sign up and log in to https://console.mistral.ai/home.
+        2.&nbsp; Go to [Your API keys](https://console.mistral.ai/api-keys).
+        3.&nbsp;Create a new key.
 4. You will use Docker to run an instance of MongoDB for a fast installation and setup. Install Docker by following the instructions in the official [Docker documentation](https://docs.docker.com/engine/installation), and start your Docker environment.
 
 ## Setting up MongoDB Atlas Locally
