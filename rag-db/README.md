@@ -6,9 +6,9 @@ This example demonstrates RAG with LangChain4J in a Jakarta EE / MicroProfile ap
 
 1. [Java 21](https://developer.ibm.com/languages/java/semeru-runtimes/downloads)
 2. Pull the Embedding Model from Ollama:
-    1.&nbsp; Download and install [Ollama](https://ollama.com/download).
-    2.&nbsp; Pull the following embedding model: `ollama pull nomic-embed-text`
-    3.&nbsp; Ensure that Ollama is running: curl http://localhost:11434
+<br>&emsp; 1.&nbsp; Download and install [Ollama](https://ollama.com/download).
+<br>&emsp; 2.&nbsp; Pull the following embedding model: `ollama pull nomic-embed-text`
+<br>&emsp; 3.&nbsp; Ensure that Ollama is running: curl http://localhost:11434
 3. Any one of the following chat model providers:
    - GitHub
         1.&nbsp; Sign up and sign in to https://github.com.
