@@ -8,7 +8,7 @@ This example demonstrates RAG with LangChain4J in a Jakarta EE / MicroProfile ap
 2. Pull the Embedding Model from Ollama:
     1.&nbsp; Download and install [Ollama](https://ollama.com/download).
     2.&nbsp; Pull the following embedding model: `ollama pull nomic-embed-text`
-    3.&nbsp; Ensure that Ollama is running successfully: curl http://localhost:11434
+    3.&nbsp; Ensure that Ollama is running: curl http://localhost:11434
 3. Any one of the following chat model providers:
    - GitHub
         1.&nbsp; Sign up and sign in to https://github.com.
@@ -19,7 +19,7 @@ This example demonstrates RAG with LangChain4J in a Jakarta EE / MicroProfile ap
    - Mistral AI
         1.&nbsp; Sign up and log in to https://console.mistral.ai/home.
         2.&nbsp; Go to [Your API keys](https://console.mistral.ai/api-keys).
-        3.&nbsp;Create a new key.
+        3.&nbsp; Create a new key.
 4. You will use Docker to run an instance of MongoDB for a fast installation and setup. Install Docker by following the instructions in the official [Docker documentation](https://docs.docker.com/engine/installation), and start your Docker environment.
 
 ## Setting up MongoDB Atlas Locally
