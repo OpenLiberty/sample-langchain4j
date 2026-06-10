@@ -11,15 +11,15 @@ This example demonstrates RAG with LangChain4J in a Jakarta EE / MicroProfile ap
 <br>&emsp; 3.&nbsp; Ensure that Ollama is running: curl http://localhost:11434
 3. Any one of the following chat model providers:
    - GitHub
-        1.&nbsp; Sign up and sign in to https://github.com.
-        2.&nbsp; Go to your [Settings/Developer Settings/Personal access tokens](https://github.com/settings/tokens).
-        3.&nbsp; Generate a new token.
+<br>&emsp;&emsp; 1.&nbsp; Sign up and sign in to https://github.com.
+<br>&emsp;&emsp; 2.&nbsp; Go to your [Settings/Developer Settings/Personal access tokens](https://github.com/settings/tokens).
+<br>&emsp;&emsp; 3.&nbsp; Generate a new token.
    - Ollama
-        1.&nbsp; Pull the following model: `ollama pull llama3.2`
+<br>&emsp;&emsp; 1.&nbsp; Pull the following model: `ollama pull llama3.2`
    - Mistral AI
-        1.&nbsp; Sign up and log in to https://console.mistral.ai/home.
-        2.&nbsp; Go to [Your API keys](https://console.mistral.ai/api-keys).
-        3.&nbsp; Create a new key.
+<br>&emsp;&emsp; 1.&nbsp; Sign up and log in to https://console.mistral.ai/home.
+<br>&emsp;&emsp; 2.&nbsp; Go to [Your API keys](https://console.mistral.ai/api-keys).
+<br>&emsp;&emsp; 3.&nbsp; Create a new key.
 4. You will use Docker to run an instance of MongoDB for a fast installation and setup. Install Docker by following the instructions in the official [Docker documentation](https://docs.docker.com/engine/installation), and start your Docker environment.
 
 ## Setting up MongoDB Atlas Locally
