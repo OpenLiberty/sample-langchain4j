@@ -81,6 +81,8 @@ jobs:
           ollama --version
       - name: Setup Ollama
         run: |
+          ollama serve &
+          sleep 10
           ollama pull llama3.2
           ollama pull nomic-embed-text
           for i in {1..40}; do
@@ -91,6 +93,7 @@ jobs:
       - name: Run tests with GITHUB_API_KEY
         env:
           GITHUB_API_KEY: ${{ secrets.ADMIN_BACKLOG }}
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
         run: |
           cd "${{ matrix.project }}"
           if [ '${{ matrix.project }}' == 'mcp' ]; then
@@ -107,6 +110,7 @@ jobs:
       - name: Run tests with OLLAMA_BASE_URL
         env:
           OLLAMA_BASE_URL: http://127.0.0.1:11434
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
         run: |
           cd "${{ matrix.project }}"
           if [ '${{ matrix.project }}' == 'mcp' ]; then

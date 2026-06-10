@@ -4,24 +4,23 @@ This example demonstrates RAG with LangChain4J in a Jakarta EE / MicroProfile ap
 
 ## Prerequisites:
 
-- [Java 21](https://developer.ibm.com/languages/java/semeru-runtimes/downloads)
--   Any one of the following model providers:
-    -   GitHub
-        -   Sign up and sign in to https://github.com.
-        -   Go to your [Settings/Developer Settings/Personal access tokens](https://github.com/settings/personal-access-tokens).
-        -   Generate a new token.
-    -   Ollama
-        -   Download and install [Ollama](https://ollama.com/download).
-            -   see the [README.md](https://github.com/ollama/ollama/blob/main/README.md#ollama).
-        -   Pull the following model.
-            -   `ollama pull nomic-embed-text`
-            -   `ollama pull llama3.2`
-    -   Mistral AI
-        -   Sign up and log in to https://console.mistral.ai/home.
-        -   Go to [Your API keys](https://console.mistral.ai/api-keys).
-        -   Create a new key.
-
-- You will use Docker to run an instance of MongoDB for a fast installation and setup. Install Docker by following the instructions in the official [Docker documentation](https://docs.docker.com/engine/installation), and start your Docker environment.
+1. [Java 21](https://developer.ibm.com/languages/java/semeru-runtimes/downloads)
+2. Pull the Embedding Model from Ollama:
+<br>&emsp; 1.&nbsp; Download and install [Ollama](https://ollama.com/download).
+<br>&emsp; 2.&nbsp; Pull the following embedding model: `ollama pull nomic-embed-text`
+<br>&emsp; 3.&nbsp; Ensure that Ollama is running: curl http://localhost:11434
+3. Any one of the following chat model providers:
+   - GitHub
+<br>&emsp;&emsp; 1.&nbsp; Sign up and sign in to https://github.com.
+<br>&emsp;&emsp; 2.&nbsp; Go to your [Settings/Developer Settings/Personal access tokens](https://github.com/settings/tokens).
+<br>&emsp;&emsp; 3.&nbsp; Generate a new token.
+   - Ollama
+<br>&emsp;&emsp; 1.&nbsp; Pull the following model: `ollama pull llama3.2`
+   - Mistral AI
+<br>&emsp;&emsp; 1.&nbsp; Sign up and log in to https://console.mistral.ai/home.
+<br>&emsp;&emsp; 2.&nbsp; Go to [Your API keys](https://console.mistral.ai/api-keys).
+<br>&emsp;&emsp; 3.&nbsp; Create a new key.
+4. You will use Docker to run an instance of MongoDB for a fast installation and setup. Install Docker by following the instructions in the official [Docker documentation](https://docs.docker.com/engine/installation), and start your Docker environment.
 
 ## Setting up MongoDB Atlas Locally
 
@@ -46,13 +45,24 @@ docker compose -f docker-compose.yml up -d
 
 ## Environment Set Up
 
+Set the `ENCRYPTION_KEY` environment variable for password encryption using the provided key. In production environments, you may manage and rotate encryption keys using enterprise key management solutions such as:
+
+- **IBM Security Guardium Key Lifecycle Manager (GKLM)** 
+- **IBM Cloud Secrets Manager** 
+- **IBM Cloud Key Protect**
+- **HashiCorp Vault**
+
+```
+export ENCRYPTION_KEY=customEncryptionKey1
+```
+
 Set the `JAVA_HOME` environment variable:
 
 ```
 export JAVA_HOME=<your Java 21 home path>
 ```
 
-Set the `GITHUB_API_KEY` environment variable if using Github.
+Set the `GITHUB_API_KEY` environment variable if using Github as the chat model.
 
 ```
 unset OLLAMA_BASE_URL
